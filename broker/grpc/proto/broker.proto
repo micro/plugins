@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package broker;
+option go_package = "../broker";
 
 service Broker {
 	rpc Publish(Message) returns (Empty) {}

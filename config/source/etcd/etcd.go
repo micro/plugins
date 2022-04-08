@@ -8,6 +8,7 @@ import (
 
 	"go-micro.dev/v4/config/source"
 	"go.etcd.io/etcd/api/v3/mvccpb"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 // Currently a single etcd reader

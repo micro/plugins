@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"go-micro.dev/v4/registry"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 type etcdWatcher struct {
