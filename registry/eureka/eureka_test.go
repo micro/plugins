@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/hudl/fargo"
-	"go-micro.dev/registry"
 	"github.com/go-micro/plugins/registry/eureka/mock"
+	"github.com/hudl/fargo"
+	"go-micro.dev/v4/registry"
 )
 
 func TestRegistration(t *testing.T) {

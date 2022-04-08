@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/hudl/fargo"
+	"github.com/op/go-logging"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/registry"
-	"github.com/op/go-logging"
 )
 
 type fargoConnection interface {

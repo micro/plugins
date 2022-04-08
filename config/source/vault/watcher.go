@@ -2,6 +2,7 @@ package vault
 
 import (
 	"errors"
+
 	"github.com/hashicorp/vault/api"
 	"go-micro.dev/v4/config/source"
 )

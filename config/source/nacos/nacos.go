@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
-	"go-micro.dev/v4/config/source"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	"go-micro.dev/v4/config/source"
 )
 
 type nacosConfigSource struct {

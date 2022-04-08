@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	stan "github.com/nats-io/stan.go"
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/server"
-	stan "github.com/nats-io/stan.go"
 )
 
 type optionsKey struct{}

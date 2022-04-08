@@ -1,11 +1,10 @@
 package nacos
 
-
 import (
 	"context"
 
-	"go-micro.dev/v4/registry"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"go-micro.dev/v4/registry"
 )
 
 type addressKey struct{}
@@ -30,4 +29,3 @@ func WithClientConfig(cc constant.ClientConfig) registry.Option {
 		o.Context = context.WithValue(o.Context, configKey{}, cc)
 	}
 }
-

@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/config/source/runtimevar
 go 1.17
 
 require (
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	gocloud.dev v0.17.0
 )
 
@@ -28,5 +28,3 @@ require (
 	google.golang.org/grpc v1.27.1 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )
-
-replace go-micro.dev => ../../../../../go-micro

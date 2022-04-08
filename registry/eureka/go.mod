@@ -3,15 +3,10 @@ module github.com/go-micro/plugins/registry/eureka
 go 1.17
 
 require (
-	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
-	github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec // indirect
-	github.com/franela/goblin v0.0.0-20210519012713-85d372ac71e2 // indirect
-	github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8 // indirect
 	github.com/hudl/fargo v1.3.0
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	gopkg.in/gcfg.v1 v1.2.3 // indirect
 )
 
 require (
@@ -19,8 +14,12 @@ require (
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
+	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
+	github.com/clbanning/x2j v0.0.0-20191024224557-825249438eec // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/franela/goblin v0.0.0-20210519012713-85d372ac71e2 // indirect
+	github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
@@ -53,8 +52,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
+	gopkg.in/gcfg.v1 v1.2.3 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

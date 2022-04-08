@@ -1,10 +1,11 @@
 package grpc
 
 import (
+	"net/http"
+
 	"go-micro.dev/v4/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"net/http"
 )
 
 func microError(err error) error {

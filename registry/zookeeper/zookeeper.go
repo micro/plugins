@@ -6,11 +6,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-zookeeper/zk"
+	hash "github.com/mitchellh/hashstructure"
 	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
-	"github.com/go-zookeeper/zk"
-	hash "github.com/mitchellh/hashstructure"
 )
 
 var (

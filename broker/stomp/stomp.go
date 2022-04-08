@@ -9,10 +9,10 @@ import (
 	"net/url"
 	"time"
 
-	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/cmd"
 	"github.com/go-stomp/stomp/v3"
 	"github.com/go-stomp/stomp/v3/frame"
+	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/cmd"
 )
 
 type rbroker struct {

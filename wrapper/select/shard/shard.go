@@ -5,9 +5,9 @@ import (
 	"hash/crc32"
 
 	"go-micro.dev/v4/client"
-	"go-micro.dev/v4/selector"
 	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/selector"
 
 	"context"
 )

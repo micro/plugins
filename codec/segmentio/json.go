@@ -6,8 +6,8 @@ import (
 	"io"
 
 	"github.com/golang/protobuf/proto"
-	"go-micro.dev/v4/codec"
 	segjson "github.com/segmentio/encoding/json"
+	"go-micro.dev/v4/codec"
 )
 
 type Codec struct {

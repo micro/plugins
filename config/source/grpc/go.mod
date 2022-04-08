@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/golang/protobuf v1.5.2
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
 	google.golang.org/grpc v1.38.0
 )
@@ -22,5 +22,3 @@ require (
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )
-
-replace go-micro.dev => ../../../../../go-micro

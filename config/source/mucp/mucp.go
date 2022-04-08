@@ -3,10 +3,10 @@ package mucp
 import (
 	"context"
 
-	"go-micro.dev/cmd"
-	"go-micro.dev/config/source"
-	log "go-micro.dev/logger"
 	proto "github.com/go-micro/plugins/config/source/mucp/proto"
+	"go-micro.dev/v4/cmd"
+	"go-micro.dev/v4/config/source"
+	log "go-micro.dev/v4/logger"
 )
 
 var (

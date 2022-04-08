@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/stretchr/testify v1.7.0
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22
 )
 
@@ -16,5 +16,3 @@ require (
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

@@ -4,12 +4,13 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/gob"
-	"go-micro.dev/v4/cmd"
 	"time"
 
+	"go-micro.dev/v4/cmd"
+
+	quic "github.com/lucas-clemente/quic-go"
 	"go-micro.dev/v4/transport"
 	utls "go-micro.dev/v4/util/tls"
-	quic "github.com/lucas-clemente/quic-go"
 )
 
 type quicSocket struct {

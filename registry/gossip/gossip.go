@@ -13,15 +13,15 @@ import (
 	"sync"
 	"time"
 
+	pb "github.com/go-micro/plugins/registry/gossip/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/google/uuid"
 	"github.com/hashicorp/memberlist"
-	"go-micro.dev/cmd"
-	log "go-micro.dev/logger"
-	"go-micro.dev/registry"
-	regutil "go-micro.dev/util/registry"
-	pb "github.com/go-micro/plugins/registry/gossip/proto"
 	"github.com/mitchellh/hashstructure"
+	"go-micro.dev/v4/cmd"
+	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/registry"
+	regutil "go-micro.dev/v4/util/registry"
 )
 
 // use registry.Result int32 values after it switches from string to int32 types
@@ -180,8 +180,8 @@ func configure(g *gossipRegistry, opts ...registry.Option) error {
 
 	// sane good default options
 	c.LogOutput = io.Discard // log to /dev/null
-	c.PushPullInterval = 0       // disable expensive tcp push/pull
-	c.ProtocolVersion = 4        // suport latest stable features
+	c.PushPullInterval = 0   // disable expensive tcp push/pull
+	c.ProtocolVersion = 4    // suport latest stable features
 
 	// set config from options
 	if config, ok := g.options.Context.Value(configKey{}).(*memberlist.Config); ok && config != nil {

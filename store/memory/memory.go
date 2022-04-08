@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"go-micro.dev/v4/store"
 	"github.com/patrickmn/go-cache"
 	"github.com/pkg/errors"
+	"go-micro.dev/v4/store"
 )
 
 // NewStore returns a memory store

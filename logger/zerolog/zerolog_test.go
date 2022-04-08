@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"go-micro.dev/v4/logger"
 	"github.com/rs/zerolog"
+	"go-micro.dev/v4/logger"
 )
 
 func TestName(t *testing.T) {

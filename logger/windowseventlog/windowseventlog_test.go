@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package windowseventlog
@@ -5,8 +6,8 @@ package windowseventlog
 import (
 	"testing"
 
-	"go-micro.dev/v4/logger"
 	"github.com/stretchr/testify/assert"
+	"go-micro.dev/v4/logger"
 )
 
 func TestWindowsEventLog(t *testing.T) {

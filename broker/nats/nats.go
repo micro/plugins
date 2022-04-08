@@ -7,12 +7,12 @@ import (
 	"strings"
 	"sync"
 
+	nats "github.com/nats-io/nats.go"
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/codec/json"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
-	nats "github.com/nats-io/nats.go"
 )
 
 func init() {

@@ -3,10 +3,10 @@ module github.com/go-micro/plugins/server/grpc
 go 1.17
 
 require (
-	github.com/go-micro/plugins/client/grpc v4.0.0-20211019191242-9edc569e68bb
-	github.com/go-micro/plugins/transport/grpc v4.0.0-20211019191242-9edc569e68bb
+	github.com/go-micro/plugins/client/grpc v0.0.0
+	github.com/go-micro/plugins/transport/grpc v0.0.0
 	github.com/golang/protobuf v1.5.2
-	go-micro.dev v4.3.0
+	go-micro.dev/v4 v4.6.0
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
 	google.golang.org/genproto v0.0.0-20211020151524-b7c3a969101a
 	google.golang.org/grpc v1.42.0
@@ -50,5 +50,4 @@ require (
 replace (
 	github.com/go-micro/plugins/client/grpc => ../../../plugins/client/grpc
 	github.com/go-micro/plugins/transport/grpc => ../../../plugins/transport/grpc
-	go-micro.dev => ../../../../go-micro
 )

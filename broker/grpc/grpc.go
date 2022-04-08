@@ -15,15 +15,15 @@ import (
 
 	proto "github.com/go-micro/plugins/broker/grpc/proto"
 	"github.com/google/uuid"
-	"go-micro.dev/broker"
-	"go-micro.dev/cmd"
-	merr "go-micro.dev/errors"
-	log "go-micro.dev/logger"
-	"go-micro.dev/registry"
-	"go-micro.dev/registry/cache"
-	maddr "go-micro.dev/util/addr"
-	mnet "go-micro.dev/util/net"
-	mls "go-micro.dev/util/tls"
+	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/cmd"
+	merr "go-micro.dev/v4/errors"
+	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/registry/cache"
+	maddr "go-micro.dev/v4/util/addr"
+	mnet "go-micro.dev/v4/util/net"
+	mls "go-micro.dev/v4/util/tls"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -62,7 +62,7 @@ type grpcEvent struct {
 }
 
 var (
-	registryKey = "go-micro.dev/registry"
+	registryKey = "go-micro.dev/v4/registry"
 
 	broadcastVersion = "ff.grpc.broadcast"
 	registerTTL      = time.Minute

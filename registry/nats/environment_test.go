@@ -4,9 +4,9 @@ import (
 	"os"
 	"testing"
 
-	log "go-micro.dev/logger"
-	"go-micro.dev/registry"
 	"github.com/go-micro/plugins/registry/nats"
+	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/registry"
 )
 
 type environment struct {

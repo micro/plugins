@@ -5,7 +5,6 @@ import (
 
 	"go-micro.dev/v4/config/encoder"
 	"go.etcd.io/etcd/api/v3/mvccpb"
-	"go.etcd.io/etcd/client/v3"
 )
 
 func makeEvMap(e encoder.Encoder, data map[string]interface{}, kv []*clientv3.Event, stripPrefix string) map[string]interface{} {

@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/logger"
 	maddr "go-micro.dev/v4/util/addr"
 	mnet "go-micro.dev/v4/util/net"
 )
 
 func init() {
-        cmd.DefaultBrokers["memory"] = NewBroker
+	cmd.DefaultBrokers["memory"] = NewBroker
 }
 
 type memoryBroker struct {

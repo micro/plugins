@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.38.69
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	golang.org/x/text v0.3.6
 )
 
@@ -46,5 +46,3 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

@@ -8,7 +8,7 @@ package main
 
 import (
     "github.com/go-micro/plugins/codec/msgpackrpc"
-    "go-micro.dev"
+    "go-micro.dev/v4"
     "github.com/micro/go-micro/client"
     "github.com/micro/go-micro/server"
 )

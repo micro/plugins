@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/codec/json"
-	"go-micro.dev/v4/cmd"
-	log "go-micro.dev/v4/logger"
 	stan "github.com/nats-io/stan.go"
+	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/cmd"
+	"go-micro.dev/v4/codec/json"
+	log "go-micro.dev/v4/logger"
 )
 
 type stanBroker struct {

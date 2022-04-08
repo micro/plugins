@@ -7,7 +7,7 @@ require (
 	github.com/nats-io/nats.go v1.13.1-0.20211018182449-f2416a8b1483
 	github.com/nats-io/stan.go v0.10.0
 	github.com/pkg/errors v0.9.1
-	go-micro.dev v4.3.1-0.20211108085239-0c2041e43908
+	go-micro.dev/v4 v4.3.1-0.20211108085239-0c2041e43908
 )
 
 require (

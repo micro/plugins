@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/go-redis/redis/v8"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
-	"github.com/go-redis/redis/v8"
 )
 
 type rkv struct {

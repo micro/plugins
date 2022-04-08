@@ -10,7 +10,6 @@ import (
 	gosync "sync"
 
 	"go-micro.dev/v4/sync"
-	"go.etcd.io/etcd/client/v3"
 	cc "go.etcd.io/etcd/client/v3/concurrency"
 )
 

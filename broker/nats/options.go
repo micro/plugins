@@ -1,8 +1,8 @@
 package nats
 
 import (
-	"go-micro.dev/v4/broker"
 	nats "github.com/nats-io/nats.go"
+	"go-micro.dev/v4/broker"
 )
 
 type optionsKey struct{}

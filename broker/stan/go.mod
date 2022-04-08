@@ -4,10 +4,8 @@ go 1.17
 
 require (
 	github.com/google/uuid v1.2.0
-	github.com/nats-io/nats-server/v2 v2.3.0 // indirect
-	github.com/nats-io/nats-streaming-server v0.22.0 // indirect
 	github.com/nats-io/stan.go v0.9.0
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 )
 
 require (
@@ -32,6 +30,8 @@ require (
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/miekg/dns v1.1.43 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
+	github.com/nats-io/nats-server/v2 v2.3.0 // indirect
+	github.com/nats-io/nats-streaming-server v0.22.0 // indirect
 	github.com/nats-io/nats.go v1.11.0 // indirect
 	github.com/nats-io/nkeys v0.3.0 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
@@ -54,5 +54,3 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

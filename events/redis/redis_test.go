@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"go-micro.dev/v4/events"
 	"github.com/stretchr/testify/assert"
+	"go-micro.dev/v4/events"
 )
 
 type testObj struct {

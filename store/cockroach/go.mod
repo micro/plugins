@@ -6,7 +6,7 @@ require (
 	github.com/kr/pretty v0.2.1
 	github.com/lib/pq v1.10.2
 	github.com/pkg/errors v0.9.1
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 )
 
 require (
@@ -24,5 +24,3 @@ require (
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

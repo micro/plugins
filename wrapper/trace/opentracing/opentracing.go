@@ -7,12 +7,12 @@ import (
 	"context"
 	"strings"
 
+	opentracing "github.com/opentracing/opentracing-go"
+	opentracinglog "github.com/opentracing/opentracing-go/log"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
-	opentracing "github.com/opentracing/opentracing-go"
-	opentracinglog "github.com/opentracing/opentracing-go/log"
 )
 
 type otWrapper struct {

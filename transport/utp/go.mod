@@ -3,19 +3,19 @@ module github.com/go-micro/plugins/transport/utp
 go 1.17
 
 require (
-	github.com/anacrolix/envpprof v1.1.1 // indirect
-	github.com/anacrolix/missinggo v1.3.0 // indirect
-	github.com/anacrolix/sync v0.4.0 // indirect
 	github.com/anacrolix/utp v0.1.0
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 )
 
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
+	github.com/anacrolix/envpprof v1.1.1 // indirect
+	github.com/anacrolix/missinggo v1.3.0 // indirect
 	github.com/anacrolix/missinggo/perf v1.0.0 // indirect
 	github.com/anacrolix/missinggo/v2 v2.5.1 // indirect
+	github.com/anacrolix/sync v0.4.0 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
@@ -51,5 +51,3 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

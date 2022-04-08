@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/codec"
 	"go-micro.dev/v4/codec/jsonrpc"
 	"go-micro.dev/v4/codec/protorpc"
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
@@ -238,7 +238,7 @@ func (h *httpServer) Start() error {
 	h.Unlock()
 
 	var (
-		ln net.Listener
+		ln  net.Listener
 		err error
 	)
 
@@ -300,12 +300,11 @@ func (h *httpServer) Start() error {
 			}
 		}
 
-		
 		// deregister
 		h.Deregister()
 
 		opts.Broker.Disconnect()
-		
+
 		// Solve the problem of early exit
 		ch <- ln.Close()
 	}()

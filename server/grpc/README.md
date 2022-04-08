@@ -13,7 +13,7 @@ Specify the server to your micro service
 
 ```go
 import (
-        "go-micro.dev"
+        "go-micro.dev/v4"
         "github.com/go-micro/plugins/server/grpc"
 )
 

@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/golang/protobuf/proto"
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/errors"
@@ -25,7 +26,6 @@ import (
 	"go-micro.dev/v4/util/backoff"
 	mgrpc "go-micro.dev/v4/util/grpc"
 	mnet "go-micro.dev/v4/util/net"
-	"github.com/golang/protobuf/proto"
 	"golang.org/x/net/netutil"
 
 	"google.golang.org/grpc"

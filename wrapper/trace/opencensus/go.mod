@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/wrapper/trace/opencensus
 go 1.17
 
 require (
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	go.opencensus.io v0.23.0
 	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84
 )
@@ -23,5 +23,3 @@ require (
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )
-
-replace go-micro.dev => ../../../../../go-micro

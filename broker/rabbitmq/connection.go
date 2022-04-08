@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"go-micro.dev/v4/logger"
 	"github.com/streadway/amqp"
+	"go-micro.dev/v4/logger"
 )
 
 var (

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"go-micro.dev/v4/registry"
 	"github.com/nats-io/nats.go"
+	"go-micro.dev/v4/registry"
 )
 
 type natsWatcher struct {

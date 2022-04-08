@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/sync/etcd
 go 1.17
 
 require (
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 	go.etcd.io/etcd/client/v3 v3.5.0
 )
 
@@ -25,5 +25,3 @@ require (
 	google.golang.org/grpc v1.38.0 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro

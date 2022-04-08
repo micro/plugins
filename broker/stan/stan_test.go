@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"go-micro.dev/v4/broker"
 	stan "github.com/nats-io/stan.go"
+	"go-micro.dev/v4/broker"
 )
 
 var addrTestCases = []struct {

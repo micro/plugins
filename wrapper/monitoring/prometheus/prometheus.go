@@ -3,11 +3,12 @@ package prometheus
 import (
 	"context"
 	"fmt"
+
+	"github.com/prometheus/client_golang/prometheus"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
-	"github.com/prometheus/client_golang/prometheus"
 )
 
 var (

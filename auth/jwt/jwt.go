@@ -5,8 +5,8 @@ import (
 	"time"
 
 	jwtToken "github.com/go-micro/plugins/auth/jwt/token"
-	"go-micro.dev/auth"
-	"go-micro.dev/cmd"
+	"go-micro.dev/v4/auth"
+	"go-micro.dev/v4/cmd"
 )
 
 func init() {

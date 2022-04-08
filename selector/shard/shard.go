@@ -3,10 +3,10 @@ package shard
 import (
 	"strings"
 
-	"go-micro.dev/v4/client"
-	"go-micro.dev/v4/selector"
-	"go-micro.dev/v4/registry"
 	"github.com/minio/highwayhash"
+	"go-micro.dev/v4/client"
+	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/selector"
 )
 
 // zeroKey is the base key for all hashes, it is 32 zeros.

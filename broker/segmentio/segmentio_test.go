@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-micro/plugins/broker/segmentio"
 	segjson "github.com/go-micro/plugins/codec/segmentio"
-	"go-micro.dev/broker"
+	"go-micro.dev/v4/broker"
 )
 
 func BenchmarkSegmentioCodecJsonPublish(b *testing.B) {

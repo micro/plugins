@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-micro/plugins/registry/kubernetes/client"
 	"github.com/go-micro/plugins/registry/kubernetes/client/watch"
-	"go-micro.dev/logger"
-	"go-micro.dev/registry"
+	"go-micro.dev/v4/logger"
+	"go-micro.dev/v4/registry"
 )
 
 type k8sWatcher struct {

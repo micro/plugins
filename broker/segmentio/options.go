@@ -3,8 +3,8 @@ package segmentio
 import (
 	"context"
 
-	"go-micro.dev/v4/broker"
 	"github.com/segmentio/kafka-go"
+	"go-micro.dev/v4/broker"
 )
 
 var (

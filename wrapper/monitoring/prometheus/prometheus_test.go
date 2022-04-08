@@ -9,11 +9,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"
-	"go-micro.dev/broker"
-	"go-micro.dev/client"
-	"go-micro.dev/registry"
-	"go-micro.dev/selector"
-	"go-micro.dev/server"
+	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/client"
+	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/selector"
+	"go-micro.dev/v4/server"
 )
 
 type Test interface {

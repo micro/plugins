@@ -7,7 +7,7 @@ Import the codec and set within the client/server
 package main
 
 import (
-    "go-micro.dev"
+    "go-micro.dev/v4"
     "github.com/micro/go-micro/client"
     "github.com/micro/go-micro/server"
     "github.com/go-micro/plugins/codec/jsonrpc2"

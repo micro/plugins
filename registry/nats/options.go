@@ -3,8 +3,8 @@ package nats
 import (
 	"context"
 
-	"go-micro.dev/v4/registry"
 	"github.com/nats-io/nats.go"
+	"go-micro.dev/v4/registry"
 )
 
 type contextQuorumKey struct{}

@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/go-micro/plugins/registry/kubernetes/client"
-	"go-micro.dev/cmd"
-	"go-micro.dev/registry"
+	"go-micro.dev/v4/cmd"
+	"go-micro.dev/v4/registry"
 )
 
 type kregistry struct {

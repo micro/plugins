@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/juju/ratelimit v1.0.1
-	go-micro.dev v4.2.1
+	go-micro.dev/v4 v4.6.0
 )
 
 require (
@@ -24,5 +24,3 @@ require (
 	google.golang.org/protobuf v1.26.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
-
-replace go-micro.dev => ../../../../../go-micro

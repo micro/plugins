@@ -2,7 +2,7 @@ module github.com/go-micro/plugins/client/mucp
 
 go 1.17
 
-require go-micro.dev v4.2.1
+require go-micro.dev/v4 v4.6.0
 
 require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
@@ -42,5 +42,3 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
-
-replace go-micro.dev => ../../../../go-micro
