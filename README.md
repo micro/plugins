@@ -10,6 +10,7 @@ This repository contains plugins for all micro related tools. Read on for furthe
 ## Getting Started
 
 * [Contents](#contents)
+* [Versions](#versions)
 * [Usage](#usage)
 * [Build Pattern](#build-pattern)
 * [Contributions](#contributions)
@@ -30,6 +31,10 @@ Contents of this repository:
 | Transport | Bidirectional Streaming; NATS, RabbitMQ                         | 
 | Wrapper   | Middleware; Circuit Breakers, Rate Limiting, Tracing, Monitoring|
 
+## Versions
+
+- [v4 - go-micro.dev/v4](https://github.com/go-micro/plugins/tree/main/v4)
+
 ## Usage
 
 Plugins can be added to go-micro in the following ways. By doing so they'll be available to set via command line args or environment variables.
@@ -40,9 +45,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/registry/kubernetes"
-	_ "github.com/go-micro/plugins/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
@@ -98,7 +103,7 @@ Import and set as options when creating a new service
 ```go
 import (
 	"go-micro.dev/v4"
-	"github.com/go-micro/plugins/registry/kubernetes"
+	"github.com/go-micro/plugins/v4/registry/kubernetes"
 )
 
 func main() {
@@ -125,9 +130,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/registry/kubernetes"
-	_ "github.com/go-micro/plugins/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
