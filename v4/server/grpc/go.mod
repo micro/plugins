@@ -48,6 +48,6 @@ require (
 )
 
 replace (
-	github.com/go-micro/plugins/v4/client/grpc => ../../../plugins/client/grpc
-	github.com/go-micro/plugins/v4/transport/grpc => ../../../plugins/transport/grpc
+	github.com/go-micro/plugins/v4/client/grpc => ../../client/grpc
+	github.com/go-micro/plugins/v4/transport/grpc => ../../transport/grpc
 )
