@@ -12,7 +12,7 @@ for subscribers and publish to them, hence point to point.
 
 ```go
 import (
-	"github.com/go-micro/plugins/broker/grpc"
+	"github.com/go-micro/plugins/v4/broker/grpc"
 )
 
 // create and connect (starts a grpc server)

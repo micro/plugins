@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/events/nats
+module github.com/go-micro/plugins/v4/events/nats
 
 go 1.17
 

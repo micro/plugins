@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/codec/json-iterator
+module github.com/go-micro/plugins/v4/codec/json-iterator
 
 go 1.17
 

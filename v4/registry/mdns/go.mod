@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/registry/mdns
+module github.com/go-micro/plugins/v4/registry/mdns
 
 go 1.17
 

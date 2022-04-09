@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/client/http
+module github.com/go-micro/plugins/v4/client/http
 
 go 1.17
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-micro/plugins/events/natsjs"
+	"github.com/go-micro/plugins/v4/events/natsjs"
 	nserver "github.com/nats-io/nats-server/v2/server"
 	"github.com/stretchr/testify/assert"
 	"go-micro.dev/v4/events"

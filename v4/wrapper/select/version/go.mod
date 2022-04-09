@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/select/version
+module github.com/go-micro/plugins/v4/wrapper/select/version
 
 go 1.17
 

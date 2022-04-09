@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/broker/grpc
+module github.com/go-micro/plugins/v4/broker/grpc
 
 go 1.17
 

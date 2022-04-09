@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go-micro/plugins/registry/kubernetes/client"
-	"github.com/go-micro/plugins/registry/kubernetes/client/watch"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client/watch"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 )

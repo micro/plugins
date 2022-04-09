@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/memory
+module github.com/go-micro/plugins/v4/transport/memory
 
 go 1.17
 

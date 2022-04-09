@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/codec/jsonrpc2
+module github.com/go-micro/plugins/v4/codec/jsonrpc2
 
 go 1.17
 

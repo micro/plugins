@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/source/configmap
+module github.com/go-micro/plugins/v4/config/source/configmap
 
 go 1.17
 

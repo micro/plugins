@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/broker/http
+module github.com/go-micro/plugins/v4/broker/http
 
 go 1.17
 

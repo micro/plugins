@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/encoder/hcl
+module github.com/go-micro/plugins/v4/config/encoder/hcl
 
 go 1.17
 

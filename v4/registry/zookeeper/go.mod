@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/registry/zookeeper
+module github.com/go-micro/plugins/v4/registry/zookeeper
 
 go 1.17
 

@@ -16,10 +16,10 @@ import (
 	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/transport"
 
-	gcli "github.com/go-micro/plugins/client/grpc"
-	gsrv "github.com/go-micro/plugins/server/grpc"
-	pb "github.com/go-micro/plugins/server/grpc/proto"
-	tgrpc "github.com/go-micro/plugins/transport/grpc"
+	gcli "github.com/go-micro/plugins/v4/client/grpc"
+	gsrv "github.com/go-micro/plugins/v4/server/grpc"
+	pb "github.com/go-micro/plugins/v4/server/grpc/proto"
+	tgrpc "github.com/go-micro/plugins/v4/transport/grpc"
 )
 
 // server is used to implement helloworld.GreeterServer.

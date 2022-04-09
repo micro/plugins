@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	promwrapper "github.com/go-micro/plugins/wrapper/monitoring/prometheus"
+	promwrapper "github.com/go-micro/plugins/v4/wrapper/monitoring/prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 	dto "github.com/prometheus/client_model/go"
 	"github.com/stretchr/testify/assert"

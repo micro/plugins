@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/validator
+module github.com/go-micro/plugins/v4/wrapper/validator
 
 go 1.17
 

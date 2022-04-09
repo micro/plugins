@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/auth/jwt
+module github.com/go-micro/plugins/v4/auth/jwt
 
 go 1.17
 

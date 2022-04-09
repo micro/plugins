@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/encoder/yaml
+module github.com/go-micro/plugins/v4/config/encoder/yaml
 
 go 1.17
 

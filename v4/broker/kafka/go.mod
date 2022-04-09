@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/broker/kafka
+module github.com/go-micro/plugins/v4/broker/kafka
 
 go 1.17
 

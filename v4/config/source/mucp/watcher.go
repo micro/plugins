@@ -1,7 +1,7 @@
 package mucp
 
 import (
-	proto "github.com/go-micro/plugins/config/source/mucp/proto"
+	proto "github.com/go-micro/plugins/v4/config/source/mucp/proto"
 	"go-micro.dev/v4/config/source"
 )
 

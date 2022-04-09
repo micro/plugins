@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/acme/certmagic
+module github.com/go-micro/plugins/v4/acme/certmagic
 
 go 1.17
 

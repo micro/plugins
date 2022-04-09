@@ -10,7 +10,7 @@ import (
 	"net/http"
 
 	"github.com/micro/go-micro/server"
-	httpServer "github.com/go-micro/plugins/server/http"
+	httpServer "github.com/go-micro/plugins/v4/server/http"
 )
 
 func main() {
@@ -39,7 +39,7 @@ import (
 
 	"go-micro.dev/v4"
 	"github.com/micro/go-micro/server"
-	httpServer "github.com/go-micro/plugins/server/http"
+	httpServer "github.com/go-micro/plugins/v4/server/http"
 )
 
 func main() {

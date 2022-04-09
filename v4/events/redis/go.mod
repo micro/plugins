@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/events/redis
+module github.com/go-micro/plugins/v4/events/redis
 
 go 1.17
 

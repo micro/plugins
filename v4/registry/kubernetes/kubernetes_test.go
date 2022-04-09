@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-micro/plugins/registry/kubernetes/client"
-	"github.com/go-micro/plugins/registry/kubernetes/client/mock"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client/mock"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 )

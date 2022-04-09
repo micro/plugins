@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/endpoint
+module github.com/go-micro/plugins/v4/wrapper/endpoint
 
 go 1.17
 

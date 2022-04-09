@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/client/mock
+module github.com/go-micro/plugins/v4/client/mock
 
 go 1.17
 

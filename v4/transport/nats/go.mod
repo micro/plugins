@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/nats
+module github.com/go-micro/plugins/v4/transport/nats
 
 go 1.17
 

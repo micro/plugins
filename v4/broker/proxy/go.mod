@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/broker/proxy
+module github.com/go-micro/plugins/v4/broker/proxy
 
 go 1.17
 

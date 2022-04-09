@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/selector/label
+module github.com/go-micro/plugins/v4/selector/label
 
 go 1.17
 

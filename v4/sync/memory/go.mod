@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/sync/memory
+module github.com/go-micro/plugins/v4/sync/memory
 
 go 1.17
 

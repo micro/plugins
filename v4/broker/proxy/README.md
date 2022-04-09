@@ -19,7 +19,7 @@ micro proxy
 ### Import and Flag plugin
 
 ```
-import _ "github.com/go-micro/plugins/broker/proxy"
+import _ "github.com/go-micro/plugins/v4/broker/proxy"
 ```
 
 ```

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/broker/nats
+module github.com/go-micro/plugins/v4/broker/nats
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/logger/apex
+module github.com/go-micro/plugins/v4/logger/apex
 
 go 1.17
 

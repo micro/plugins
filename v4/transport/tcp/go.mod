@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/tcp
+module github.com/go-micro/plugins/v4/transport/tcp
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/logger/zerolog
+module github.com/go-micro/plugins/v4/logger/zerolog
 
 go 1.17
 

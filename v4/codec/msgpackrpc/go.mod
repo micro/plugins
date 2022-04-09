@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/codec/msgpackrpc
+module github.com/go-micro/plugins/v4/codec/msgpackrpc
 
 go 1.17
 

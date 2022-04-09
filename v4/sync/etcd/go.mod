@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/sync/etcd
+module github.com/go-micro/plugins/v4/sync/etcd
 
 go 1.17
 

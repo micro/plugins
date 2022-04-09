@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/quic
+module github.com/go-micro/plugins/v4/transport/quic
 
 go 1.17
 

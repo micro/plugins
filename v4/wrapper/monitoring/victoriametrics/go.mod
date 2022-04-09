@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/monitoring/victoriametrics
+module github.com/go-micro/plugins/v4/wrapper/monitoring/victoriametrics
 
 go 1.17
 

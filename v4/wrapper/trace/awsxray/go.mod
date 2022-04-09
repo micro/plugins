@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/trace/awsxray
+module github.com/go-micro/plugins/v4/wrapper/trace/awsxray
 
 go 1.17
 

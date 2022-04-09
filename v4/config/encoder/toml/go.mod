@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/encoder/toml
+module github.com/go-micro/plugins/v4/config/encoder/toml
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/sync/consul
+module github.com/go-micro/plugins/v4/sync/consul
 
 go 1.17
 

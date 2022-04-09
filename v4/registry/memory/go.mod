@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/registry/memory
+module github.com/go-micro/plugins/v4/registry/memory
 
 go 1.17
 

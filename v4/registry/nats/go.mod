@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/registry/nats
+module github.com/go-micro/plugins/v4/registry/nats
 
 go 1.17
 

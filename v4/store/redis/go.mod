@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/store/redis
+module github.com/go-micro/plugins/v4/store/redis
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/wrapper/breaker/gobreaker
+module github.com/go-micro/plugins/v4/wrapper/breaker/gobreaker
 
 go 1.17
 

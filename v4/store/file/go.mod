@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/store/file
+module github.com/go-micro/plugins/v4/store/file
 
 go 1.17
 

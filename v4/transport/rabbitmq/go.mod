@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/rabbitmq
+module github.com/go-micro/plugins/v4/transport/rabbitmq
 
 go 1.17
 

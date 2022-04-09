@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/source/url
+module github.com/go-micro/plugins/v4/config/source/url
 
 go 1.17
 

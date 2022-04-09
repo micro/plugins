@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/store/mysql
+module github.com/go-micro/plugins/v4/store/mysql
 
 go 1.17
 

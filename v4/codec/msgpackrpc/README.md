@@ -7,7 +7,7 @@ Import the codec and set within the client/server
 package main
 
 import (
-    "github.com/go-micro/plugins/codec/msgpackrpc"
+    "github.com/go-micro/plugins/v4/codec/msgpackrpc"
     "go-micro.dev/v4"
     "github.com/micro/go-micro/client"
     "github.com/micro/go-micro/server"

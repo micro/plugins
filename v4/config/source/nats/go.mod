@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/config/source/nats
+module github.com/go-micro/plugins/v4/config/source/nats
 
 go 1.17
 

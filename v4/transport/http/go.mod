@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/transport/http
+module github.com/go-micro/plugins/v4/transport/http
 
 go 1.17
 

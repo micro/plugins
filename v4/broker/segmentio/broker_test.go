@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	segmentio "github.com/go-micro/plugins/broker/segmentio"
+	segmentio "github.com/go-micro/plugins/v4/broker/segmentio"
 	"go-micro.dev/v4/broker"
 )
 
