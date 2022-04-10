@@ -12,8 +12,9 @@ This repository contains plugins for all micro related tools. Read on for furthe
 * [Contents](#contents)
 * [Versions](#versions)
 * [Usage](#usage)
-* [Build Pattern](#build-pattern)
+* [Build Pattern](#build)
 * [Contributions](#contributions)
+* [Community](#community)
 
 ## Contents
 
@@ -118,7 +119,7 @@ func main() {
 }
 ```
 
-## Build
+## Build Pattern
 
 An anti-pattern is modifying the `main.go` file to include plugins. Best practice recommendation is to include
 plugins in a separate file and rebuild with it included. This allows for automation of building plugins and
@@ -150,3 +151,8 @@ MICRO_REGISTRY=kubernetes \
 MICRO_TRANSPORT=nats \
 service
 ```
+
+## Community
+
+- [Slack](https://join.slack.com/t/go-micro/shared_invite/zt-175aaev1d-iHExPTlfxvfkOeeKLIYEYw)
+- [QQ Group](https://jq.qq.com/?_wv=1027&k=5Gmrfv9i)
