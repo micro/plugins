@@ -187,8 +187,6 @@ func (n *stanBroker) connect() error {
 			log.Errorf("[stan]: failed to connect %v: %v\n", n.addrs, err)
 		}
 	}
-
-	return nil
 }
 
 func (n *stanBroker) Connect() error {

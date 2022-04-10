@@ -444,8 +444,6 @@ func (g *gossipRegistry) connect(addrs []string) error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func (g *gossipRegistry) publish(action string, services []*registry.Service) {

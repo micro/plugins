@@ -48,7 +48,7 @@ func (wr *bodyWatcher) stream() {
 			// read a line
 			b, err := reader.ReadBytes('\n')
 			if err != nil {
-				return
+				break
 			}
 
 			// ignore for the first second

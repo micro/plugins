@@ -330,8 +330,6 @@ func (r *rmqtportListener) accept(fn func(transport.Socket)) (bool, error) {
 			sock.Unlock()
 		}
 	}
-
-	return false, nil
 }
 
 func (r *rmqtport) putReq(id string) chan amqp.Delivery {

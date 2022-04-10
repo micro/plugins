@@ -15,7 +15,7 @@ func expectedPort(t *testing.T, expected string, lsn transport.Listener) {
 
 	if port != expected {
 		lsn.Close()
-		t.Fatalf("Expected address to be `%s`, got `%s`", expected, port)
+		t.Errorf("Expected address to be `%s`, got `%s`", expected, port)
 	}
 }
 
@@ -24,7 +24,7 @@ func testUTPTransport(t *testing.T, secure bool) {
 
 	l, err := tr.Listen("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unexpected listen err: %v", err)
+		t.Errorf("Unexpected listen err: %v", err)
 	}
 	defer l.Close()
 
@@ -50,7 +50,7 @@ func testUTPTransport(t *testing.T, secure bool) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
@@ -140,7 +140,7 @@ func TestUTPTransportError(t *testing.T) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
@@ -187,7 +187,7 @@ func TestUTPTransportTimeout(t *testing.T) {
 			case <-done:
 				return
 			case <-time.After(time.Second):
-				t.Fatal("deadline not executed")
+				t.Error("deadline not executed")
 			}
 		}()
 
@@ -205,7 +205,7 @@ func TestUTPTransportTimeout(t *testing.T) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()

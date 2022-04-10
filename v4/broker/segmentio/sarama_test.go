@@ -122,7 +122,7 @@ func BenchmarkSaramaCodecJsonSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()
@@ -185,7 +185,7 @@ func BenchmarkSaramaCodecSegmentioSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()

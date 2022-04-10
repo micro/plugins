@@ -56,5 +56,4 @@ func TestDurable(t *testing.T) {
 	if err := service.Run(); err != nil {
 		t.Fatal(err)
 	}
-
 }

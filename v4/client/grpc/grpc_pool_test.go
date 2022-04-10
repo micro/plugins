@@ -14,7 +14,7 @@ func testPool(t *testing.T, size int, ttl time.Duration, idle int, ms int) {
 	// setup server
 	l, err := net.Listen("tcp", ":0")
 	if err != nil {
-		t.Fatalf("failed to listen: %v", err)
+		t.Errorf("failed to listen: %v", err)
 	}
 	defer l.Close()
 
@@ -42,7 +42,7 @@ func testPool(t *testing.T, size int, ttl time.Duration, idle int, ms int) {
 		}
 
 		if rsp.Message != "Hello John" {
-			t.Fatalf("Got unexpected response %v", rsp.Message)
+			t.Errorf("Got unexpected response %v", rsp.Message)
 		}
 
 		// release the conn
@@ -51,7 +51,7 @@ func testPool(t *testing.T, size int, ttl time.Duration, idle int, ms int) {
 		p.Lock()
 		if i := p.conns[l.Addr().String()].count; i > size {
 			p.Unlock()
-			t.Fatalf("pool size %d is greater than expected %d", i, size)
+			t.Errorf("pool size %d is greater than expected %d", i, size)
 		}
 		p.Unlock()
 	}

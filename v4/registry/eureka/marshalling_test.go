@@ -25,8 +25,8 @@ func TestServiceToInstance(t *testing.T) {
 	endpoints := []*registry.Endpoint{
 		&registry.Endpoint{
 			Name:     "endpoint",
-			Request:  &registry.Value{"request-value", "request-value-type", []*registry.Value{}},
-			Response: &registry.Value{"response-value", "response-value-type", []*registry.Value{}},
+			Request:  &registry.Value{Name: "request-value", Type: "request-value-type", Values: []*registry.Value{}},
+			Response: &registry.Value{Name: "response-value", Type: "response-value-type", Values: []*registry.Value{}},
 			Metadata: map[string]string{"endpoint-meta-key": "endpoint-meta-value"},
 		},
 	}

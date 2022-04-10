@@ -3,7 +3,7 @@
 for d in $(find * -name 'go.mod'); do
   pushd $(dirname $d) >/dev/null
   go get
-  go vet ./...
+  go vet
   #go test -race -v ./... || :
   # go test -v ./...
   popd >/dev/null

@@ -187,7 +187,7 @@ func TestTCPTransportTimeout(t *testing.T) {
 			case <-done:
 				return
 			case <-time.After(time.Second):
-				t.Fatal("deadline not executed")
+				t.Error("deadline not executed")
 			}
 		}()
 

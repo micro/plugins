@@ -13,20 +13,20 @@ import (
 func subscribe(t *testing.T, b broker.Broker, topic string, handle broker.Handler) broker.Subscriber {
 	s, err := b.Subscribe(topic, handle)
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 	return s
 }
 
 func publish(t *testing.T, b broker.Broker, topic string, msg *broker.Message) {
 	if err := b.Publish(topic, msg); err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 }
 
 func unsubscribe(t *testing.T, s broker.Subscriber) {
 	if err := s.Unsubscribe(); err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 }
 
@@ -42,7 +42,7 @@ func TestBroker(t *testing.T) {
 	b.Init()
 
 	if err := b.Connect(); err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
 	defer b.Disconnect()
 
