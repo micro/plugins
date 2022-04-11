@@ -10,9 +10,11 @@ This repository contains plugins for all micro related tools. Read on for furthe
 ## Getting Started
 
 * [Contents](#contents)
+* [Versions](#versions)
 * [Usage](#usage)
-* [Build Pattern](#build-pattern)
+* [Build Pattern](#build)
 * [Contributions](#contributions)
+* [Community](#community)
 
 ## Contents
 
@@ -30,6 +32,10 @@ Contents of this repository:
 | Transport | Bidirectional Streaming; NATS, RabbitMQ                         | 
 | Wrapper   | Middleware; Circuit Breakers, Rate Limiting, Tracing, Monitoring|
 
+## Versions
+
+- [v4 - go-micro.dev/v4](https://github.com/go-micro/plugins/tree/main/v4)
+
 ## Usage
 
 Plugins can be added to go-micro in the following ways. By doing so they'll be available to set via command line args or environment variables.
@@ -40,9 +46,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/registry/kubernetes"
-	_ "github.com/go-micro/plugins/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
@@ -98,7 +104,7 @@ Import and set as options when creating a new service
 ```go
 import (
 	"go-micro.dev/v4"
-	"github.com/go-micro/plugins/registry/kubernetes"
+	"github.com/go-micro/plugins/v4/registry/kubernetes"
 )
 
 func main() {
@@ -113,7 +119,7 @@ func main() {
 }
 ```
 
-## Build
+## Build Pattern
 
 An anti-pattern is modifying the `main.go` file to include plugins. Best practice recommendation is to include
 plugins in a separate file and rebuild with it included. This allows for automation of building plugins and
@@ -125,9 +131,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/registry/kubernetes"
-	_ "github.com/go-micro/plugins/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
@@ -145,3 +151,8 @@ MICRO_REGISTRY=kubernetes \
 MICRO_TRANSPORT=nats \
 service
 ```
+
+## Community
+
+- [Slack](https://join.slack.com/t/go-micro/shared_invite/zt-175aaev1d-iHExPTlfxvfkOeeKLIYEYw)
+- [QQ Group](https://jq.qq.com/?_wv=1027&k=5Gmrfv9i)
