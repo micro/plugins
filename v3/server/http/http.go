@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"github.com/asim/go-micro/v3/broker"
+	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/codec"
 	"github.com/asim/go-micro/v3/codec/jsonrpc"
 	"github.com/asim/go-micro/v3/codec/protorpc"
-	"github.com/asim/go-micro/v3/cmd"
 	log "github.com/asim/go-micro/v3/logger"
 	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/server"
@@ -238,7 +238,7 @@ func (h *httpServer) Start() error {
 	h.Unlock()
 
 	var (
-		ln net.Listener
+		ln  net.Listener
 		err error
 	)
 
@@ -300,12 +300,11 @@ func (h *httpServer) Start() error {
 			}
 		}
 
-		
 		// deregister
 		h.Deregister()
 
 		opts.Broker.Disconnect()
-		
+
 		// Solve the problem of early exit
 		ch <- ln.Close()
 	}()

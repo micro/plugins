@@ -22,7 +22,7 @@ import (
 	maddr "github.com/asim/go-micro/v3/util/addr"
 	mnet "github.com/asim/go-micro/v3/util/net"
 	mls "github.com/asim/go-micro/v3/util/tls"
-	proto "github.com/go-micro/plugins/v3/broker/grpc/v3/proto"
+	proto "github.com/go-micro/plugins/v3/broker/grpc/proto"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/asim/go-micro/v3/broker"
-	"github.com/asim/go-micro/v3/codec/json"
 	"github.com/asim/go-micro/v3/cmd"
+	"github.com/asim/go-micro/v3/codec/json"
 	log "github.com/asim/go-micro/v3/logger"
+	"github.com/google/uuid"
 	stan "github.com/nats-io/stan.go"
 )
 
@@ -187,8 +187,6 @@ func (n *stanBroker) connect() error {
 			log.Errorf("[stan]: failed to connect %v: %v\n", n.addrs, err)
 		}
 	}
-
-	return nil
 }
 
 func (n *stanBroker) Connect() error {

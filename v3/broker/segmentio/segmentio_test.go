@@ -119,7 +119,7 @@ func BenchmarkSegmentioCodecJsonSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()
@@ -182,7 +182,7 @@ func BenchmarkSegmentioCodecSegmentioSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()

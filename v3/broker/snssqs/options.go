@@ -1,9 +1,9 @@
 package snssqs
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/asim/go-micro/v3/broker"
 	"github.com/asim/go-micro/v3/client"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 type maxMessagesKey struct{}

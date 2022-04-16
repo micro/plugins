@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	consul "github.com/hashicorp/consul/api"
 	"github.com/asim/go-micro/v3/registry"
+	consul "github.com/hashicorp/consul/api"
 )
 
 // Connect specifies services should be registered as Consul Connect services

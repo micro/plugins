@@ -17,7 +17,7 @@ import (
 	log "github.com/asim/go-micro/v3/logger"
 	"github.com/asim/go-micro/v3/registry"
 	regutil "github.com/asim/go-micro/v3/util/registry"
-	pb "github.com/go-micro/plugins/v3/registry/gossip/v3/proto"
+	pb "github.com/go-micro/plugins/v3/registry/gossip/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/google/uuid"
 	"github.com/hashicorp/memberlist"
@@ -444,8 +444,6 @@ func (g *gossipRegistry) connect(addrs []string) error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func (g *gossipRegistry) publish(action string, services []*registry.Service) {

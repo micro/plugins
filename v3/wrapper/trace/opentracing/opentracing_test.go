@@ -5,15 +5,15 @@ import (
 	"testing"
 
 	"github.com/asim/go-micro/v3/client"
+	cli "github.com/asim/go-micro/v3/client"
 	microerr "github.com/asim/go-micro/v3/errors"
+	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/selector"
 	"github.com/asim/go-micro/v3/server"
+	srv "github.com/asim/go-micro/v3/server"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/mocktracer"
 	"github.com/stretchr/testify/assert"
-
-	cli "github.com/asim/go-micro/v3/client"
-	srv "github.com/asim/go-micro/v3/server"
 )
 
 type Test interface {

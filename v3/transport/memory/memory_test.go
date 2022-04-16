@@ -13,7 +13,7 @@ func TestMemoryTransport(t *testing.T) {
 	// bind / listen
 	l, err := tr.Listen("127.0.0.1:8080")
 	if err != nil {
-		t.Fatalf("Unexpected error listening %v", err)
+		t.Errorf("Unexpected error listening %v", err)
 	}
 	defer l.Close()
 
@@ -35,14 +35,14 @@ func TestMemoryTransport(t *testing.T) {
 				}
 			}
 		}); err != nil {
-			t.Fatalf("Unexpected error accepting %v", err)
+			t.Errorf("Unexpected error accepting %v", err)
 		}
 	}()
 
 	// dial
 	c, err := tr.Dial("127.0.0.1:8080")
 	if err != nil {
-		t.Fatalf("Unexpected error dialing %v", err)
+		t.Errorf("Unexpected error dialing %v", err)
 	}
 	defer c.Close()
 
@@ -70,21 +70,21 @@ func TestListener(t *testing.T) {
 	// bind / listen on random port
 	l, err := tr.Listen(":0")
 	if err != nil {
-		t.Fatalf("Unexpected error listening %v", err)
+		t.Errorf("Unexpected error listening %v", err)
 	}
 	defer l.Close()
 
 	// try again
 	l2, err := tr.Listen(":0")
 	if err != nil {
-		t.Fatalf("Unexpected error listening %v", err)
+		t.Errorf("Unexpected error listening %v", err)
 	}
 	defer l2.Close()
 
 	// now make sure it still fails
 	l3, err := tr.Listen(":8080")
 	if err != nil {
-		t.Fatalf("Unexpected error listening %v", err)
+		t.Errorf("Unexpected error listening %v", err)
 	}
 	defer l3.Close()
 

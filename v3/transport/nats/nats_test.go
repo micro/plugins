@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/go-log/log"
 	"github.com/asim/go-micro/v3/server"
 	"github.com/asim/go-micro/v3/transport"
+	"github.com/go-log/log"
 	"github.com/nats-io/nats.go"
 )
 

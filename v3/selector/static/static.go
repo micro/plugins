@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/asim/go-micro/v3/selector"
 	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/asim/go-micro/v3/selector"
 )
 
 const (

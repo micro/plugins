@@ -10,9 +10,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hudl/fargo"
 	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/hudl/fargo"
 	"github.com/op/go-logging"
 )
 

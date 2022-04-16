@@ -1,8 +1,8 @@
 package mock
 
 import (
-	"github.com/go-micro/plugins/v3/registry/kubernetes/v3/client"
-	"github.com/go-micro/plugins/v3/registry/kubernetes/v3/client/watch"
+	"github.com/go-micro/plugins/v3/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v3/registry/kubernetes/client/watch"
 )
 
 type mockWatcher struct {

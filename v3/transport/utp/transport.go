@@ -23,7 +23,8 @@ func (u *utpTransport) Dial(addr string, opts ...transport.DialOption) (transpor
 		opt(&dopts)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), dopts.Timeout)
+	ctx, cancel := context.WithTimeout(context.Background(), dopts.Timeout)
+	defer cancel()
 	c, err := utp.DialContext(ctx, addr)
 	if err != nil {
 		return nil, err

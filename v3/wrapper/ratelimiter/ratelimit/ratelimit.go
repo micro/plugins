@@ -1,14 +1,13 @@
 package ratelimit
 
 import (
+	"context"
 	"time"
 
-	"github.com/juju/ratelimit"
 	"github.com/asim/go-micro/v3/client"
 	"github.com/asim/go-micro/v3/errors"
 	"github.com/asim/go-micro/v3/server"
-
-	"context"
+	"github.com/juju/ratelimit"
 )
 
 type clientWrapper struct {

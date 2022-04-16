@@ -1,6 +1,5 @@
 package nacos
 
-
 import (
 	"context"
 
@@ -30,4 +29,3 @@ func WithClientConfig(cc constant.ClientConfig) registry.Option {
 		o.Context = context.WithValue(o.Context, configKey{}, cc)
 	}
 }
-

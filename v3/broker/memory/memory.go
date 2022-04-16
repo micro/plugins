@@ -8,16 +8,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/broker"
+	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/logger"
 	maddr "github.com/asim/go-micro/v3/util/addr"
 	mnet "github.com/asim/go-micro/v3/util/net"
+	"github.com/google/uuid"
 )
 
 func init() {
-        cmd.DefaultBrokers["memory"] = NewBroker
+	cmd.DefaultBrokers["memory"] = NewBroker
 }
 
 type memoryBroker struct {

@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/asim/go-micro/v3/registry"
-	"github.com/go-micro/plugins/v3/registry/eureka/v3/mock"
+	"github.com/go-micro/plugins/v3/registry/eureka/mock"
 	"github.com/hudl/fargo"
 )
 

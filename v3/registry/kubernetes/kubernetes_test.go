@@ -11,8 +11,8 @@ import (
 
 	log "github.com/asim/go-micro/v3/logger"
 	"github.com/asim/go-micro/v3/registry"
-	"github.com/go-micro/plugins/v3/registry/kubernetes/v3/client"
-	"github.com/go-micro/plugins/v3/registry/kubernetes/v3/client/mock"
+	"github.com/go-micro/plugins/v3/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v3/registry/kubernetes/client/mock"
 )
 
 var (

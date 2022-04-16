@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/asim/go-micro/v3/broker"
-	"github.com/asim/go-micro/v3/codec/json"
 	"github.com/asim/go-micro/v3/cmd"
+	"github.com/asim/go-micro/v3/codec/json"
 	"github.com/asim/go-micro/v3/logger"
+	"github.com/google/uuid"
 	kafka "github.com/segmentio/kafka-go"
 )
 

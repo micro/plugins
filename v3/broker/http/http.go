@@ -17,16 +17,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/asim/go-micro/v3/broker"
-	"github.com/asim/go-micro/v3/codec/json"
 	"github.com/asim/go-micro/v3/cmd"
+	"github.com/asim/go-micro/v3/codec/json"
 	merr "github.com/asim/go-micro/v3/errors"
 	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/registry/cache"
 	maddr "github.com/asim/go-micro/v3/util/addr"
 	mnet "github.com/asim/go-micro/v3/util/net"
 	mls "github.com/asim/go-micro/v3/util/tls"
+	"github.com/google/uuid"
 	"golang.org/x/net/http2"
 )
 

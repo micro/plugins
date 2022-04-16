@@ -5,8 +5,8 @@ import (
 	stdjson "encoding/json"
 	"io"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/asim/go-micro/v3/codec"
+	"github.com/golang/protobuf/proto"
 	segjson "github.com/segmentio/encoding/json"
 )
 

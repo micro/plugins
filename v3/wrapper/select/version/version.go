@@ -5,8 +5,8 @@ import (
 	"sort"
 
 	"github.com/asim/go-micro/v3/client"
-	"github.com/asim/go-micro/v3/selector"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/asim/go-micro/v3/selector"
 )
 
 // NewClientWrapper is a wrapper which selects only latest versions of services

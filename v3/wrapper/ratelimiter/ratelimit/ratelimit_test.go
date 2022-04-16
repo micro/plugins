@@ -1,19 +1,18 @@
 package ratelimit
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
-
-	"context"
 
 	"github.com/asim/go-micro/v3/client"
 	"github.com/asim/go-micro/v3/errors"
 	"github.com/asim/go-micro/v3/selector"
 	"github.com/asim/go-micro/v3/server"
-	bmemory "github.com/go-micro/plugins/v3/broker/memory/v3"
-	rmemory "github.com/go-micro/plugins/v3/registry/memory/v3"
-	tmemory "github.com/go-micro/plugins/v3/transport/memory/v3"
+	bmemory "github.com/go-micro/plugins/v3/broker/memory"
+	rmemory "github.com/go-micro/plugins/v3/registry/memory"
+	tmemory "github.com/go-micro/plugins/v3/transport/memory"
 	"github.com/juju/ratelimit"
 )
 

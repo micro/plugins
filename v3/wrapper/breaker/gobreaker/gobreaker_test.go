@@ -6,6 +6,7 @@ import (
 
 	"github.com/asim/go-micro/v3/client"
 	"github.com/asim/go-micro/v3/errors"
+	"github.com/asim/go-micro/v3/registry"
 	"github.com/asim/go-micro/v3/selector"
 	"github.com/sony/gobreaker"
 )

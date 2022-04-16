@@ -15,7 +15,7 @@ func call(b *testing.B, c int) {
 	// server listen
 	l, err := tr.Listen("localhost:0")
 	if err != nil {
-		b.Fatal(err)
+		b.Error(err)
 	}
 	defer l.Close()
 
@@ -43,7 +43,7 @@ func call(b *testing.B, c int) {
 			select {
 			case <-done:
 			default:
-				b.Fatalf("Unexpected accept err: %v", err)
+				b.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
@@ -58,19 +58,19 @@ func call(b *testing.B, c int) {
 	// client connection
 	client, err := tr.Dial(l.Addr())
 	if err != nil {
-		b.Fatalf("Unexpected dial err: %v", err)
+		b.Errorf("Unexpected dial err: %v", err)
 	}
 
 	send := func(c transport.Client) {
 		// send message
 		if err := c.Send(&m); err != nil {
-			b.Fatalf("Unexpected send err: %v", err)
+			b.Errorf("Unexpected send err: %v", err)
 		}
 
 		var rm transport.Message
 		// receive message
 		if err := c.Recv(&rm); err != nil {
-			b.Fatalf("Unexpected recv err: %v", err)
+			b.Errorf("Unexpected recv err: %v", err)
 		}
 	}
 
@@ -90,7 +90,7 @@ func call(b *testing.B, c int) {
 		go func() {
 			cl, err := tr.Dial(l.Addr())
 			if err != nil {
-				b.Fatalf("Unexpected dial err: %v", err)
+				b.Errorf("Unexpected dial err: %v", err)
 			}
 			defer cl.Close()
 

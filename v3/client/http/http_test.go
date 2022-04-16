@@ -105,7 +105,7 @@ func TestHTTPClient(t *testing.T) {
 }
 
 func TestHTTPClientStream(t *testing.T) {
-	r := memory.NewRegistry()
+	r := registry.NewMemoryRegistry()
 	s := selector.NewSelector(selector.Registry(r))
 
 	l, err := net.Listen("tcp", "127.0.0.1:0")

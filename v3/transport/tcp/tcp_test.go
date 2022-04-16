@@ -128,7 +128,7 @@ func TestTCPTransportError(t *testing.T) {
 				if err == io.EOF {
 					return
 				}
-				t.Fatal(err)
+				t.Error(err)
 			}
 		}
 	}
@@ -187,7 +187,7 @@ func TestTCPTransportTimeout(t *testing.T) {
 			case <-done:
 				return
 			case <-time.After(time.Second):
-				t.Fatal("deadline not executed")
+				t.Error("deadline not executed")
 			}
 		}()
 

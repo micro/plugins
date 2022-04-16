@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/asim/go-micro/v3/broker"
+	"github.com/asim/go-micro/v3/registry"
 	"github.com/google/uuid"
 )
 
@@ -70,7 +71,7 @@ func sub(be *testing.B, c int) {
 
 func pub(be *testing.B, c int) {
 	be.StopTimer()
-	m := memory.NewRegistry()
+	m := registry.NewMemoryRegistry()
 	b := NewBroker(broker.Registry(m))
 	topic := uuid.New().String()
 
@@ -111,7 +112,7 @@ func pub(be *testing.B, c int) {
 		go func() {
 			for _ = range ch {
 				if err := b.Publish(topic, msg); err != nil {
-					be.Fatalf("Unexpected publish error: %v", err)
+					be.Errorf("Unexpected publish error: %v", err)
 				}
 				select {
 				case <-done:
@@ -139,7 +140,7 @@ func pub(be *testing.B, c int) {
 }
 
 func TestBroker(t *testing.T) {
-	m := memory.NewRegistry()
+	m := registry.NewMemoryRegistry()
 	b := NewBroker(broker.Registry(m))
 
 	if err := b.Init(); err != nil {
@@ -185,7 +186,7 @@ func TestBroker(t *testing.T) {
 }
 
 func TestConcurrentSubBroker(t *testing.T) {
-	m := memory.NewRegistry()
+	m := registry.NewMemoryRegistry()
 	b := NewBroker(broker.Registry(m))
 
 	if err := b.Init(); err != nil {
@@ -242,7 +243,7 @@ func TestConcurrentSubBroker(t *testing.T) {
 }
 
 func TestConcurrentPubBroker(t *testing.T) {
-	m := memory.NewRegistry()
+	m := registry.NewMemoryRegistry()
 	b := NewBroker(broker.Registry(m))
 
 	if err := b.Init(); err != nil {

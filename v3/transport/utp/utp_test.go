@@ -15,7 +15,7 @@ func expectedPort(t *testing.T, expected string, lsn transport.Listener) {
 
 	if port != expected {
 		lsn.Close()
-		t.Fatalf("Expected address to be `%s`, got `%s`", expected, port)
+		t.Errorf("Expected address to be `%s`, got `%s`", expected, port)
 	}
 }
 
@@ -24,7 +24,7 @@ func testUTPTransport(t *testing.T, secure bool) {
 
 	l, err := tr.Listen("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unexpected listen err: %v", err)
+		t.Errorf("Unexpected listen err: %v", err)
 	}
 	defer l.Close()
 
@@ -50,14 +50,14 @@ func testUTPTransport(t *testing.T, secure bool) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
 
 	c, err := tr.Dial(l.Addr())
 	if err != nil {
-		t.Fatalf("Unexpected dial err: %v", err)
+		t.Errorf("Unexpected dial err: %v", err)
 	}
 	defer c.Close()
 
@@ -69,17 +69,17 @@ func testUTPTransport(t *testing.T, secure bool) {
 	}
 
 	if err := c.Send(&m); err != nil {
-		t.Fatalf("Unexpected send err: %v", err)
+		t.Errorf("Unexpected send err: %v", err)
 	}
 
 	var rm transport.Message
 
 	if err := c.Recv(&rm); err != nil {
-		t.Fatalf("Unexpected recv err: %v", err)
+		t.Errorf("Unexpected recv err: %v", err)
 	}
 
 	if string(rm.Body) != string(m.Body) {
-		t.Fatalf("Expected %v, got %v", m.Body, rm.Body)
+		t.Errorf("Expected %v, got %v", m.Body, rm.Body)
 	}
 
 	close(done)
@@ -90,19 +90,19 @@ func TestUTPTransportPortRange(t *testing.T) {
 
 	lsn1, err := tp.Listen(":44444-44448")
 	if err != nil {
-		t.Fatalf("Did not expect an error, got %s", err)
+		t.Errorf("Did not expect an error, got %s", err)
 	}
 	expectedPort(t, "44444", lsn1)
 
 	lsn2, err := tp.Listen(":44444-44448")
 	if err != nil {
-		t.Fatalf("Did not expect an error, got %s", err)
+		t.Errorf("Did not expect an error, got %s", err)
 	}
 	expectedPort(t, "44445", lsn2)
 
 	lsn, err := tp.Listen("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Did not expect an error, got %s", err)
+		t.Errorf("Did not expect an error, got %s", err)
 	}
 
 	lsn.Close()
@@ -115,7 +115,7 @@ func TestUTPTransportError(t *testing.T) {
 
 	l, err := tr.Listen("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unexpected listen err: %v", err)
+		t.Errorf("Unexpected listen err: %v", err)
 	}
 	defer l.Close()
 
@@ -128,7 +128,7 @@ func TestUTPTransportError(t *testing.T) {
 				if err == io.EOF {
 					return
 				}
-				t.Fatal(err)
+				t.Error(err)
 			}
 		}
 	}
@@ -140,14 +140,14 @@ func TestUTPTransportError(t *testing.T) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
 
 	c, err := tr.Dial(l.Addr())
 	if err != nil {
-		t.Fatalf("Unexpected dial err: %v", err)
+		t.Errorf("Unexpected dial err: %v", err)
 	}
 	defer c.Close()
 
@@ -159,7 +159,7 @@ func TestUTPTransportError(t *testing.T) {
 	}
 
 	if err := c.Send(&m); err != nil {
-		t.Fatalf("Unexpected send err: %v", err)
+		t.Errorf("Unexpected send err: %v", err)
 	}
 
 	close(done)
@@ -170,7 +170,7 @@ func TestUTPTransportTimeout(t *testing.T) {
 
 	l, err := tr.Listen("127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("Unexpected listen err: %v", err)
+		t.Errorf("Unexpected listen err: %v", err)
 	}
 	defer l.Close()
 
@@ -187,7 +187,7 @@ func TestUTPTransportTimeout(t *testing.T) {
 			case <-done:
 				return
 			case <-time.After(time.Second):
-				t.Fatal("deadline not executed")
+				t.Error("deadline not executed")
 			}
 		}()
 
@@ -205,14 +205,14 @@ func TestUTPTransportTimeout(t *testing.T) {
 			select {
 			case <-done:
 			default:
-				t.Fatalf("Unexpected accept err: %v", err)
+				t.Errorf("Unexpected accept err: %v", err)
 			}
 		}
 	}()
 
 	c, err := tr.Dial(l.Addr())
 	if err != nil {
-		t.Fatalf("Unexpected dial err: %v", err)
+		t.Errorf("Unexpected dial err: %v", err)
 	}
 	defer c.Close()
 
@@ -224,7 +224,7 @@ func TestUTPTransportTimeout(t *testing.T) {
 	}
 
 	if err := c.Send(&m); err != nil {
-		t.Fatalf("Unexpected send err: %v", err)
+		t.Errorf("Unexpected send err: %v", err)
 	}
 
 	<-done

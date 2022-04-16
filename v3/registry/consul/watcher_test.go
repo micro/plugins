@@ -3,8 +3,8 @@ package consul
 import (
 	"testing"
 
-	"github.com/hashicorp/consul/api"
 	"github.com/asim/go-micro/v3/registry"
+	"github.com/hashicorp/consul/api"
 )
 
 func TestHealthyServiceHandler(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kr/pretty"
 	"github.com/asim/go-micro/v3/store"
+	"github.com/kr/pretty"
 )
 
 func TestSQL(t *testing.T) {

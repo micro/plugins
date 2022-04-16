@@ -122,7 +122,7 @@ func BenchmarkSaramaCodecJsonSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()
@@ -133,7 +133,7 @@ func BenchmarkSaramaCodecJsonSubscribe(b *testing.B) {
 	}
 	defer func() {
 		if err := sub.Unsubscribe(); err != nil {
-			b.Fatal(err)
+			b.Error(err)
 		}
 	}()
 	<-exit
@@ -185,7 +185,7 @@ func BenchmarkSaramaCodecSegmentioSubscribe(b *testing.B) {
 				return
 			}
 			if err := brk.Publish("test_topic", bm); err != nil {
-				b.Fatal(err)
+				b.Error(err)
 			}
 		}
 	}()

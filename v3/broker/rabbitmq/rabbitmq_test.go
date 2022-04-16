@@ -8,7 +8,7 @@ import (
 	micro "github.com/asim/go-micro/v3"
 	broker "github.com/asim/go-micro/v3/broker"
 	server "github.com/asim/go-micro/v3/server"
-	rabbitmq "github.com/go-micro/plugins/v3/broker/rabbitmq/v3"
+	rabbitmq "github.com/go-micro/plugins/v3/broker/rabbitmq"
 )
 
 type Example struct{}

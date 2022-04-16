@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/asim/go-micro/v3/broker"
-	"github.com/asim/go-micro/v3/cmd"
 	"github.com/asim/go-micro/v3/client"
+	"github.com/asim/go-micro/v3/cmd"
 	raw "github.com/asim/go-micro/v3/codec/bytes"
 	"github.com/asim/go-micro/v3/errors"
 	"github.com/asim/go-micro/v3/metadata"
