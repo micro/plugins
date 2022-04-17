@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/asim/go-micro/v3/config/source"
-	"k8s.io/client-go/1.5/kubernetes"
-	"k8s.io/client-go/1.5/pkg/api"
-	"k8s.io/client-go/1.5/pkg/fields"
-	"k8s.io/client-go/1.5/tools/cache"
+	api "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/fields"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/cache"
 )
 
 type watcher struct {
