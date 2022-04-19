@@ -34,6 +34,8 @@ Contents of this repository:
 
 ## Versions
 
+- [v2 - github.com/micro/go-micro/v2](https://github.com/go-micro/plugins/tree/main/v2)
+- [v3 - github.com/asim/go-micro/v3](https://github.com/go-micro/plugins/tree/main/v3)
 - [v4 - go-micro.dev/v4](https://github.com/go-micro/plugins/tree/main/v4)
 
 ## Usage
