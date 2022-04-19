@@ -3,8 +3,8 @@ module github.com/go-micro/plugins/v4/broker/segmentio
 go 1.17
 
 require (
-	github.com/go-micro/plugins/v4/broker/kafka v0.0.0
-	github.com/go-micro/plugins/v4/codec/segmentio v0.0.0
+	github.com/go-micro/plugins/v4/broker/kafka v1.0.0
+	github.com/go-micro/plugins/v4/codec/segmentio v1.0.0
 	github.com/google/uuid v1.2.0
 	github.com/segmentio/kafka-go v0.4.31
 	go-micro.dev/v4 v4.6.0
