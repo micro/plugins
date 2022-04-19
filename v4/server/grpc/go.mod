@@ -3,8 +3,8 @@ module github.com/go-micro/plugins/v4/server/grpc
 go 1.17
 
 require (
-	github.com/go-micro/plugins/v4/client/grpc v0.0.0
-	github.com/go-micro/plugins/v4/transport/grpc v0.0.0
+	github.com/go-micro/plugins/v4/client/grpc v1.0.0
+	github.com/go-micro/plugins/v4/transport/grpc v1.0.0
 	github.com/golang/protobuf v1.5.2
 	go-micro.dev/v4 v4.6.0
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
