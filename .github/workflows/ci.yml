@@ -8,10 +8,6 @@ on:
       - "v3/**"
       - "v4/**"
   push:
-    tags:
-      - "v2/**"
-      - "v3/**"
-      - "v4/**"
     paths:
       - "v2/**"
       - "v3/**"
@@ -40,6 +36,16 @@ jobs:
             v4:
               - 'v4/**'
 
+      - name: Debug tags
+        run: |
+          echo "Tags: ${{ github.event.inputs.tags }}"
+          echo "V2: ${{ startsWith(github.event.inputs.tags,'v2') }}"
+          echo "V2: ${{ steps.changes.outputs.v3 == 'true' || startsWith(github.event.inputs.tags,'v3') }}"
+          echo "V3: ${{ startsWith(github.event.inputs.tags,'v3') }}"
+          echo "V3: ${{ steps.changes.outputs.v3 == 'true' || startsWith(github.event.inputs.tags,'v3') }}"
+          echo "V4: ${{ startsWith(github.event.inputs.tags,'v4') }}"
+          echo "V4: ${{ steps.changes.outputs.v3 == 'true' || startsWith(github.event.inputs.tags,'v3') }}"
+
       - name: Run v2 tests
         if: steps.changes.outputs.v2 == 'true' || startsWith(github.event.inputs.tags,'v2')
         id: testsv2
@@ -51,7 +57,7 @@ jobs:
         run: ./scripts/test.sh v3
 
       - name: Run v4 tests
-        if: steps.changes.outputs.v4 == 'true' || startsWith(github.event.inputs.tags,'v2')
+        if: steps.changes.outputs.v4 == 'true' || startsWith(github.event.inputs.tags,'v4')
         id: testsv4
         run: ./scripts/test.sh v4
 
