@@ -38,6 +38,8 @@ jobs:
 
       - name: Debug tags
         run: |
+          echo "ref: ${{ github.ref }}"
+          echo "tags: ${{ startsWith(github.ref,'refs/tags/v3') }}"
           echo "Tags: ${{ github.event.inputs.tags }}"
           echo "V2: ${{ startsWith(github.event.inputs.tags,'v2') }}"
           echo "V2: ${{ steps.changes.outputs.v3 == 'true' || startsWith(github.event.inputs.tags,'v3') }}"
