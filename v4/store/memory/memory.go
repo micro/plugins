@@ -129,7 +129,7 @@ func (m *memoryStore) list(prefix string, limit, offset uint) []string {
 		if !strings.HasPrefix(k, prefix+"/") {
 			continue
 		}
-		allKeys = append(allkeys, strings.TrimPrefix(k, prefix+"/"))
+		allKeys = append(allKeys, strings.TrimPrefix(k, prefix+"/"))
 	}
 
 	if limit != 0 || offset != 0 {
