@@ -1,4 +1,4 @@
-# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/go-micro/plugins/v2?status.svg)](https://godoc.org/github.com/go-micro/plugins/v2) [![Travis CI](https://travis-ci.org/micro/go-plugins.svg?branch=master)](https://travis-ci.org/micro/go-plugins) [![Go Report Card](https://goreportcard.com/badge/micro/go-plugins)](https://goreportcard.com/report/github.com/go-micro/plugins/v2)
+# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/go-micro/plugins?status.svg)](https://godoc.org/github.com/go-micro/plugins) [![Unit Tests](https://github.com/go-micro/plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/go-micro/plugins/actions/workflows/ci.yml) [![Go Report Card](https://goreportcard.com/badge/micro/go-plugins)](https://goreportcard.com/report/github.com/go-micro/plugins) [![Vistors](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fgo-micro%2Fplugins&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=Vistors&edge_flat=false)](https://hits.seeyoufarm.com)
 
 Go plugins is a place for community maintained plugins.
 
@@ -13,6 +13,7 @@ This repository contains plugins for all micro related tools. Read on for furthe
 * [Usage](#usage)
 * [Build Pattern](#build-pattern)
 * [Contributions](#contributions)
+* [Community](#community)
 
 ## Contents
 
@@ -145,3 +146,9 @@ MICRO_REGISTRY=kubernetes \
 MICRO_TRANSPORT=nats \
 service
 ```
+
+## Community
+
+- [Discord](https://discord.gg/qV3HvnEJfB)
+- [Slack](https://join.slack.com/t/go-micro/shared_invite/zt-175aaev1d-iHExPTlfxvfkOeeKLIYEYw)
+- [QQ Group](https://jq.qq.com/?_wv=1027&k=5Gmrfv9i)

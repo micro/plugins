@@ -9,11 +9,16 @@ This repository contains plugins for all micro related tools. Read on for furthe
 
 ## Getting Started
 
-* [Contents](#contents)
-* [Usage](#usage)
-* [Build Pattern](#build-pattern)
-* [Contributions](#contributions)
-* [Community](#community)
+- [Plugins](#plugins)
+	- [Overview](#overview)
+	- [Getting Started](#getting-started)
+	- [Contents](#contents)
+	- [Usage](#usage)
+		- [Env](#env)
+		- [Flags](#flags)
+		- [Options](#options)
+	- [Build Pattern](#build-pattern)
+	- [Community](#community)
 
 ## Contents
 
@@ -41,9 +46,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v3/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v3/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v3/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
@@ -53,7 +58,7 @@ Create your service and ensure you call `service.Init`
 package main
 
 import (
-	"github.com/asim/go-micro/v3"
+	"go-micro.dev/v4"
 )
 
 func main() {
@@ -98,8 +103,8 @@ Import and set as options when creating a new service
 
 ```go
 import (
-	"github.com/asim/go-micro/v3"
-	"github.com/go-micro/plugins/v3/registry/kubernetes"
+	"go-micro.dev/v4"
+	"github.com/go-micro/plugins/v4/registry/kubernetes"
 )
 
 func main() {
@@ -114,7 +119,7 @@ func main() {
 }
 ```
 
-## Build
+## Build Pattern
 
 An anti-pattern is modifying the `main.go` file to include plugins. Best practice recommendation is to include
 plugins in a separate file and rebuild with it included. This allows for automation of building plugins and
@@ -126,9 +131,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v3/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v3/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v3/transport/nats"
+	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v4/transport/nats"
 )
 ```
 
