@@ -1,0 +1,63 @@
+name: Unit Tests
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "v2/**"
+      - "v3/**"
+      - "v4/**"
+  push:
+    paths:
+      - "v2/**"
+      - "v3/**"
+      - "v4/**"
+
+jobs:
+  test:
+    name: Test plugins
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            v2:
+              - 'v2/**'
+            v3:
+              - 'v3/**'
+            v4:
+              - 'v4/**'
+
+      - name: Run v2 tests
+        if: steps.changes.outputs.v2 == 'true'
+        id: testsv2
+        run: ./scripts/test.sh v2
+
+      - name: Run v3 tests
+        if: steps.changes.outputs.v3 == 'true'
+        id: testsv3
+        run: ./scripts/test.sh v3
+
+      - name: Run v4 tests
+        if: steps.changes.outputs.v4 == 'true'
+        id: testsv4
+        run: ./scripts/test.sh v4
+
+      - name: Notify of test failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_CHANNEL: github-actions
+          SLACK_COLOR: "#BF280A"
+          SLACK_ICON: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          SLACK_TITLE: Tests Failed
+          SLACK_USERNAME: GitHub Actions
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
