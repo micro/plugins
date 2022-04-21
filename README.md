@@ -1,4 +1,4 @@
-# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/go-micro/plugins?status.svg)](https://godoc.org/github.com/go-micro/plugins)
+# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/go-micro/plugins?status.svg)](https://godoc.org/github.com/go-micro/plugins) [![Unit Tests](https://github.com/go-micro/plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/go-micro/plugins/actions/workflows/ci.yml)
 
 Go plugins is a place for community maintained plugins.
 
