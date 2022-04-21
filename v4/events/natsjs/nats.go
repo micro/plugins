@@ -186,7 +186,7 @@ func (s *stream) Consume(topic string, opts ...events.ConsumeOption) (<-chan eve
 
 	// setup the options
 	subOpts := []nats.SubOpt{
-		nats.Durable(topic),
+		nats.Durable(options.Group),
 	}
 
 	if options.CustomRetries {
