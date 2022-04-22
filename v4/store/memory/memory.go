@@ -123,15 +123,13 @@ func (m *memoryStore) delete(prefix, key string) {
 
 func (m *memoryStore) list(prefix string, limit, offset uint) []string {
 	allItems := m.store.Items()
-	allKeys := make([]string, len(allItems))
-	i := 0
+	allKeys := make([]string, 0, len(allItems))
 
 	for k := range allItems {
 		if !strings.HasPrefix(k, prefix+"/") {
 			continue
 		}
-		allKeys[i] = strings.TrimPrefix(k, prefix+"/")
-		i++
+		allKeys = append(allKeys, strings.TrimPrefix(k, prefix+"/"))
 	}
 
 	if limit != 0 || offset != 0 {
