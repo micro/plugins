@@ -86,12 +86,21 @@ func (m *fileStore) init(opts ...store.Option) error {
 		m.options.Table = DefaultTable
 	}
 
-	// create a directory /tmp/micro
-	dir := filepath.Join(DefaultDir, m.options.Database)
+	if m.options.Context != nil {
+		if dir, ok := m.options.Context.Value(dirOptionKey{}).(string); ok {
+			m.dir = dir
+		}
+	}
+
+	// create default directory
+	if m.dir == "" {
+		m.dir = DefaultDir
+	}
+
 	// Ignoring this as the folder might exist.
 	// Reads/Writes updates will return with sensible error messages
 	// about the dir not existing in case this cannot create the path anyway
-	os.MkdirAll(dir, 0700)
+	os.MkdirAll(m.dir, 0700)
 
 	return nil
 }
@@ -121,8 +130,8 @@ func (f *fileStore) getDB(database, table string) (*fileHandle, error) {
 		return fd, nil
 	}
 
-	// create a directory /tmp/micro
-	dir := filepath.Join(DefaultDir, database)
+	// create directory
+	dir := filepath.Join(f.dir, database)
 	// create the database handle
 	fname := table + ".db"
 	// make the dir
