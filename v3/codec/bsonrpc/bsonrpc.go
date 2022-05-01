@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/asim/go-bson"
 	"github.com/asim/go-micro/v3/codec"
+	"github.com/go-micro/go-bson"
 )
 
 type bsonCodec struct {
