@@ -3,7 +3,7 @@ package bsonrpc
 import (
 	"io"
 
-	"github.com/asim/go-bson"
+	"github.com/go-micro/go-bson"
 	"go-micro.dev/v4/codec"
 )
 
