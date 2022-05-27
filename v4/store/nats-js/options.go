@@ -29,6 +29,7 @@ func JetStreamOptions(opts ...nats.JSOpt) store.Option {
 }
 
 // ObjectStoreOptions accepts multiple nats.ObjectStoreConfigs
+// This will create buckets with the provided configs at initialization.
 func ObjectStoreOptions(cfg ...*nats.ObjectStoreConfig) store.Option {
 	return setStoreOption(objOptionsKey{}, cfg)
 }

@@ -36,6 +36,7 @@ NatsOptions(opts nats.Options)
 JetStreamOptions(opts ...nats.JSOpt)
 
 // ObjectStoreOptions accepts multiple nats.ObjectStoreConfigs
+// This will create buckets with the provided configs at initialization.
 //
 // type ObjectStoreConfig struct {
 // 	Bucket      string
