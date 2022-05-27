@@ -6,7 +6,8 @@ This plugin uses the NATS JetStream [Object Store](https://docs.nats.io/nats-con
 
 This enables a key/value store with unlimited message size, allowing you to store files or data of any size under a single key.
 
-You can use this plugin like any other store plugin.
+You can use this plugin like any other store plugin. 
+To start a local NATS JetStream server run `nats-server -js`.
 
 To manually create a new storage object call:
 
