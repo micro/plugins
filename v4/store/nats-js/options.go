@@ -35,12 +35,16 @@ func ObjectStoreOptions(cfg ...*nats.ObjectStoreConfig) store.Option {
 
 // DefaultTTL sets the default TTL to use for new buckets
 //  By default no TTL is set.
+//
+// TTL ON INDIVIDUAL WRITE CALLS IS NOT SUPPORTED, only bucket wide TTL.
+// Either set a default TTL with this option or provide bucket specific options
+//  with ObjectStoreOptions
 func DefaultTTL(ttl time.Duration) store.Option {
 	return setStoreOption(ttlOptionsKey{}, ttl)
 }
 
 // DefaultMemory sets the default storage type to memory only.
-
+//
 //  The default is file storage, persisting storage between service restarts.
 // Be aware that the default storage location of NATS the /tmp dir is, and thus
 //  won't persist reboots.
@@ -57,7 +61,7 @@ func DefaultDescription(text string) store.Option {
 // DeleteBucket will use the key passed to Delete as a bucket (database) name,
 //  and delete the bucket.
 // This option should not be combined with the store.DeleteFrom option, as
-//  that will overwrite it.
+//  that will overwrite the delete action.
 func DeleteBucket() store.DeleteOption {
 	return func(d *store.DeleteOptions) {
 		d.Table = "DELETE_BUCKET"
