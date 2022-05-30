@@ -1,6 +1,7 @@
 package natsjs
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -9,168 +10,30 @@ import (
 	"go-micro.dev/v4/store"
 )
 
-type test struct {
-	Record   *store.Record
-	Database string
-	Table    string
-	WantErr  bool
-}
-
-var (
-	table = []test{
-		{
-			Record: &store.Record{
-				Key:   "One",
-				Value: []byte("First value"),
-			},
-			WantErr: false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Two",
-				Value: []byte("Second value"),
-			},
-			Table:   "prefix_test",
-			WantErr: false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Third",
-				Value: []byte("Third value"),
-			},
-			Database: "new-bucket",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Four",
-				Value: []byte("Fourth value"),
-			},
-			Database: "new-bucket",
-			Table:    "prefix_test",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Alex",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "names",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Jones",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "names",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Adrianna",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "names",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "MexicoCity",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "cities",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "HoustonCity",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "cities",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "ZurichCity",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "cities",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "Helsinki",
-				Value: []byte("Some value"),
-			},
-			Database: "prefix-test",
-			Table:    "cities",
-			WantErr:  false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "testKeytest",
-				Value: []byte("Some value"),
-			},
-			Table:   "some_table",
-			WantErr: false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "testSecondtest",
-				Value: []byte("Some value"),
-			},
-			Table:   "some_table",
-			WantErr: false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "lalala",
-				Value: []byte("Some value"),
-			},
-			Table:   "some_table",
-			WantErr: false,
-		},
-		{
-			Record: &store.Record{
-				Key:   "testAnothertest",
-				Value: []byte("Some value"),
-			},
-			WantErr: false,
-		},
-	}
-)
-
-func setupTest(t *testing.T) store.Store {
-	s := NewStore()
-	if err := s.Init(); err != nil {
-		t.Fatal(err)
-	}
-	return s
-}
-
 func TestNats(t *testing.T) {
 	// Setup without calling Init on purpose
-	s := NewStore()
+	ctx, cancel := context.WithCancel(context.Background())
+	addr := startNatsServer(ctx, t)
+	s := NewStore(store.Nodes(addr))
 	defer s.Close()
+	defer cancel()
+
+	// Test String method
 	t.Log("Testing:", s.String())
 
 	basicTest(s, t)
 }
 
 func TestOptions(t *testing.T) {
-	s := NewStore(
-		store.Nodes(nats.DefaultURL),
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t,
 		DefaultMemory(),
 
 		// Having a non-default description will trigger nats.ErrStreamNameAlreadyInUse
 		//  since the buckets have been created in previous tests with a different description.
+		//
+		// NOTE: this is only the case with a manually set up server, not with current
+		//       test setup, where new servers are started for each test.
 		DefaultDescription("My fancy description"),
 
 		// Option has no effect in this context, just to test setting the option
@@ -188,18 +51,20 @@ func TestOptions(t *testing.T) {
 			Replicas:    1,
 		}),
 	)
-	defer s.Close()
+	defer cancel()
 
 	basicTest(s, t)
 }
 
 func TestTTL(t *testing.T) {
-	s := NewStore(
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t,
 		DefaultTTL(100*time.Millisecond),
 
 		// Since these buckets will be new they will have the new description
 		DefaultDescription("My fancy description"),
 	)
+	defer cancel()
 
 	// Use a uuid to make sure a new bucket is created
 	id := uuid.New().String()
@@ -223,8 +88,9 @@ func TestTTL(t *testing.T) {
 }
 
 func TestMetaData(t *testing.T) {
-	s := setupTest(t)
-	defer s.Close()
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t)
+	defer cancel()
 
 	record := store.Record{
 		Key:   "KeyOne",
@@ -256,7 +122,9 @@ func TestMetaData(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	s := setupTest(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t)
+	defer cancel()
 
 	for _, r := range table {
 		if err := s.Write(r.Record, store.WriteTo(r.Database, r.Table)); err != nil {
@@ -279,8 +147,9 @@ func TestDelete(t *testing.T) {
 }
 
 func TestList(t *testing.T) {
-	s := setupTest(t)
-	defer s.Close()
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t)
+	defer cancel()
 
 	for _, r := range table {
 		if err := s.Write(r.Record, store.WriteTo(r.Database, r.Table)); err != nil {
@@ -354,8 +223,9 @@ func TestList(t *testing.T) {
 }
 
 func TestDeleteBucket(t *testing.T) {
-	s := setupTest(t)
-	defer s.Close()
+	ctx, cancel := context.WithCancel(context.Background())
+	s := testSetup(ctx, t)
+	defer cancel()
 
 	for _, r := range table {
 		if err := s.Write(r.Record, store.WriteTo(r.Database, r.Table)); err != nil {
