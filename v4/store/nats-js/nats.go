@@ -11,6 +11,7 @@ import (
 
 	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/store"
 )
 
@@ -34,6 +35,10 @@ type natsStore struct {
 	conn    *nats.Conn
 	js      nats.JetStreamContext
 	buckets map[string]nats.ObjectStore
+}
+
+func init() {
+	cmd.DefaultStores["natsjs"] = NewStore
 }
 
 // NewStore will create a new NATS JetStream Object Store
