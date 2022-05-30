@@ -6,7 +6,6 @@ type test struct {
 	Record   *store.Record
 	Database string
 	Table    string
-	WantErr  bool
 }
 
 var (
@@ -16,15 +15,13 @@ var (
 				Key:   "One",
 				Value: []byte("First value"),
 			},
-			WantErr: false,
 		},
 		{
 			Record: &store.Record{
 				Key:   "Two",
 				Value: []byte("Second value"),
 			},
-			Table:   "prefix_test",
-			WantErr: false,
+			Table: "prefix_test",
 		},
 		{
 			Record: &store.Record{
@@ -32,7 +29,6 @@ var (
 				Value: []byte("Third value"),
 			},
 			Database: "new-bucket",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -41,7 +37,6 @@ var (
 			},
 			Database: "new-bucket",
 			Table:    "prefix_test",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -50,7 +45,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "names",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -59,7 +53,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "names",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -68,7 +61,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "names",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -77,7 +69,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "cities",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -86,7 +77,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "cities",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -95,7 +85,6 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "cities",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
@@ -104,38 +93,33 @@ var (
 			},
 			Database: "prefix-test",
 			Table:    "cities",
-			WantErr:  false,
 		},
 		{
 			Record: &store.Record{
 				Key:   "testKeytest",
 				Value: []byte("Some value"),
 			},
-			Table:   "some_table",
-			WantErr: false,
+			Table: "some_table",
 		},
 		{
 			Record: &store.Record{
 				Key:   "testSecondtest",
 				Value: []byte("Some value"),
 			},
-			Table:   "some_table",
-			WantErr: false,
+			Table: "some_table",
 		},
 		{
 			Record: &store.Record{
 				Key:   "lalala",
 				Value: []byte("Some value"),
 			},
-			Table:   "some_table",
-			WantErr: false,
+			Table: "some_table",
 		},
 		{
 			Record: &store.Record{
 				Key:   "testAnothertest",
 				Value: []byte("Some value"),
 			},
-			WantErr: false,
 		},
 	}
 )
