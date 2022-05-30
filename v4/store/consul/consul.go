@@ -8,12 +8,17 @@ import (
 	"path/filepath"
 
 	"github.com/hashicorp/consul/api"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/store"
 )
 
 type ckv struct {
 	options store.Options
 	client  *api.Client
+}
+
+func init() {
+	cmd.DefaultStores["consul"] = NewStore
 }
 
 func (c *ckv) Init(opts ...store.Option) error {

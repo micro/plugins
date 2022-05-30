@@ -10,6 +10,7 @@ import (
 	"time"
 
 	mc "github.com/bradfitz/gomemcache/memcache"
+	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
 )
@@ -19,6 +20,11 @@ type mkv struct {
 	Server  *mc.ServerList
 	Client  *mc.Client
 }
+
+func init() {
+	cmd.DefaultStores["memcached"] = NewStore
+}
+
 
 func (m *mkv) Init(opts ...store.Option) error {
 	for _, o := range opts {

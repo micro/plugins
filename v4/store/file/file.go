@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/store"
 	bolt "go.etcd.io/bbolt"
 )
@@ -26,6 +27,11 @@ var (
 	// bucket used for data storage
 	dataBucket = "data"
 )
+
+func init() {
+	cmd.DefaultStores["file"] = NewStore
+}
+
 
 // NewStore returns a memory store
 func NewStore(opts ...store.Option) store.Store {
