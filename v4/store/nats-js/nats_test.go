@@ -58,15 +58,17 @@ func TestOptions(t *testing.T) {
 
 func TestTTL(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
+
+	ttl := 500 * time.Millisecond
 	s := testSetup(ctx, t,
-		DefaultTTL(100*time.Millisecond),
+		DefaultTTL(ttl),
 
 		// Since these buckets will be new they will have the new description
 		DefaultDescription("My fancy description"),
 	)
 	defer cancel()
 
-	// Use a uuid to make sure a new bucket is created
+	// Use a uuid to make sure a new bucket is created when using local server
 	id := uuid.New().String()
 	for _, r := range table {
 		if err := s.Write(r.Record, store.WriteTo(r.Database+id, r.Table)); err != nil {
@@ -74,7 +76,7 @@ func TestTTL(t *testing.T) {
 		}
 	}
 
-	time.Sleep(time.Second)
+	time.Sleep(ttl * 2)
 
 	for _, r := range table {
 		res, err := s.Read(r.Record.Key, store.ReadFrom(r.Database+id, r.Table))
