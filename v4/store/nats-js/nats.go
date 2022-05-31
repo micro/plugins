@@ -70,14 +70,14 @@ func (n *natsStore) Init(opts ...store.Option) error {
 	// Connect to NATS servers
 	conn, err := n.nopts.Connect()
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Failed to connect to NATS Server")
 	}
 	n.conn = conn
 
 	// Create JetStream context
 	js, err := conn.JetStream(n.jsopts...)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "Failed to create JetStream context")
 	}
 	n.js = js
 
@@ -98,7 +98,7 @@ func (n *natsStore) Init(opts ...store.Option) error {
 			store, err = n.js.ObjectStore(cfg.Bucket)
 		}
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "Failed to create bucket (%s)", cfg.Bucket)
 		}
 		n.buckets[cfg.Bucket] = store
 	}
@@ -187,7 +187,7 @@ func (n *natsStore) Read(key string, opts ...store.ReadOption) ([]*store.Record,
 	if err == nats.ErrNoObjectsFound {
 		return []*store.Record{}, nil
 	} else if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Failed to list objects")
 	}
 
 	for _, obj := range objects {
@@ -209,17 +209,17 @@ func (n *natsStore) Read(key string, opts ...store.ReadOption) ([]*store.Record,
 	for _, key := range keys {
 		obj, err := bucket.Get(key)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "Failed to get object from bucket")
 		}
 
 		b, err := io.ReadAll(obj)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "Failed to read returned bytes")
 		}
 
 		info, err := obj.Info()
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "Failed to fetch record info")
 		}
 
 		metadata := map[string]interface{}{}
@@ -297,7 +297,11 @@ func (n *natsStore) Write(r *store.Record, opts ...store.WriteOption) error {
 		Headers:     header,
 	}, bytes.NewReader(r.Value))
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "Failed to store data in bucket")
+	}
+
+	return nil
 }
 
 // Delete removes the record with the corresponding key from the store.
@@ -323,7 +327,10 @@ func (n *natsStore) Delete(key string, opts ...store.DeleteOption) error {
 
 	if opt.Table == "DELETE_BUCKET" {
 		delete(n.buckets, key)
-		return n.js.DeleteObjectStore(key)
+		if err := n.js.DeleteObjectStore(key); err != nil {
+			return errors.Wrap(err, "Failed to delete bucket")
+		}
+		return nil
 	}
 
 	store, ok := n.buckets[opt.Database]
@@ -331,7 +338,10 @@ func (n *natsStore) Delete(key string, opts ...store.DeleteOption) error {
 		return ErrBucketNotFound
 	}
 
-	return store.Delete(getKey(key, opt.Table))
+	if err := store.Delete(getKey(key, opt.Table)); err != nil {
+		return errors.Wrap(err, "Failed to delete data")
+	}
+	return nil
 }
 
 // List returns any keys that match, or an empty list with no error if none matched.
@@ -362,7 +372,7 @@ func (n *natsStore) List(opts ...store.ListOption) ([]string, error) {
 
 	objects, err := store.List()
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Failed to list keys in bucket")
 	}
 
 	var keys []string
@@ -417,7 +427,7 @@ func (n *natsStore) createNewBucket(name string) (nats.ObjectStore, error) {
 		store, err = n.js.ObjectStore(name)
 	}
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Failed to create new bucket (%s)", name)
 	}
 	n.buckets[name] = store
 	return store, err

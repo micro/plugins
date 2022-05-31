@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -11,6 +12,7 @@ import (
 	"time"
 
 	nserver "github.com/nats-io/nats-server/v2/server"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"go-micro.dev/v4/store"
 )
@@ -22,7 +24,7 @@ func testSetup(ctx context.Context, t *testing.T, opts ...store.Option) store.St
 	s := NewStore(opts...)
 
 	if err := s.Init(); err != nil {
-		t.Fatal(err)
+		t.Fatal(errors.Wrap(err, "Store initialization failed"))
 	}
 
 	go func() {
@@ -79,9 +81,21 @@ func natsServer(ctx context.Context, t *testing.T, opts *nserver.Options) {
 	// first start NATS
 	go server.Start()
 
+	tmpdir := t.TempDir()
+	natsdir := filepath.Join(tmpdir, "nats-js")
+
 	jsConf := &nserver.JetStreamConfig{
-		StoreDir: filepath.Join(t.TempDir(), "nats-js"),
+		StoreDir: natsdir,
 	}
+
+	// This fixes some issues where tests fail because directory cleanup fails
+	t.Cleanup(func() {
+		contents, _ := filepath.Glob(natsdir + "/*")
+		for _, item := range contents {
+			os.RemoveAll(item)
+		}
+		os.RemoveAll(natsdir)
+	})
 
 	// second start JetStream
 	err = server.EnableJetStream(jsConf)
