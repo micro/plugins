@@ -56,6 +56,7 @@ func NewStore(opts ...store.Option) store.Store {
 		jsopts:          []nats.JSOpt{},
 		objStoreConfigs: []*nats.ObjectStoreConfig{},
 		buckets:         map[string]nats.ObjectStore{},
+		storageType:     nats.FileStorage,
 	}
 
 	n.setOption(opts...)

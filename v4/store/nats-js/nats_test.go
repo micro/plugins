@@ -7,21 +7,34 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
+	"github.com/pkg/errors"
 	"go-micro.dev/v4/store"
 )
 
 func TestNats(t *testing.T) {
 	// Setup without calling Init on purpose
-	ctx, cancel := context.WithCancel(context.Background())
-	addr := startNatsServer(ctx, t)
-	s := NewStore(store.Nodes(addr))
-	defer s.Close()
-	defer cancel()
+	var err error
+	var cancel func()
+	var ctx context.Context
+	for i := 0; i < 5; i++ {
+		ctx, cancel = context.WithCancel(context.Background())
+		addr := startNatsServer(ctx, t)
+		s := NewStore(store.Nodes(addr))
 
-	// Test String method
-	t.Log("Testing:", s.String())
+		// Test String method
+		t.Log("Testing:", s.String())
 
-	basicTest(s, t)
+		err = basicTest(s, t)
+		if err != nil {
+			t.Log(err)
+			continue
+		}
+		s.Close()
+		cancel()
+		return
+	}
+	cancel()
+	t.Fatal(err)
 }
 
 func TestOptions(t *testing.T) {
@@ -53,7 +66,9 @@ func TestOptions(t *testing.T) {
 	)
 	defer cancel()
 
-	basicTest(s, t)
+	if err := basicTest(s, t); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestTTL(t *testing.T) {
@@ -144,7 +159,6 @@ func TestDelete(t *testing.T) {
 		if len(res) > 0 {
 			t.Fatalf("Failed to delete %s from %s %s proery", r.Record.Key, r.Database, r.Table)
 		}
-		t.Logf("Test %s passed", r.Record.Key)
 	}
 }
 
@@ -259,14 +273,14 @@ func TestDeleteBucket(t *testing.T) {
 
 }
 
-func basicTest(s store.Store, t *testing.T) {
+func basicTest(s store.Store, t *testing.T) error {
 	for _, test := range table {
 		if err := s.Write(test.Record, store.WriteTo(test.Database, test.Table)); err != nil {
-			t.Fatal(err)
+			return errors.Wrap(err, "Failed to write record in basic test")
 		}
 		r, err := s.Read(test.Record.Key, store.ReadFrom(test.Database, test.Table))
 		if err != nil {
-			t.Fatal(err)
+			return errors.Wrap(err, "Failed to read record in basic test")
 		}
 		if len(r) == 0 {
 			t.Fatalf("No results found for %s (%s) %s", test.Record.Key, test.Database, test.Table)
@@ -280,6 +294,6 @@ func basicTest(s store.Store, t *testing.T) {
 		if val1 != val2 {
 			t.Fatalf("Value not equal for (%s: %s) != (%s: %s)", key, val1, key2, val2)
 		}
-		t.Logf("Test %s passed", test.Record.Key)
 	}
+	return nil
 }
