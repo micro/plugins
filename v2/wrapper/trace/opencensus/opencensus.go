@@ -27,8 +27,7 @@ type clientWrapper struct {
 
 func injectTraceIntoCtx(ctx context.Context, span *trace.Span) context.Context {
 	spanCtx := propagation.Binary(span.SpanContext())
-	metadata.Set(ctx, TracePropagationField, base64.RawStdEncoding.EncodeToString(spanCtx))
-	return ctx
+	return metadata.Set(ctx, TracePropagationField, base64.RawStdEncoding.EncodeToString(spanCtx))
 }
 
 // Call implements client.Client.Call.
