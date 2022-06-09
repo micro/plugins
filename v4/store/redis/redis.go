@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
+	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
 )
@@ -13,6 +14,10 @@ type rkv struct {
 	ctx     context.Context
 	options store.Options
 	Client  *redis.Client
+}
+
+func init() {
+	cmd.DefaultStores["redis"] = NewStore
 }
 
 func (r *rkv) Init(opts ...store.Option) error {

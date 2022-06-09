@@ -9,6 +9,7 @@ import (
 
 	"github.com/patrickmn/go-cache"
 	"github.com/pkg/errors"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/store"
 )
 
@@ -38,6 +39,10 @@ type storeRecord struct {
 	value     []byte
 	metadata  map[string]interface{}
 	expiresAt time.Time
+}
+
+func init() {
+	cmd.DefaultStores["memory"] = NewStore
 }
 
 func (m *memoryStore) key(prefix, key string) string {

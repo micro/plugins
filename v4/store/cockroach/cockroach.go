@@ -12,6 +12,7 @@ import (
 
 	"github.com/lib/pq"
 	"github.com/pkg/errors"
+	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
 )
@@ -43,6 +44,10 @@ type sqlStore struct {
 	sync.RWMutex
 	// known databases
 	databases map[string]bool
+}
+
+func init() {
+	cmd.DefaultStores["cockroach"] = NewStore
 }
 
 func (s *sqlStore) getDB(database, table string) (string, string) {

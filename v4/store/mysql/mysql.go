@@ -7,6 +7,7 @@ import (
 	"unicode"
 
 	"github.com/pkg/errors"
+	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
 )
@@ -27,6 +28,10 @@ type sqlStore struct {
 	options store.Options
 
 	readPrepare, writePrepare, deletePrepare *sql.Stmt
+}
+
+func init() {
+	cmd.DefaultStores["mysql"] = NewStore
 }
 
 func (s *sqlStore) Init(opts ...store.Option) error {
