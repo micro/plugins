@@ -32,6 +32,7 @@ func testSetup(ctx context.Context, t *testing.T, opts ...store.Option) store.St
 			t.Log(errors.Wrap(err, "Error: Server initialization failed, restarting server"))
 			cancel()
 			s.Close()
+			time.Sleep(time.Second)
 			continue
 		}
 
@@ -92,14 +93,21 @@ func natsServer(ctx context.Context, t *testing.T, opts *nserver.Options) {
 		false, false, false,
 	)
 
-	// first start NATS
-	go server.Start()
-
 	tmpdir := t.TempDir()
 	natsdir := filepath.Join(tmpdir, "nats-js")
-
 	jsConf := &nserver.JetStreamConfig{
 		StoreDir: natsdir,
+	}
+
+	// first start NATS
+	go server.Start()
+	time.Sleep(time.Second)
+
+	// second start JetStream
+	err = server.EnableJetStream(jsConf)
+	assert.NoError(t, err)
+	if err != nil {
+		return
 	}
 
 	// This fixes some issues where tests fail because directory cleanup fails
@@ -110,13 +118,6 @@ func natsServer(ctx context.Context, t *testing.T, opts *nserver.Options) {
 		}
 		os.RemoveAll(natsdir)
 	})
-
-	// second start JetStream
-	err = server.EnableJetStream(jsConf)
-	assert.NoError(t, err)
-	if err != nil {
-		return
-	}
 
 	<-ctx.Done()
 }
