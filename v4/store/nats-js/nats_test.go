@@ -29,6 +29,15 @@ func TestNats(t *testing.T) {
 			t.Log(err)
 			continue
 		}
+
+		// Test reading non-existing key
+		r, err := s.Read("this-is-a-random-key")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(r) > 0 {
+			t.Fatal("Lenth should be 0")
+		}
 		s.Close()
 		cancel()
 		return
@@ -151,13 +160,14 @@ func TestDelete(t *testing.T) {
 		if err := s.Delete(r.Record.Key, store.DeleteFrom(r.Database, r.Table)); err != nil {
 			t.Fatal(err)
 		}
+		time.Sleep(time.Second)
 
 		res, err := s.Read(r.Record.Key, store.ReadFrom(r.Database, r.Table))
 		if err != nil {
 			t.Fatal(err)
 		}
 		if len(res) > 0 {
-			t.Fatalf("Failed to delete %s from %s %s proery", r.Record.Key, r.Database, r.Table)
+			t.Fatalf("Failed to delete %s:%s from %s %s (len: %d)", r.Record.Key, r.Record.Value, r.Database, r.Table, len(res))
 		}
 	}
 }

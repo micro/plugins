@@ -40,6 +40,13 @@ var (
 		},
 		{
 			Record: &store.Record{
+				Key:   "empty-value",
+				Value: []byte{},
+			},
+			Database: "new-bucket",
+		},
+		{
+			Record: &store.Record{
 				Key:   "Alex",
 				Value: []byte("Some value"),
 			},
