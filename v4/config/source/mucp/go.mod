@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/golang/protobuf v1.5.2
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 )
 
 require (

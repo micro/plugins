@@ -272,9 +272,7 @@ func (r *rbroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 			header[k], _ = v.(string)
 		}
 
-		// Messages sent from other frameworks to rabbitmq do not have this header.
-		// The 'RoutingKey' in the message can be used as this header.
-		// Then the message can be transfered to the subscriber which bind this topic.
+		// Get rid of dependence on 'Micro-Topic'
 		msgTopic := header["Micro-Topic"]
 		if msgTopic == "" {
 			header["Micro-Topic"] = msg.RoutingKey

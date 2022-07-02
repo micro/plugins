@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/anacrolix/utp v0.1.0
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 )
 
 require (

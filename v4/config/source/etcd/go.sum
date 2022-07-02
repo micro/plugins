@@ -521,8 +521,8 @@ github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
-go-micro.dev/v4 v4.6.0 h1:sY1Ps3Vgq8tFzcUGps9WnJhy1AKspXK+4wWIwugiRss=
-go-micro.dev/v4 v4.6.0/go.mod h1:7UY87mLE6T4zHKsNS5D+VWZcXGTEvU1rbA90PezzlWM=
+go-micro.dev/v4 v4.7.0 h1:vjvZ94JNBMXb7MrbpSIf2zMmj8oVMmOnJRDJLnGGGaE=
+go-micro.dev/v4 v4.7.0/go.mod h1:7UY87mLE6T4zHKsNS5D+VWZcXGTEvU1rbA90PezzlWM=
 go.etcd.io/bbolt v1.3.2/go.mod h1:IbVyRI1SCnLcuJnV2u8VeU0CEYM7e686BmAb1XKL+uU=
 go.etcd.io/etcd/api/v3 v3.5.2 h1:tXok5yLlKyuQ/SXSjtqHc4uzNaMqZi2XsoSPr/LlJXI=
 go.etcd.io/etcd/api/v3 v3.5.2/go.mod h1:5GB2vv4A4AOn3yk7MftYGHkUfGtDHnEraIjym4dYz5A=

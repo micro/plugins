@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/caddyserver/certmagic v0.11.2
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 )
 
 require (
