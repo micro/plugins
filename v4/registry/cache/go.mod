@@ -2,7 +2,7 @@ module github.com/go-micro/plugins/v4/registry/cache
 
 go 1.17
 
-require go-micro.dev/v4 v4.6.0
+require go-micro.dev/v4 v4.7.0
 
 require (
 	github.com/google/uuid v1.2.0 // indirect

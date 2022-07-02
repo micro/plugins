@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.3.0
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
 	google.golang.org/grpc v1.41.0
 )

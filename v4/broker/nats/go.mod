@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/nats-io/nats.go v1.11.1-0.20210623165838-4b75fc59ae30
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 )
 
 require (

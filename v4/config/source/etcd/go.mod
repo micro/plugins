@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/config/source/etcd
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.6.0
+	go-micro.dev/v4 v4.7.0
 	go.etcd.io/etcd/api/v3 v3.5.2
 	go.etcd.io/etcd/client/v3 v3.5.2
 )
