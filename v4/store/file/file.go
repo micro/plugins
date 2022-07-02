@@ -32,7 +32,6 @@ func init() {
 	cmd.DefaultStores["file"] = NewStore
 }
 
-
 // NewStore returns a memory store
 func NewStore(opts ...store.Option) store.Store {
 	s := &fileStore{

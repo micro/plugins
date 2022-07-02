@@ -21,7 +21,7 @@ for d in $(find $version -name 'go.mod'); do
     *)
     pushd $(dirname $d) >/dev/null
     go vet
-    go test -v
+    go test 
     popd >/dev/null
   esac
 done

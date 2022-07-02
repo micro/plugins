@@ -25,7 +25,6 @@ func init() {
 	cmd.DefaultStores["memcached"] = NewStore
 }
 
-
 func (m *mkv) Init(opts ...store.Option) error {
 	for _, o := range opts {
 		o(&m.options)
