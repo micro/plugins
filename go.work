@@ -109,6 +109,7 @@ use (
 	./v4/wrapper/trace/awsxray
 	./v4/wrapper/trace/datadog
 	./v4/wrapper/trace/opencensus
+	./v4/wrapper/trace/opentelemetry
 	./v4/wrapper/trace/opentracing
 	./v4/wrapper/validator
 )
