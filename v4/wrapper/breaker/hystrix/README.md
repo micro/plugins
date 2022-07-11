@@ -31,9 +31,9 @@ import (
 func main() {
 	service := micro.NewService(micro.WrapClient(hystrix.NewClientWrapper(hystrix.WithFilter(func(c context.Context, e error) error {
 			if e == ErrLetItPass {
-				return nil
+				return true 
 			}
-			return e
+			return false
 	}))))
 	service.Init(micro.Name("test.srv"), micro.Address(":80"))
 	if err := service.Run(); err != nil {
