@@ -173,6 +173,10 @@ func (r *rkv) configure() error {
 		}
 	}
 
+	if r.Client != nil {
+		r.Client.Close()
+	}
+	
 	r.Client = redis.NewClient(redisOptions)
 
 	return nil
