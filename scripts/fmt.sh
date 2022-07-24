@@ -1,8 +1,14 @@
 #!/bin/bash -ex
 
-for d in $(find * -name 'go.mod'); do
+version=$1
+
+if [ "x$version" = "x" ]; then
+  version='*'
+fi
+
+for d in $(find $version -name 'go.mod'); do
   pushd $(dirname $d)
   go fmt
-  # go mod tidy
+  go mod tidy
   popd
 done
