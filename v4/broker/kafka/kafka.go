@@ -9,9 +9,9 @@ import (
 	"github.com/Shopify/sarama"
 	"github.com/google/uuid"
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/codec/json"
 	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/util/cmd"
 )
 
 type kBroker struct {

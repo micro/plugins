@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/google/uuid v1.2.0
 	github.com/nsqio/go-nsq v1.0.8
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 )
 
 require (

@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/sync/etcd
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.6.1-0.20220407104607-62c2981baf63
+	go-micro.dev/v4 v4.8.0
 	go.etcd.io/etcd/client/v3 v3.5.0
 )
 

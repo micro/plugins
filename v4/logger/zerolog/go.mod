@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/rs/zerolog v1.23.0
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 )
 
 require (

@@ -6,7 +6,7 @@ require (
 	github.com/kr/pretty v0.2.1
 	github.com/lib/pq v1.10.2
 	github.com/pkg/errors v0.9.1
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 )
 
 require (

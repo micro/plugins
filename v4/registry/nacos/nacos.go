@@ -12,8 +12,8 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/util/cmd"
 )
 
 type nacosRegistry struct {

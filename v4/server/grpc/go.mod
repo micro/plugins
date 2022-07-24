@@ -6,7 +6,7 @@ require (
 	github.com/go-micro/plugins/v4/client/grpc v1.0.0
 	github.com/go-micro/plugins/v4/transport/grpc v1.0.0
 	github.com/golang/protobuf v1.5.2
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
 	google.golang.org/genproto v0.0.0-20211020151524-b7c3a969101a
 	google.golang.org/grpc v1.42.0

@@ -16,7 +16,6 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/errors"
 	"go-micro.dev/v4/logger"
 	meta "go-micro.dev/v4/metadata"
@@ -24,6 +23,7 @@ import (
 	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/util/addr"
 	"go-micro.dev/v4/util/backoff"
+	"go-micro.dev/v4/util/cmd"
 	mgrpc "go-micro.dev/v4/util/grpc"
 	mnet "go-micro.dev/v4/util/net"
 	"golang.org/x/net/netutil"

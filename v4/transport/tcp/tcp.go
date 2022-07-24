@@ -9,10 +9,10 @@ import (
 	"net"
 	"time"
 
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/transport"
 	maddr "go-micro.dev/v4/util/addr"
+	"go-micro.dev/v4/util/cmd"
 	mnet "go-micro.dev/v4/util/net"
 	mls "go-micro.dev/v4/util/tls"
 )

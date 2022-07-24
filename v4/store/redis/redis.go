@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
+	"go-micro.dev/v4/util/cmd"
 )
 
 type rkv struct {

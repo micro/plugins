@@ -3,6 +3,6 @@
 for d in $(find * -name 'go.mod'); do
   pushd $(dirname $d)
   go fmt
-  go mod tidy
+  # go mod tidy
   popd
 done

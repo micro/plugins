@@ -13,8 +13,8 @@ import (
 
 	consul "github.com/hashicorp/consul/api"
 	hash "github.com/mitchellh/hashstructure"
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/util/cmd"
 	mnet "go-micro.dev/v4/util/net"
 )
 

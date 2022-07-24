@@ -10,9 +10,9 @@ import (
 	"time"
 
 	mc "github.com/bradfitz/gomemcache/memcache"
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
+	"go-micro.dev/v4/util/cmd"
 )
 
 type mkv struct {

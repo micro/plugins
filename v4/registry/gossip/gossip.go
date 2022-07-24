@@ -18,9 +18,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/hashicorp/memberlist"
 	"github.com/mitchellh/hashstructure"
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/util/cmd"
 	regutil "go-micro.dev/v4/util/registry"
 )
 

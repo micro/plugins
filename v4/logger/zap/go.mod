@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/logger/zap
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	go.uber.org/zap v1.17.0
 )
 

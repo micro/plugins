@@ -2,8 +2,8 @@
 package registry
 
 import (
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/selector"
+	"go-micro.dev/v4/util/cmd"
 )
 
 func init() {

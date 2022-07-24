@@ -12,8 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/cmd"
 	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/util/cmd"
 )
 
 const (
