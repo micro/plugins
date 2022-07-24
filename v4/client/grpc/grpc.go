@@ -13,12 +13,12 @@ import (
 
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/client"
-	"go-micro.dev/v4/cmd"
 	raw "go-micro.dev/v4/codec/bytes"
 	"go-micro.dev/v4/errors"
 	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/selector"
+	"go-micro.dev/v4/util/cmd"
 	pnet "go-micro.dev/v4/util/net"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

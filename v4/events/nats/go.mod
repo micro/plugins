@@ -7,12 +7,16 @@ require (
 	github.com/nats-io/nats.go v1.13.1-0.20211018182449-f2416a8b1483
 	github.com/nats-io/stan.go v0.10.0
 	github.com/pkg/errors v0.9.1
-	go-micro.dev/v4 v4.3.1-0.20211108085239-0c2041e43908
+	go-micro.dev/v4 v4.8.0
 )
 
 require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/hashicorp/golang-lru v0.5.1 // indirect
+	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/miekg/dns v1.1.43 // indirect
 	github.com/nats-io/nats-server/v2 v2.6.4 // indirect
 	github.com/nats-io/nats-streaming-server v0.23.0 // indirect
@@ -25,5 +29,6 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
 	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
 )

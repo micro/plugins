@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/registry"
+	"go-micro.dev/v4/util/cmd"
 )
 
 type proxy struct {

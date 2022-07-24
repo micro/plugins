@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/client/grpc
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.3.0
+	go-micro.dev/v4 v4.8.0
 	google.golang.org/grpc v1.42.0
 	google.golang.org/grpc/examples v0.0.0-20211102180624-670c133e568e
 	google.golang.org/protobuf v1.27.1
@@ -21,6 +21,7 @@ require (
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
@@ -44,4 +45,5 @@ require (
 	google.golang.org/genproto v0.0.0-20200806141610-86f49bd18e98 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

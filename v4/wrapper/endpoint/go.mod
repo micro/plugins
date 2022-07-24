@@ -2,7 +2,7 @@ module github.com/go-micro/plugins/v4/wrapper/endpoint
 
 go 1.17
 
-require go-micro.dev/v4 v4.7.0
+require go-micro.dev/v4 v4.8.0
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect

@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"go-micro.dev/v4/cache"
-	"go-micro.dev/v4/cmd"
+	"go-micro.dev/v4/util/cmd"
 )
 
 func init() {

@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/wrapper/ratelimiter/uber
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	go.uber.org/ratelimit v0.2.0
 )
 

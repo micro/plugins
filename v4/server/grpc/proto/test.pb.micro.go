@@ -42,21 +42,18 @@ func NewTestEndpoints() []*api.Endpoint {
 			Name:    "Test.Call",
 			Path:    []string{"/api/v0/test/call/{uuid}"},
 			Method:  []string{"POST"},
-			Body:    "*",
 			Handler: "rpc",
 		},
 		&api.Endpoint{
 			Name:    "Test.CallPcre",
 			Path:    []string{"^/api/v0/test/call/pcre/?$"},
 			Method:  []string{"POST"},
-			Body:    "*",
 			Handler: "rpc",
 		},
 		&api.Endpoint{
 			Name:    "Test.CallPcreInvalid",
 			Path:    []string{"^/api/v0/test/call/pcre/invalid/?"},
 			Method:  []string{"POST"},
-			Body:    "*",
 			Handler: "rpc",
 		},
 	}
@@ -134,21 +131,18 @@ func RegisterTestHandler(s server.Server, hdlr TestHandler, opts ...server.Handl
 		Name:    "Test.Call",
 		Path:    []string{"/api/v0/test/call/{uuid}"},
 		Method:  []string{"POST"},
-		Body:    "*",
 		Handler: "rpc",
 	}))
 	opts = append(opts, api.WithEndpoint(&api.Endpoint{
 		Name:    "Test.CallPcre",
 		Path:    []string{"^/api/v0/test/call/pcre/?$"},
 		Method:  []string{"POST"},
-		Body:    "*",
 		Handler: "rpc",
 	}))
 	opts = append(opts, api.WithEndpoint(&api.Endpoint{
 		Name:    "Test.CallPcreInvalid",
 		Path:    []string{"^/api/v0/test/call/pcre/invalid/?"},
 		Method:  []string{"POST"},
-		Body:    "*",
 		Handler: "rpc",
 	}))
 	return s.Handle(s.NewHandler(&Test{h}, opts...))

@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/nacos-group/nacos-sdk-go/v2 v2.0.0-Beta.1
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 )
 
 require (
@@ -64,5 +64,6 @@ require (
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	honnef.co/go/tools v0.0.1-2020.1.3 // indirect
 )

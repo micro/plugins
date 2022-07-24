@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/config/source/configmap
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	k8s.io/api v0.24.1
 	k8s.io/apimachinery v0.24.1
 	k8s.io/client-go v0.24.1

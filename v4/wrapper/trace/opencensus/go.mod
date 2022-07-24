@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/wrapper/trace/opencensus
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	go.opencensus.io v0.23.0
 	google.golang.org/genproto v0.0.0-20210624195500-8bfb893ecb84
 )

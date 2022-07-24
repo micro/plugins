@@ -6,7 +6,7 @@ require (
 	github.com/go-micro/plugins/v4/client/grpc v1.0.0
 	github.com/go-micro/plugins/v4/transport/grpc v1.0.0
 	github.com/golang/protobuf v1.5.2
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 	golang.org/x/net v0.0.0-20211020060615-d418f374d309
 	google.golang.org/genproto v0.0.0-20211020151524-b7c3a969101a
 	google.golang.org/grpc v1.42.0
@@ -19,11 +19,18 @@ require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
+	github.com/evanphx/json-patch/v5 v5.5.0 // indirect
+	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/go-acme/lego/v4 v4.4.0 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
+	github.com/gobwas/httphead v0.1.0 // indirect
+	github.com/gobwas/pool v0.2.1 // indirect
+	github.com/gobwas/ws v1.0.4 // indirect
 	github.com/google/uuid v1.2.0 // indirect
+	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect

@@ -6,7 +6,7 @@ require (
 	github.com/kr/pretty v0.2.1
 	github.com/lib/pq v1.10.2
 	github.com/pkg/errors v0.9.1
-	go-micro.dev/v4 v4.7.0
+	go-micro.dev/v4 v4.8.0
 )
 
 require (
@@ -46,4 +46,5 @@ require (
 	google.golang.org/protobuf v1.26.0 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
