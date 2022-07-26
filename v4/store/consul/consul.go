@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"path/filepath"
+	"strings"
 
 	"github.com/hashicorp/consul/api"
 	"go-micro.dev/v4/store"
@@ -79,7 +79,7 @@ func (c *ckv) Write(record *store.Record, opts ...store.WriteOption) error {
 	}
 
 	_, err := c.client.KV().Put(&api.KVPair{
-		Key:   filepath.Join(options.Table, record.Key),
+		Key:   strings.Join([]string{options.Table, record.Key},"/"),
 		Value: record.Value,
 	}, nil)
 	return err
