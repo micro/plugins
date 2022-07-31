@@ -86,7 +86,8 @@ func newConfig(config *tls.Config) *tls.Config {
 
 func newGRPCBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
-		Context: context.TODO(),
+		Context:  context.TODO(),
+		Registry: registry.DefaultRegistry,
 	}
 
 	for _, o := range opts {
@@ -102,7 +103,7 @@ func newGRPCBroker(opts ...broker.Option) broker.Broker {
 	// get registry
 	reg, ok := options.Context.Value(registryKey).(registry.Registry)
 	if !ok {
-		reg = registry.DefaultRegistry
+		reg = options.Registry
 	}
 
 	h := &grpcBroker{
@@ -314,7 +315,7 @@ func (h *grpcBroker) Connect() error {
 	// get registry
 	reg, ok := h.opts.Context.Value(registryKey).(registry.Registry)
 	if !ok {
-		reg = registry.DefaultRegistry
+		reg = h.opts.Registry
 	}
 	// set cache
 	h.r = cache.New(reg)
@@ -377,7 +378,7 @@ func (h *grpcBroker) Init(opts ...broker.Option) error {
 	// get registry
 	reg, ok := h.opts.Context.Value(registryKey).(registry.Registry)
 	if !ok {
-		reg = registry.DefaultRegistry
+		reg = h.opts.Registry
 	}
 
 	// get cache
