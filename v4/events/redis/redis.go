@@ -34,16 +34,23 @@ type redisStream struct {
 }
 
 func NewStream(opts ...Option) (events.Stream, error) {
-	options := Options{}
+	options := Options{
+		Address: "redis://127.0.0.1:6379",
+	}
 	for _, o := range opts {
 		o(&options)
 	}
-	rc := redis.NewClient(&redis.Options{
-		Addr:      options.Address,
-		Username:  options.User,
-		Password:  options.Password,
-		TLSConfig: options.TLSConfig,
-	})
+	redisOptions, err := redis.ParseURL(options.Address)
+	if err != nil {
+		redisOptions = &redis.Options{
+			Addr:      options.Address,
+			Username:  options.User,
+			Password:  options.Password,
+			TLSConfig: options.TLSConfig,
+		}
+	}
+
+	rc := redis.NewClient(redisOptions)
 	rs := &redisStream{
 		redisClient: rc,
 		attempts:    map[string]int{},

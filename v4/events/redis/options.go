@@ -13,6 +13,11 @@ type Options struct {
 // Option is a function which configures options
 type Option func(o *Options)
 
+// Address sets the Redis address option.
+// Needs to be a full URL with scheme (redis://, rediss://, unix://).
+// (eg. redis://user:password@localhost:6789/3?dial_timeout=3).
+// Alternatively, the address can simply be the `host:port` format
+// where User, Password, TLSConfig are defined with their respective options.
 func Address(addr string) Option {
 	return func(o *Options) {
 		o.Address = addr
