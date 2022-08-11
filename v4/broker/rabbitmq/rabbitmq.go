@@ -25,7 +25,7 @@ type rbroker struct {
 
 type subscriber struct {
 	mtx          sync.Mutex
-	mayRun       bool
+	unsub        chan bool
 	opts         broker.SubscribeOptions
 	topic        string
 	ch           *rabbitMQChannel
@@ -34,6 +34,7 @@ type subscriber struct {
 	r            *rbroker
 	fn           func(msg amqp.Delivery)
 	headers      map[string]interface{}
+	wg           sync.WaitGroup
 }
 
 type publication struct {
@@ -72,9 +73,18 @@ func (s *subscriber) Topic() string {
 }
 
 func (s *subscriber) Unsubscribe() error {
+
+	s.unsub <- true
+
+	// Need to wait on subscriber to exit if autoack is disabled
+	// since closing the channel will prevent the ack/nack from
+	// being sent upon handler completion.
+	if !s.opts.AutoAck {
+		s.wg.Wait()
+	}
+
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
-	s.mayRun = false
 	if s.ch != nil {
 		return s.ch.Close()
 	}
@@ -82,21 +92,21 @@ func (s *subscriber) Unsubscribe() error {
 }
 
 func (s *subscriber) resubscribe() {
+
+	s.wg.Add(1)
+	defer s.wg.Done()
+
 	minResubscribeDelay := 100 * time.Millisecond
 	maxResubscribeDelay := 30 * time.Second
 	expFactor := time.Duration(2)
 	reSubscribeDelay := minResubscribeDelay
 	//loop until unsubscribe
 	for {
-		s.mtx.Lock()
-		mayRun := s.mayRun
-		s.mtx.Unlock()
-		if !mayRun {
-			// we are unsubscribed, showdown routine
-			return
-		}
 
 		select {
+		// unsubscribe case
+		case <-s.unsub:
+			return
 		//check shutdown case
 		case <-s.r.conn.close:
 			//yep, its shutdown case
@@ -140,10 +150,20 @@ func (s *subscriber) resubscribe() {
 			reSubscribeDelay *= expFactor
 			continue
 		}
-		for d := range sub {
-			s.r.wg.Add(1)
-			s.fn(d)
-			s.r.wg.Done()
+
+	SubLoop:
+		for {
+			select {
+			case <-s.unsub:
+				return
+			case d, ok := <-sub:
+				if !ok {
+					break SubLoop
+				}
+				s.r.wg.Add(1)
+				s.fn(d)
+				s.r.wg.Done()
+			}
 		}
 	}
 }
@@ -292,8 +312,9 @@ func (r *rbroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 		}
 	}
 
-	sret := &subscriber{topic: topic, opts: opt, mayRun: true, r: r,
-		durableQueue: durableQueue, fn: fn, headers: headers, queueArgs: qArgs}
+	sret := &subscriber{topic: topic, opts: opt, unsub: make(chan bool), r: r,
+		durableQueue: durableQueue, fn: fn, headers: headers, queueArgs: qArgs,
+		wg: sync.WaitGroup{}}
 
 	go sret.resubscribe()
 
