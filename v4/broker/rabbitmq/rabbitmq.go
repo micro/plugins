@@ -4,6 +4,7 @@ package rabbitmq
 import (
 	"context"
 	"errors"
+	"net/url"
 	"sync"
 	"time"
 
@@ -330,7 +331,12 @@ func (r *rbroker) String() string {
 
 func (r *rbroker) Address() string {
 	if len(r.addrs) > 0 {
-		return r.addrs[0]
+		u, err := url.Parse(r.addrs[0])
+		if err != nil {
+			return ""
+		}
+
+		return u.Redacted()
 	}
 	return ""
 }
