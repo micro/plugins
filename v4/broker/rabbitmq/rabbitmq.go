@@ -74,7 +74,13 @@ func (s *subscriber) Topic() string {
 func (s *subscriber) Unsubscribe() error {
 
 	s.unsub <- true
-	s.wg.Wait()
+
+	// Need to wait on subscriber to exit if autoack is disabled
+	// since closing the channel will prevent the ack/nack from
+	// being sent upon handler completion.
+	if !s.opts.AutoAck {
+		s.wg.Wait()
+	}
 
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
