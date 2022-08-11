@@ -9,7 +9,6 @@ import (
 
 	"github.com/streadway/amqp"
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/util/cmd"
 )
 
@@ -152,7 +151,6 @@ func (s *subscriber) resubscribe() {
 				return
 			case d, ok := <-sub:
 				if !ok {
-					logger.Info("breaking loop")
 					break SubLoop
 				}
 				s.r.wg.Add(1)
