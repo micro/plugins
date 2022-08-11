@@ -268,6 +268,7 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 		Tags:    tags,
 		Port:    port,
 		Address: host,
+		Meta:    node.Metadata,
 		Check:   check,
 	}
 
