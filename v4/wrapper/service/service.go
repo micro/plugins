@@ -35,3 +35,13 @@ func NewHandlerWrapper(service micro.Service) server.HandlerWrapper {
 		}
 	}
 }
+
+// NewSubscriberWrapper wraps a service within a subscriber so it can be accessed by the subscription handler itself.
+func NewSubscriberWrapper(service micro.Service) server.SubscriberWrapper {
+	return func(h server.SubscriberFunc) server.SubscriberFunc {
+		return func(ctx context.Context, msg server.Message) error {
+			ctx = micro.NewContext(ctx, service)
+			return h(ctx, msg)
+		}
+	}
+}
