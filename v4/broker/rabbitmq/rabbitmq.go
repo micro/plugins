@@ -4,6 +4,7 @@ package rabbitmq
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"sync"
 	"time"
@@ -290,7 +291,7 @@ func (r *rbroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 	fn := func(msg amqp.Delivery) {
 		header := make(map[string]string)
 		for k, v := range msg.Headers {
-			header[k], _ = v.(string)
+			header[k] = fmt.Sprintf("%v", v)
 		}
 
 		// Get rid of dependence on 'Micro-Topic'
