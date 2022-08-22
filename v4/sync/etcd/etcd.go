@@ -143,9 +143,13 @@ func (e *etcdSync) Unlock(id string) error {
 	if !ok {
 		return errors.New("lock not found")
 	}
-	err := v.m.Unlock(context.Background())
-	delete(e.locks, id)
-	return err
+
+	if err := v.m.Unlock(context.Background()); err != nil {
+		return err
+	}
+
+	defer delete(e.locks, id)
+	return v.s.Close()
 }
 
 func (e *etcdSync) String() string {
