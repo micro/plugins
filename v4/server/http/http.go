@@ -188,6 +188,10 @@ func (h *httpServer) Register() error {
 			subOpts = append(subOpts, broker.Queue(queue))
 		}
 
+		if cx := sb.Options().Context; cx != nil {
+			subOpts = append(subOpts, broker.SubscribeContext(cx))
+		}
+
 		if !sb.Options().AutoAck {
 			subOpts = append(subOpts, broker.DisableAutoAck())
 		}
