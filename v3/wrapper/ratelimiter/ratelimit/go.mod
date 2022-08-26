@@ -7,7 +7,7 @@ require (
 	github.com/go-micro/plugins/v3/broker/memory v1.0.0
 	github.com/go-micro/plugins/v3/registry/memory v1.0.0
 	github.com/go-micro/plugins/v3/transport/memory v1.0.0
-	github.com/juju/ratelimit v1.0.1
+	github.com/juju/ratelimit v1.0.2
 )
 
 replace (

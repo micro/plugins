@@ -8,9 +8,9 @@ require (
 	github.com/go-micro/plugins/v3/client/grpc v1.0.0
 	github.com/go-micro/plugins/v3/transport/grpc v1.0.0
 	github.com/golang/protobuf v1.5.2
-	golang.org/x/net v0.0.0-20210614182718-04defd469f4e
-	google.golang.org/genproto v0.0.0-20200806141610-86f49bd18e98
-	google.golang.org/grpc v1.38.0
+	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c
+	google.golang.org/genproto v0.0.0-20220822174746-9e6da59bd2fc
+	google.golang.org/grpc v1.49.0
 )
 
 replace (
