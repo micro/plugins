@@ -21,7 +21,7 @@ type kBroker struct {
 	p  sarama.SyncProducer
 	ap sarama.AsyncProducer
 
-	sc []sarama.Client
+	cgs []sarama.ConsumerGroup
 
 	connected bool
 	scMutex   sync.Mutex
@@ -29,6 +29,7 @@ type kBroker struct {
 }
 
 type subscriber struct {
+	k    *kBroker
 	cg   sarama.ConsumerGroup
 	t    string
 	opts broker.SubscribeOptions
@@ -73,7 +74,22 @@ func (s *subscriber) Topic() string {
 }
 
 func (s *subscriber) Unsubscribe() error {
-	return s.cg.Close()
+	if err := s.cg.Close(); err != nil {
+		return err
+	}
+
+	k := s.k
+	k.scMutex.Lock()
+	defer k.scMutex.Unlock()
+
+	for i, cg := range k.cgs {
+		if cg == s.cg {
+			k.cgs = append(k.cgs[:i], k.cgs[i+1:]...)
+			return nil
+		}
+	}
+
+	return nil
 }
 
 func (k *kBroker) Address() string {
@@ -152,7 +168,7 @@ func (k *kBroker) Connect() error {
 	if ap != nil {
 		k.ap = ap
 	}
-	k.sc = make([]sarama.Client, 0)
+	k.cgs = make([]sarama.ConsumerGroup, 0)
 	k.connected = true
 	k.scMutex.Unlock()
 
@@ -162,10 +178,10 @@ func (k *kBroker) Connect() error {
 func (k *kBroker) Disconnect() error {
 	k.scMutex.Lock()
 	defer k.scMutex.Unlock()
-	for _, client := range k.sc {
-		client.Close()
+	for _, consumer := range k.cgs {
+		consumer.Close()
 	}
-	k.sc = nil
+	k.cgs = nil
 	if k.p != nil {
 		k.p.Close()
 	}
@@ -223,16 +239,16 @@ func (k *kBroker) Publish(topic string, msg *broker.Message, opts ...broker.Publ
 	return errors.New(`no connection resources available`)
 }
 
-func (k *kBroker) getSaramaClusterClient(topic string) (sarama.Client, error) {
+func (k *kBroker) getSaramaConsumerGroup(groupID string) (sarama.ConsumerGroup, error) {
 	config := k.getClusterConfig()
-	cs, err := sarama.NewClient(k.addrs, config)
+	cg, err := sarama.NewConsumerGroup(k.addrs, groupID, config)
 	if err != nil {
 		return nil, err
 	}
 	k.scMutex.Lock()
 	defer k.scMutex.Unlock()
-	k.sc = append(k.sc, cs)
-	return cs, nil
+	k.cgs = append(k.cgs, cg)
+	return cg, nil
 }
 
 func (k *kBroker) Subscribe(topic string, handler broker.Handler, opts ...broker.SubscribeOption) (broker.Subscriber, error) {
@@ -244,11 +260,7 @@ func (k *kBroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 		o(&opt)
 	}
 	// we need to create a new client per consumer
-	c, err := k.getSaramaClusterClient(topic)
-	if err != nil {
-		return nil, err
-	}
-	cg, err := sarama.NewConsumerGroupFromClient(opt.Queue, c)
+	cg, err := k.getSaramaConsumerGroup(opt.Queue)
 	if err != nil {
 		return nil, err
 	}
@@ -280,7 +292,7 @@ func (k *kBroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 			}
 		}
 	}()
-	return &subscriber{cg: cg, opts: opt, t: topic}, nil
+	return &subscriber{k: k, cg: cg, opts: opt, t: topic}, nil
 }
 
 func (k *kBroker) String() string {
