@@ -22,7 +22,7 @@ func TestNewRabbitMQConnURL(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, 0, false)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, 0, false, false)
 
 		if have, want := conn.url, test.want; have != want {
 			t.Errorf("%s: invalid url, want %q, have %q", test.title, want, have)
@@ -64,7 +64,7 @@ func TestTryToConnectTLS(t *testing.T) {
 	for _, test := range testcases {
 		dialCount, dialTLSCount = 0, 0
 
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, []string{test.url}, 0, false)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, []string{test.url}, 0, false, false)
 		conn.tryConnect(test.secure, test.amqpConfig)
 
 		have := dialCount
@@ -78,22 +78,23 @@ func TestTryToConnectTLS(t *testing.T) {
 	}
 }
 
-func TestNewRabbitMQPrefetch(t *testing.T) {
+func TestNewRabbitMQPrefetchConfirm(t *testing.T) {
 	testcases := []struct {
 		title          string
 		urls           []string
 		prefetchCount  int
 		prefetchGlobal bool
+		confirm        bool
 	}{
-		{"Multiple URLs", []string{"amqp://example.com/one", "amqp://example.com/two"}, 1, true},
-		{"Insecure URL", []string{"amqp://example.com"}, 1, true},
-		{"Secure URL", []string{"amqps://example.com"}, 1, true},
-		{"Invalid URL", []string{"http://example.com"}, 1, true},
-		{"No URLs", []string{}, 1, true},
+		{"Multiple URLs", []string{"amqp://example.com/one", "amqp://example.com/two"}, 1, true, true},
+		{"Insecure URL", []string{"amqp://example.com"}, 1, true, true},
+		{"Secure URL", []string{"amqps://example.com"}, 1, true, true},
+		{"Invalid URL", []string{"http://example.com"}, 1, true, true},
+		{"No URLs", []string{}, 1, true, true},
 	}
 
 	for _, test := range testcases {
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, test.prefetchCount, test.prefetchGlobal)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, test.prefetchCount, test.prefetchGlobal, test.confirm)
 
 		if have, want := conn.prefetchCount, test.prefetchCount; have != want {
 			t.Errorf("%s: invalid prefetch count, want %d, have %d", test.title, want, have)
@@ -101,6 +102,10 @@ func TestNewRabbitMQPrefetch(t *testing.T) {
 
 		if have, want := conn.prefetchGlobal, test.prefetchGlobal; have != want {
 			t.Errorf("%s: invalid prefetch global setting, want %t, have %t", test.title, want, have)
+		}
+
+		if have, want := conn.confirm, test.confirm; have != want {
+			t.Errorf("%s: invalid confirm setting, want %t, have %t", test.title, want, have)
 		}
 	}
 }

@@ -6,6 +6,7 @@ package rabbitmq
 
 import (
 	"errors"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/streadway/amqp"
@@ -15,9 +16,11 @@ type rabbitMQChannel struct {
 	uuid       string
 	connection *amqp.Connection
 	channel    *amqp.Channel
+	confirm    chan amqp.Confirmation
+	mtx        sync.Mutex
 }
 
-func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal bool) (*rabbitMQChannel, error) {
+func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal bool, confirm bool) (*rabbitMQChannel, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
@@ -26,23 +29,34 @@ func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal b
 		uuid:       id.String(),
 		connection: conn,
 	}
-	if err := rabbitCh.Connect(prefetchCount, prefetchGlobal); err != nil {
+	if err := rabbitCh.Connect(prefetchCount, prefetchGlobal, confirm); err != nil {
 		return nil, err
 	}
 	return rabbitCh, nil
 
 }
 
-func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool) error {
+func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool, confirm bool) error {
 	var err error
 	r.channel, err = r.connection.Channel()
 	if err != nil {
 		return err
 	}
+
 	err = r.channel.Qos(prefetchCount, 0, prefetchGlobal)
 	if err != nil {
 		return err
 	}
+
+	if confirm {
+		r.confirm = r.channel.NotifyPublish(make(chan amqp.Confirmation, 1))
+
+		err = r.channel.Confirm(false)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -57,7 +71,29 @@ func (r *rabbitMQChannel) Publish(exchange, key string, message amqp.Publishing)
 	if r.channel == nil {
 		return errors.New("Channel is nil")
 	}
-	return r.channel.Publish(exchange, key, false, false, message)
+
+	if r.confirm != nil {
+		r.mtx.Lock()
+		defer r.mtx.Unlock()
+	}
+
+	err := r.channel.Publish(exchange, key, false, false, message)
+	if err != nil {
+		return err
+	}
+
+	if r.confirm != nil {
+		confirm, ok := <-r.confirm
+		if !ok {
+			return errors.New("Channel closed before could receive confirm")
+		}
+
+		if !confirm.Ack {
+			return errors.New("Could not publish message, received nack from broker")
+		}
+	}
+
+	return nil
 }
 
 func (r *rabbitMQChannel) DeclareExchange(exchange string) error {

@@ -352,7 +352,7 @@ func (r *rbroker) Init(opts ...broker.Option) error {
 
 func (r *rbroker) Connect() error {
 	if r.conn == nil {
-		r.conn = newRabbitMQConn(r.getExchange(), r.opts.Addrs, r.getPrefetchCount(), r.getPrefetchGlobal())
+		r.conn = newRabbitMQConn(r.getExchange(), r.opts.Addrs, r.getPrefetchCount(), r.getPrefetchGlobal(), r.getConfirm())
 	}
 
 	conf := defaultAmqpConfig
@@ -417,4 +417,11 @@ func (r *rbroker) getPrefetchGlobal() bool {
 		return e
 	}
 	return DefaultPrefetchGlobal
+}
+
+func (r *rbroker) getConfirm() bool {
+	if e, ok := r.opts.Context.Value(confirmKey{}).(bool); ok {
+		return e
+	}
+	return DefaultConfirm
 }
