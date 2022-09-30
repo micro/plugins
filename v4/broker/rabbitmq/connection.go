@@ -23,7 +23,7 @@ var (
 	DefaultPrefetchCount  = 0
 	DefaultPrefetchGlobal = false
 	DefaultRequeueOnError = false
-	DefaultConfirm        = false
+	DefaultConfirmPublish = false
 
 	// The amqp library does not seem to set these when using amqp.DialConfig
 	// (even though it says so in the comments) so we set them manually to make
@@ -49,7 +49,7 @@ type rabbitMQConn struct {
 	url             string
 	prefetchCount   int
 	prefetchGlobal  bool
-	confirm         bool
+	confirmPublish  bool
 
 	sync.Mutex
 	connected bool
@@ -66,7 +66,7 @@ type Exchange struct {
 	Durable bool
 }
 
-func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlobal bool, confirm bool) *rabbitMQConn {
+func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlobal bool, confirmPublish bool) *rabbitMQConn {
 	var url string
 
 	if len(urls) > 0 && regexp.MustCompile("^amqp(s)?://.*").MatchString(urls[0]) {
@@ -80,7 +80,7 @@ func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlob
 		url:            url,
 		prefetchCount:  prefetchCount,
 		prefetchGlobal: prefetchGlobal,
-		confirm:        confirm,
+		confirmPublish: confirmPublish,
 		close:          make(chan bool),
 		waitConnection: make(chan struct{}),
 	}
@@ -228,7 +228,7 @@ func (r *rabbitMQConn) tryConnect(secure bool, config *amqp.Config) error {
 		return err
 	}
 
-	if r.Channel, err = newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirm); err != nil {
+	if r.Channel, err = newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirmPublish); err != nil {
 		return err
 	}
 
@@ -237,13 +237,13 @@ func (r *rabbitMQConn) tryConnect(secure bool, config *amqp.Config) error {
 	} else {
 		r.Channel.DeclareExchange(r.exchange.Name)
 	}
-	r.ExchangeChannel, err = newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirm)
+	r.ExchangeChannel, err = newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirmPublish)
 
 	return err
 }
 
 func (r *rabbitMQConn) Consume(queue, key string, headers amqp.Table, qArgs amqp.Table, autoAck, durableQueue bool) (*rabbitMQChannel, <-chan amqp.Delivery, error) {
-	consumerChannel, err := newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirm)
+	consumerChannel, err := newRabbitChannel(r.Connection, r.prefetchCount, r.prefetchGlobal, r.confirmPublish)
 	if err != nil {
 		return nil, nil, err
 	}

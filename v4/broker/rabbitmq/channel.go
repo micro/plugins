@@ -13,14 +13,14 @@ import (
 )
 
 type rabbitMQChannel struct {
-	uuid       string
-	connection *amqp.Connection
-	channel    *amqp.Channel
-	confirm    chan amqp.Confirmation
-	mtx        sync.Mutex
+	uuid           string
+	connection     *amqp.Connection
+	channel        *amqp.Channel
+	confirmPublish chan amqp.Confirmation
+	mtx            sync.Mutex
 }
 
-func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal bool, confirm bool) (*rabbitMQChannel, error) {
+func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal bool, confirmPublish bool) (*rabbitMQChannel, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
@@ -29,14 +29,14 @@ func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal b
 		uuid:       id.String(),
 		connection: conn,
 	}
-	if err := rabbitCh.Connect(prefetchCount, prefetchGlobal, confirm); err != nil {
+	if err := rabbitCh.Connect(prefetchCount, prefetchGlobal, confirmPublish); err != nil {
 		return nil, err
 	}
 	return rabbitCh, nil
 
 }
 
-func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool, confirm bool) error {
+func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool, confirmPublish bool) error {
 	var err error
 	r.channel, err = r.connection.Channel()
 	if err != nil {
@@ -48,8 +48,8 @@ func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool, confir
 		return err
 	}
 
-	if confirm {
-		r.confirm = r.channel.NotifyPublish(make(chan amqp.Confirmation, 1))
+	if confirmPublish {
+		r.confirmPublish = r.channel.NotifyPublish(make(chan amqp.Confirmation, 1))
 
 		err = r.channel.Confirm(false)
 		if err != nil {
@@ -72,7 +72,7 @@ func (r *rabbitMQChannel) Publish(exchange, key string, message amqp.Publishing)
 		return errors.New("Channel is nil")
 	}
 
-	if r.confirm != nil {
+	if r.confirmPublish != nil {
 		r.mtx.Lock()
 		defer r.mtx.Unlock()
 	}
@@ -82,14 +82,14 @@ func (r *rabbitMQChannel) Publish(exchange, key string, message amqp.Publishing)
 		return err
 	}
 
-	if r.confirm != nil {
-		confirm, ok := <-r.confirm
+	if r.confirmPublish != nil {
+		confirmation, ok := <-r.confirmPublish
 		if !ok {
-			return errors.New("Channel closed before could receive confirm")
+			return errors.New("Channel closed before could receive confirmation of publish")
 		}
 
-		if !confirm.Ack {
-			return errors.New("Could not publish message, received nack from broker")
+		if !confirmation.Ack {
+			return errors.New("Could not publish message, received nack from broker on confirmation")
 		}
 	}
 
