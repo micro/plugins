@@ -12,6 +12,7 @@ type headersKey struct{}
 type queueArgumentsKey struct{}
 type prefetchCountKey struct{}
 type prefetchGlobalKey struct{}
+type confirmPublishKey struct{}
 type exchangeKey struct{}
 type requeueOnErrorKey struct{}
 type deliveryMode struct{}
@@ -67,6 +68,11 @@ func PrefetchCount(c int) broker.Option {
 // PrefetchGlobal creates a durable queue when subscribing.
 func PrefetchGlobal() broker.Option {
 	return setBrokerOption(prefetchGlobalKey{}, true)
+}
+
+// ConfirmPublish ensures all published messages are confirmed by waiting for an ack/nack from the broker
+func ConfirmPublish() broker.Option {
+	return setBrokerOption(confirmPublishKey{}, true)
 }
 
 // DeliveryMode sets a delivery mode for publishing
