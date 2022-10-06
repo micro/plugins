@@ -12,6 +12,7 @@ type prefixKey struct{}
 type stripPrefixKey struct{}
 type authKey struct{}
 type dialTimeoutKey struct{}
+type defaultKv struct{}
 
 type authCreds struct {
 	Username string
@@ -66,5 +67,16 @@ func WithDialTimeout(timeout time.Duration) source.Option {
 			o.Context = context.Background()
 		}
 		o.Context = context.WithValue(o.Context, dialTimeoutKey{}, timeout)
+	}
+}
+
+// DefaultKv avoid err if no exist keys with prefix
+// put /prefix/default "{}"
+func DefaultKv(flag bool) source.Option {
+	return func(o *source.Options) {
+		if o.Context == nil {
+			o.Context = context.Background()
+		}
+		o.Context = context.WithValue(o.Context, defaultKv{}, flag)
 	}
 }

@@ -8,6 +8,8 @@ import (
 
 	"go-micro.dev/v4/config/source"
 	clientv3 "go.etcd.io/etcd/client/v3"
+
+	"go-micro.dev/v4/logger"
 )
 
 type watcher struct {
@@ -52,11 +54,15 @@ func (w *watcher) handle(evs []*clientv3.Event) {
 	}
 
 	// update base changeset
-	d := makeEvMap(w.opts.Encoder, vals, evs, w.stripPrefix)
-
+	d, err := makeEvMap(w.opts.Encoder, vals, evs, w.stripPrefix)
+	if err != nil {
+		logger.Errorf("etcd watcher makeEvMap err %v", err)
+		return
+	}
 	// pack the changeset
 	b, err := w.opts.Encoder.Encode(d)
 	if err != nil {
+		logger.Errorf("etcd watcher Encode err %v", err)
 		return
 	}
 
