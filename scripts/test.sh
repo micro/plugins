@@ -25,6 +25,10 @@ function find_all() {
 
 # Run GoLangCi Linters
 function run_linter() {
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.0
+
+	golangci-lint --version
+
 	cwd=$(pwd)
 	for dir in $(echo $1); do
 		echo "Running linter on $dir"
