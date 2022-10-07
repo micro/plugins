@@ -102,9 +102,9 @@ case $1 in
 	dirs=$(get_dirs $2)
 
 	msg="Found $(echo $dirs | wc -l) changed directories"
-        prinf '\033[46m${msg}\033{m'
+        printf '\033[46m${msg}\033{m'
 	msg="Changed dirs:"
-        prinf '\033[46m${msg}\033{m'
+        printf '\033[46m${msg}\033{m'
 	printf "${dirs}\n"
 	sleep 1
 
