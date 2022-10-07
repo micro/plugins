@@ -19,7 +19,6 @@ jobs:
         with:
           go-version: 1.19
           check-latest: true
-          cache: true
       - name: Run test
         run: |
           echo "=============== list modified files ==============="
