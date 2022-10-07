@@ -13,7 +13,7 @@ import (
 	"go-micro.dev/v4/util/cmd"
 )
 
-// NewStore returns a memory store
+// NewStore returns a memory store.
 func NewStore(opts ...store.Option) store.Store {
 	s := &memoryStore{
 		options: store.Options{
@@ -25,6 +25,7 @@ func NewStore(opts ...store.Option) store.Store {
 	for _, o := range opts {
 		o(&s.options)
 	}
+
 	return s
 }
 
