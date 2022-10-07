@@ -47,7 +47,7 @@ function run_linter() {
 	done
 
 	if [[ $failed == "true" ]]; then
-		printf "Linter failed"
+		echo "Linter failed"
 		exit 1
 	fi
 }
@@ -101,8 +101,8 @@ case $1 in
 "lint")
 	dirs=$(get_dirs $2)
 
-	printf "Found $(echo $dirs | wc -l) changed directories"
-	printf "Changed dirs:"
+	echo "Found $(echo $dirs | wc -l) changed directories"
+	echo "Changed dirs:"
 	printf $dirs
 
 	run_linter $dirs
