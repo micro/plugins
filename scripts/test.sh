@@ -47,7 +47,7 @@ function run_linter() {
 	done
 
 	if [[ $failed == "true" ]]; then
-	        echo "Linter failed"
+		echo "Linter failed"
 		exit 1
 	fi
 }
