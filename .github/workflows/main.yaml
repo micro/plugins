@@ -2,7 +2,7 @@ name: Run PR Tests
 on:
   push:
     branches:
-    - "!master"
+    - "!main"
 jobs:
   golangci:
     name: Lint
