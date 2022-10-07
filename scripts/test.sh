@@ -33,7 +33,7 @@ function run_linter() {
 	for dir in $(echo $1); do
 		echo "Running linter on $dir"
 		pushd $dir >/dev/null
-		golangci-lint run -c "${cwd}/.golangci.yaml"
+		golangci-lint run --issues-exit-code 0 -c "${cwd}/.golangci.yaml"
 		popd >/dev/null
 	done
 }
@@ -82,6 +82,7 @@ function get_dirs() {
 	fi
 }
 
+echo "Using branch: $GITHUB_REF_NAME"
 case $1 in
 "lint")
 	dirs=$(get_dirs $2)
