@@ -1,0 +1,26 @@
+name: Run Tests
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    types:
+      - opened
+      - reopened
+    branches:
+      - "**"
+jobs:
+  golangci:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+          check-latest: true
+          cache: true
+      - name: Run test
+        run: |
+          echo "=============== list modified files ==============="
+          git diff --name-only HEAD^ HEAD
