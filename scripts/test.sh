@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 GO_TEST_FLAGS="-v -race -cover -bench=."
 
@@ -86,7 +86,7 @@ case $1 in
 "lint")
 	dirs=$(get_dirs $2)
 
-	echo "Found $(echo $changed | wc -l) changed directories"
+	echo "Found $(echo $dirs | wc -l) changed directories"
 	echo "Changed dirs:"
 	echo $dirs
 
