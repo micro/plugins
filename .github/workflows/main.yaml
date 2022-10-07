@@ -2,6 +2,7 @@ name: Run Main Tests
 on:
   push:
     branches:
+    - '**'
     - '!main'
 jobs:
   golangci:
