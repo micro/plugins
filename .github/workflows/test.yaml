@@ -24,6 +24,6 @@ jobs:
       - name: Run test
         run: |
           echo "=============== list modified files ==============="
-          git checkout main
+          git fetch main
           git branch --list
           git diff --name-only $(git merge-base --fork-point main)
