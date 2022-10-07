@@ -29,13 +29,26 @@ function run_linter() {
 
 	golangci-lint --version
 
+	failed="false"
+
 	cwd=$(pwd)
 	for dir in $(echo $1); do
 		echo "Running linter on $dir"
 		pushd $dir >/dev/null
-		golangci-lint run --issues-exit-code 0 -c "${cwd}/.golangci.yaml"
+
+		golangci-lint run -c "${cwd}/.golangci.yaml"
+
+		# Keep track of exit code of linter
+		if [[ $? -ne 0 ]]; then
+			failed="true"
+		fi
+
 		popd >/dev/null
 	done
+
+	if [[ $failed == "true "]]; then
+		exit 1
+	fi
 }
 
 # Run unit tests with tparse to create a summary
