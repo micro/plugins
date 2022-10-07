@@ -81,7 +81,7 @@ function run_linter() {
   if [[ $failed == "true" ]]; then
     add_summary "## Autofix Linting Issues"
     add_summary "The linter can sometimes autofix some of the issues, if it is supported."
-    add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c \"<plugins dir>/.golangci.yaml\" --fix\n\`\`\`"
+    add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c \"<go-micro/plugins dir>/.golangci.yaml\" --fix\n\`\`\`"
     print_red "Linter failed"
     exit 1
   fi
@@ -101,6 +101,8 @@ function create_summary() {
     # Download all modules
     go get -v -t -d ./...
 
+    add_summary "## Test Summary"
+
     go test $GO_TEST_FLAGS -json ./... |
       tparse -notests -format=markdown >>$GITHUB_STEP_SUMMARY
 
@@ -119,7 +121,6 @@ function create_summary() {
 
 # Run Unit tests with RichGo for pretty output
 function run_test() {
-  # if [[ "${#1[@]}" -eq 0 ]]
   go install github.com/kyoh86/richgo@latest
 
   cwd=$(pwd)
@@ -156,23 +157,27 @@ function get_dirs() {
   fi
 }
 
+
 print_msg "Using branch: $GITHUB_REF_NAME"
 
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
+  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
 
   print_list $dirs
   run_linter $dirs
   ;;
 "test")
   dirs=($(get_dirs $2))
+  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
 
   print_list $dirs
   run_test $dirs
   ;;
 "summary")
   dirs=($(get_dirs $2))
+  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
 
   print_list $dirs
   create_summary $dirs
