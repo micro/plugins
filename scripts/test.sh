@@ -38,21 +38,35 @@ function run_linter() {
 function create_summary() {
 	go install github.com/mfridman/tparse@latest
 
-	# Download all modules
-	go get -v -t -d ./...
+	cwd=$(pwd)
+	for dir in $(echo $1); do
+		echo "Creating summary for $dir"
+		pushd $dir >/dev/null
 
-	go test $GO_TEST_FLAGS -json ./... |
-		tparse -notests -format=markdown >>$GITHUB_STEP_SUMMARY
+		# Download all modules
+		go get -v -t -d ./...
+
+		go test $GO_TEST_FLAGS -json ./... |
+			tparse -notests -format=markdown >>$GITHUB_STEP_SUMMARY
+		popd >/dev/null
+	done
 }
 
 # Run Unit tests with RichGo for pretty output
 function run_test() {
 	go install github.com/kyoh86/richgo@latest
 
-	# Download all modules
-	go get -v -t -d ./...
+	cwd=$(pwd)
+	for dir in $(echo $1); do
+		echo "Creating summary for $dir"
+		pushd $dir >/dev/null
 
-	richgo test $GO_TEST_FLAGS ./...
+		# Download all modules
+		go get -v -t -d ./...
+
+		richgo test $GO_TEST_FLAGS ./...
+		popd >/dev/null
+	done
 }
 
 # Get the dir list based on command type
