@@ -24,7 +24,7 @@ function print_red() {
 function print_list() {
   dirs=$1
 
-  print_msg "Found ${#dirs[@]} changed directories"
+  print_msg "Found ${#dirs[@]} directories to test"
   echo "Changed dirs:"
   printf '%s \n' "${dirs[@]}"
   printf '\n\n'
