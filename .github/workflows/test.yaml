@@ -24,7 +24,7 @@ jobs:
       - name: Run test
         run: |
           echo "=============== list modified files ==============="
-          git checkout ${{ github.base_ref }}
-          git checkout ${{ github.head_ref }}
+          git checkout $GITHUB_BASE_REF
+          git checkout $GITHUB_HEAD_REF
           git branch --list
-          git diff --name-only $(git merge-base --fork-point ${{ github.base_ref }})
+          git diff --name-only $(git merge-base --fork-point $GITHUB_BASE_REF)
