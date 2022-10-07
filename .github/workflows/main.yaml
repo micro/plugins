@@ -17,7 +17,7 @@ jobs:
           go-version: 1.19
           check-latest: true
       - name: Run Linters
-        run: ./scripts/test.sh test
+        run: ./scripts/test.sh lint
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
