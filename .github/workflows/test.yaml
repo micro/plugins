@@ -25,6 +25,9 @@ jobs:
         run: |
           echo "=============== list modified files ==============="
           echo "Base ref: $GITHUB_BASE_REF, Headref: $GITHUB_HEAD_REF"
+          echo "Base ref: ${{ env.GITHUB_BASE_REF }}, Headref: $GITHUB_HEAD_REF"
+          echo "Base ref: \$GITHUB_BASE_REF, Headref: \$GITHUB_HEAD_REF"
+          
           git checkout -b $GITHUB_BASE_REF
           git checkout $GITHUB_HEAD_REF
           git branch --list
