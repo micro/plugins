@@ -22,4 +22,5 @@ jobs:
       - name: Run test
         run: |
           echo "=============== list modified files ==============="
-          git --no-pager  diff --name-only $(git merge-base --fork-point main)
+          git branch --list
+          git diff --name-only $(git merge-base --fork-point main)
