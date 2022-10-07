@@ -24,7 +24,7 @@ jobs:
       - name: Run test
         run: |
           echo "=============== list modified files ==============="
-          git checkout main
-          git checkout ${{ github.event.pull_request.head.sha }}
+          git checkout ${{ github.base_ref }}
+          git checkout ${{ github.head_ref }}
           git branch --list
-          git diff --name-only $(git merge-base --fork-point main)
+          git diff --name-only $(git merge-base --fork-point ${{ github.base_ref }})
