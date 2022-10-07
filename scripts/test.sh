@@ -15,7 +15,7 @@ function find_changes() {
 
 	changes=$(find $(echo $changes) -name 'go.mod' -printf '%h\n')
 
-	echo $changes
+	printf $changes
 }
 
 # Find all go directories
@@ -32,7 +32,7 @@ function run_linter() {
 	failed="false"
 
 	cwd=$(pwd)
-	for dir in $(echo $1); do
+	for dir in $(printf $1); do
 		echo "Running linter on $dir"
 		pushd $dir >/dev/null
 
@@ -47,7 +47,7 @@ function run_linter() {
 	done
 
 	if [[ $failed == "true" ]]; then
-		echo "Linter failed"
+		printf "Linter failed"
 		exit 1
 	fi
 }
@@ -101,9 +101,9 @@ case $1 in
 "lint")
 	dirs=$(get_dirs $2)
 
-	echo "Found $(echo $dirs | wc -l) changed directories"
-	echo "Changed dirs:"
-	echo $dirs
+	printf "Found $(echo $dirs | wc -l) changed directories"
+	printf "Changed dirs:"
+	printf $dirs
 
 	run_linter $dirs
 	;;
@@ -116,11 +116,11 @@ case $1 in
 	create_summary $dirs
 	;;
 "")
-	echo "Please provider a command"
+	printf "Please provider a command"
 	exit 1
 	;;
 *)
-	echo "Command not found: $1"
+	printf "Command not found: $1"
 	exit 1
 	;;
 esac
