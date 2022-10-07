@@ -31,6 +31,10 @@ function print_list() {
   sleep 1
 }
 
+function add_summary() {
+  printf "${1}\n" >>$GITHUB_STEP_SUMMARY
+}
+
 # Find directories that contain changes
 function find_changes() {
   # Pull main branch
@@ -75,7 +79,9 @@ function run_linter() {
   done
 
   if [[ $failed == "true" ]]; then
-    echo "Run \`golangci-lint run -c \"<plugins dir>/.golangci.yaml\" --fix\` to autofix some issues where possible." >>$GITHUB_STEP_SUMMARY
+    add_summary "## Autofix Linting Issues"
+    add_summary "The linter can sometimes autofix some of the issues, if it is supported."
+    add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c \"<plugins dir>/.golangci.yaml\" --fix\n\`\`\`"
     print_red "Linter failed"
     exit 1
   fi
@@ -154,19 +160,19 @@ print_msg "Using branch: $GITHUB_REF_NAME"
 
 case $1 in
 "lint")
-  dirs=( $(get_dirs $2) )
+  dirs=($(get_dirs $2))
 
   print_list $dirs
   run_linter $dirs
   ;;
 "test")
-  dirs=( $(get_dirs $2) )
+  dirs=($(get_dirs $2))
 
   print_list $dirs
   run_test $dirs
   ;;
 "summary")
-  dirs=( $(get_dirs $2) )
+  dirs=($(get_dirs $2))
 
   print_list $dirs
   create_summary $dirs
