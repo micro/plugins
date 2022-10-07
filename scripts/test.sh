@@ -101,10 +101,8 @@ case $1 in
 "lint")
 	dirs=$(get_dirs $2)
 
-	msg="Found $(echo $dirs | wc -l) changed directories"
-        printf '\033[46m' ${msg} '\033{m\n'
-	msg="Changed dirs:"
-        printf '\033[46m' ${msg} '\033{m\n'
+        printf '\033[46m' "Found $(echo $dirs | wc -l) changed directories" '\033{m\n'
+        printf '\033[46m' "Changed dirs:" '\033{m\n'
 	printf "${dirs}\n"
 	sleep 1
 
