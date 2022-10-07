@@ -20,7 +20,7 @@ type etcd struct {
 	cerr        error
 	// avoid err if no exist any keys with prefix
 	// put /prefix/default "{}"
-	defaultKv bool
+	useDefKey bool
 }
 
 var (
@@ -32,7 +32,7 @@ func (c *etcd) Read() (*source.ChangeSet, error) {
 	if c.cerr != nil {
 		return nil, c.cerr
 	}
-	if c.defaultKv {
+	if c.useDefKey {
 		rsp, err := c.client.Get(context.Background(), c.prefix+DefaultKey)
 		if err != nil || rsp == nil || len(rsp.Kvs) == 0 {
 			_, err = c.client.Put(context.Background(), c.prefix+DefaultKey, "{}")
@@ -150,9 +150,9 @@ func NewSource(opts ...source.Option) source.Source {
 		sp = prefix
 	}
 
-	dftKv := false
-	if d, ok := options.Context.Value(defaultKv{}).(bool); ok {
-		dftKv = d
+	dftKey := false
+	if d, ok := options.Context.Value(useDefKey{}).(bool); ok {
+		dftKey = d
 	}
 
 	return &etcd{
@@ -161,6 +161,6 @@ func NewSource(opts ...source.Option) source.Source {
 		opts:        options,
 		client:      client,
 		cerr:        err,
-		defaultKv:   dftKv,
+		useDefKey:   dftKey,
 	}
 }

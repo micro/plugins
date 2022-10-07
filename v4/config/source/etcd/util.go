@@ -14,7 +14,7 @@ func makeEvMap(e encoder.Encoder, data map[string]interface{}, kv []*clientv3.Ev
 	if data == nil {
 		data = make(map[string]interface{})
 	}
-	var err error = nil
+	var err error
 	for _, v := range kv {
 		switch mvccpb.Event_EventType(v.Type) {
 		case mvccpb.DELETE:
@@ -32,7 +32,7 @@ func makeEvMap(e encoder.Encoder, data map[string]interface{}, kv []*clientv3.Ev
 
 func makeMap(e encoder.Encoder, kv []*mvccpb.KeyValue, stripPrefix string) (map[string]interface{}, error) {
 	data := make(map[string]interface{})
-	var err error = nil
+	var err error
 	for _, v := range kv {
 		d, e := update(e, data, v, "put", stripPrefix)
 		if e != nil {
