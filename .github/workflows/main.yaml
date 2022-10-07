@@ -32,7 +32,7 @@ jobs:
       - name: Run Unit Tests
         run: ./scripts/test.sh test
   summary:
-    name: Summary
+    name: Summary Dicky
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
