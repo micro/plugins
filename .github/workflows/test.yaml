@@ -28,4 +28,6 @@ jobs:
           git checkout -b main
           git checkout $GITHUB_REF_NAME
           git branch --list
+          echo "Changes"
           git diff --name-only $(git merge-base --fork-point main)
+          git diff $(git merge-base --fork-point main)
