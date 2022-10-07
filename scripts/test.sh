@@ -36,7 +36,7 @@ function run_linter() {
 		echo "Running linter on $dir"
 		pushd $dir >/dev/null
 
-		golangci-lint run -c "${cwd}/.golangci.yaml"
+		golangci-lint run --out-format github-actions -c "${cwd}/.golangci.yaml"
 
 		# Keep track of exit code of linter
 		if [[ $? -ne 0 ]]; then
