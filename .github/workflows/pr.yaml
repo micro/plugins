@@ -31,7 +31,7 @@ jobs:
       - name: Run Unit Tests
         run: ./scripts/test.sh test all
   summary:
-    name: Unit Tests
+    name: Summary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
