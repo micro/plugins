@@ -18,17 +18,29 @@ type etcd struct {
 	opts        source.Options
 	client      *clientv3.Client
 	cerr        error
+	// avoid err if no exist any keys with prefix
+	// put /prefix/default "{}"
+	useDefKey bool
 }
 
 var (
 	DefaultPrefix = "/micro/config/"
+	DefaultKey    = "/default"
 )
 
 func (c *etcd) Read() (*source.ChangeSet, error) {
 	if c.cerr != nil {
 		return nil, c.cerr
 	}
-
+	if c.useDefKey {
+		rsp, err := c.client.Get(context.Background(), c.prefix+DefaultKey)
+		if err != nil || rsp == nil || len(rsp.Kvs) == 0 {
+			_, err = c.client.Put(context.Background(), c.prefix+DefaultKey, "{}")
+			if err != nil {
+				return nil, fmt.Errorf("put default err: %v", err)
+			}
+		}
+	}
 	rsp, err := c.client.Get(context.Background(), c.prefix, clientv3.WithPrefix())
 	if err != nil {
 		return nil, err
@@ -43,7 +55,10 @@ func (c *etcd) Read() (*source.ChangeSet, error) {
 		kvs = append(kvs, (*mvccpb.KeyValue)(v))
 	}
 
-	data := makeMap(c.opts.Encoder, kvs, c.stripPrefix)
+	data, err := makeMap(c.opts.Encoder, kvs, c.stripPrefix)
+	if err != nil {
+		return nil, err
+	}
 
 	b, err := c.opts.Encoder.Encode(data)
 	if err != nil {
@@ -135,11 +150,17 @@ func NewSource(opts ...source.Option) source.Source {
 		sp = prefix
 	}
 
+	dftKey := false
+	if d, ok := options.Context.Value(useDefKey{}).(bool); ok {
+		dftKey = d
+	}
+
 	return &etcd{
 		prefix:      prefix,
 		stripPrefix: sp,
 		opts:        options,
 		client:      client,
 		cerr:        err,
+		useDefKey:   dftKey,
 	}
 }
