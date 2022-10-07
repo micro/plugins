@@ -103,7 +103,8 @@ case $1 in
 
 	echo "Found $(echo $dirs | wc -l) changed directories"
 	echo "Changed dirs:"
-	printf $dirs
+	printf "${dirs}\n"
+	sleep 1
 
 	run_linter $dirs
 	;;
