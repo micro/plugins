@@ -13,7 +13,7 @@ function find_changes() {
 	changes=$(git diff --name-only $hash |
 		xargs -d'\n' -I{} dirname {} | sort -u)
 
-	changes=$(find $(echo $changes) -name 'go.mod' -printf '%h\n')
+	changes=$(find $(echo $changes) -maxdepth 1 -name 'go.mod' -printf '%h\n')
 
 	printf $changes
 }
@@ -65,7 +65,7 @@ function create_summary() {
 		go get -v -t -d ./...
 
 		go test $GO_TEST_FLAGS -json ./... |
-			tparse -notests -format=markdown >>$GITHUB_STEP_SUMMARY
+			tparse -notests -format=markdown >> $GITHUB_STEP_SUMMARY
 		popd >/dev/null
 	done
 }
