@@ -27,6 +27,7 @@ jobs:
           echo "Base ref: $GITHUB_BASE_REF, Headref: $GITHUB_HEAD_REF"
           echo "Base ref: ${{ env.GITHUB_BASE_REF }}, Headref: $GITHUB_HEAD_REF"
           echo "Base ref: \$GITHUB_BASE_REF, Headref: \$GITHUB_HEAD_REF"
+          env
           
           git checkout -b $GITHUB_BASE_REF
           git checkout $GITHUB_HEAD_REF
