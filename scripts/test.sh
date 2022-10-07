@@ -46,6 +46,7 @@ function run_linter() {
 		popd >/dev/null
 	done
 
+	echo "Linter failed"
 	if [[ $failed == "true "]]; then
 		exit 1
 	fi
