@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// bodyWatcher scans the body of a request for chunks
+// bodyWatcher scans the body of a request for chunks.
 type bodyWatcher struct {
 	results chan Event
 	stop    chan struct{}
@@ -15,12 +15,12 @@ type bodyWatcher struct {
 	req     *http.Request
 }
 
-// Changes returns the results channel
+// Changes returns the results channel.
 func (wr *bodyWatcher) ResultChan() <-chan Event {
 	return wr.results
 }
 
-// Stop cancels the request
+// Stop cancels the request.
 func (wr *bodyWatcher) Stop() {
 	select {
 	case <-wr.stop:
@@ -70,7 +70,7 @@ func (wr *bodyWatcher) stream() {
 }
 
 // NewBodyWatcher creates a k8s body watcher for
-// a given http request
+// a given http request.
 func NewBodyWatcher(req *http.Request, client *http.Client) (Watch, error) {
 	stop := make(chan struct{})
 	req.Cancel = stop

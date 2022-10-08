@@ -127,7 +127,6 @@ func TestHTTPClientStream(t *testing.T) {
 		if !ok {
 			http.Error(w, "could not hijack conn", 500)
 			return
-
 		}
 
 		// hijacked

@@ -69,7 +69,6 @@ func BenchmarkSegmentioCodecSegmentioPublish(b *testing.B) {
 			b.Fatal(err)
 		}
 	}
-
 }
 
 func BenchmarkSegmentioCodecJsonSubscribe(b *testing.B) {

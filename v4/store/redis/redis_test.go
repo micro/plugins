@@ -77,7 +77,6 @@ func Test_rkv_configure(t *testing.T) {
 			if r.Client.Options().Username != tt.want.username {
 				t.Errorf("configure() username = %v, want username %v", r.Client.Options().Username, tt.want.username)
 			}
-
 		})
 	}
 }
@@ -88,7 +87,7 @@ func Test_Store(t *testing.T) {
 	}
 	r := new(rkv)
 
-	//r.options = store.Options{Nodes: []string{"redis://:password@127.0.0.1:6379"}}
+	// r.options = store.Options{Nodes: []string{"redis://:password@127.0.0.1:6379"}}
 	//r.options = store.Options{Nodes: []string{"127.0.0.1:6379"}}
 	r.options = store.Options{Nodes: []string{"redis://127.0.0.1:6379"}}
 

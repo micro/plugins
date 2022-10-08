@@ -13,7 +13,7 @@ func init() {
 	cmd.DefaultAuths["jwt"] = NewAuth
 }
 
-// NewAuth returns a new instance of the Auth service
+// NewAuth returns a new instance of the Auth service.
 func NewAuth(opts ...auth.Option) auth.Auth {
 	j := new(jwt)
 	j.Init(opts...)

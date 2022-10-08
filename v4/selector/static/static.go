@@ -63,7 +63,6 @@ func (s *staticSelector) String() string {
 }
 
 func NewSelector(opts ...selector.Option) selector.Selector {
-
 	// Build a new
 	s := &staticSelector{
 		addressSuffix: "",

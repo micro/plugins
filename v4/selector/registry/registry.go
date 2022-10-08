@@ -10,7 +10,7 @@ func init() {
 	cmd.DefaultSelectors["registry"] = NewSelector
 }
 
-// NewSelector returns a new registry selector
+// NewSelector returns a new registry selector.
 func NewSelector(opts ...selector.Option) selector.Selector {
 	return selector.NewSelector(opts...)
 }

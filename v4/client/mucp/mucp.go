@@ -10,7 +10,7 @@ func init() {
 	cmd.DefaultClients["mucp"] = NewClient
 }
 
-// NewClient returns a new micro client interface
+// NewClient returns a new micro client interface.
 func NewClient(opts ...client.Option) client.Client {
 	return client.NewClient(opts...)
 }

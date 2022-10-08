@@ -117,7 +117,7 @@ func TestClient(t *testing.T) {
 
 			var rootSpan opentracing.Span
 			for _, s := range spans {
-				// order of traces in buffer is not garanteed
+				// order of traces in buffer is not guaranteed
 				switch s.OperationName {
 				case "root":
 					rootSpan = s

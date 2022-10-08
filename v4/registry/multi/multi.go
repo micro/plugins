@@ -61,7 +61,6 @@ func (m *multiRegistry) Register(s *registry.Service, opts ...registry.RegisterO
 	}
 
 	return nil
-
 }
 
 func (m *multiRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {

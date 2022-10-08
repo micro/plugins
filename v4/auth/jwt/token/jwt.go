@@ -8,7 +8,7 @@ import (
 	"go-micro.dev/v4/auth"
 )
 
-// authClaims to be encoded in the JWT
+// authClaims to be encoded in the JWT.
 type authClaims struct {
 	Type     string            `json:"type"`
 	Scopes   []string          `json:"scopes"`
@@ -17,19 +17,19 @@ type authClaims struct {
 	jwt.StandardClaims
 }
 
-// JWT implementation of token provider
+// JWT implementation of token provider.
 type JWT struct {
 	opts Options
 }
 
-// New returns an initialized basic provider
+// New returns an initialized basic provider.
 func New(opts ...Option) Provider {
 	return &JWT{
 		opts: NewOptions(opts...),
 	}
 }
 
-// Generate a new JWT
+// Generate a new JWT.
 func (j *JWT) Generate(acc *auth.Account, opts ...GenerateOption) (*Token, error) {
 	// decode the private key
 	priv, err := base64.StdEncoding.DecodeString(j.opts.PrivateKey)
@@ -68,7 +68,7 @@ func (j *JWT) Generate(acc *auth.Account, opts ...GenerateOption) (*Token, error
 	}, nil
 }
 
-// Inspect a JWT
+// Inspect a JWT.
 func (j *JWT) Inspect(t string) (*auth.Account, error) {
 	// decode the public key
 	pub, err := base64.StdEncoding.DecodeString(j.opts.PublicKey)
@@ -103,7 +103,7 @@ func (j *JWT) Inspect(t string) (*auth.Account, error) {
 	}, nil
 }
 
-// String returns JWT
+// String returns JWT.
 func (j *JWT) String() string {
 	return "jwt"
 }

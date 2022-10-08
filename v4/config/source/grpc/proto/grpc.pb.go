@@ -5,9 +5,11 @@
 Package grpc is a generated protocol buffer package.
 
 It is generated from these files:
+
 	grpc.proto
 
 It has these top-level messages:
+
 	ChangeSet
 	ReadRequest
 	ReadResponse

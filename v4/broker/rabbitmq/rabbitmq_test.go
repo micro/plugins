@@ -51,7 +51,7 @@ func TestDurable(t *testing.T) {
 		server.SubscriberQueue("queue.default"),
 	)
 
-	//service.Init()
+	// service.Init()
 
 	if err := service.Run(); err != nil {
 		t.Fatal(err)

@@ -168,7 +168,6 @@ func validateSubscriber(sub server.Subscriber) error {
 
 func (g *grpcServer) createSubHandler(sb *subscriber, opts server.Options) broker.Handler {
 	return func(p broker.Event) (err error) {
-
 		defer func() {
 			if r := recover(); r != nil {
 				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {

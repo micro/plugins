@@ -7,7 +7,6 @@ import (
 )
 
 func Test_cueEncoder_Decode(t *testing.T) {
-
 	type Cfg struct {
 		Msg   string
 		Place string

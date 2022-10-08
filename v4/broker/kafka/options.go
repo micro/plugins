@@ -41,7 +41,7 @@ func AsyncProducer(errors chan<- *sarama.ProducerError, successes chan<- *sarama
 
 type subscribeContextKey struct{}
 
-// SubscribeContext set the context for broker.SubscribeOption
+// SubscribeContext set the context for broker.SubscribeOption.
 func SubscribeContext(ctx context.Context) broker.SubscribeOption {
 	return setSubscribeOption(subscribeContextKey{}, ctx)
 }
@@ -52,7 +52,7 @@ func SubscribeConfig(c *sarama.Config) broker.SubscribeOption {
 	return setSubscribeOption(subscribeConfigKey{}, c)
 }
 
-// consumerGroupHandler is the implementation of sarama.ConsumerGroupHandler
+// consumerGroupHandler is the implementation of sarama.ConsumerGroupHandler.
 type consumerGroupHandler struct {
 	handler broker.Handler
 	subopts broker.SubscribeOptions

@@ -58,7 +58,7 @@ func (s *shard) Call(ctx context.Context, req client.Request, rsp interface{}, o
 	return s.Client.Call(ctx, req, rsp, nOpts...)
 }
 
-// NewClientWrapper is a wrapper which shards based on a header key value
+// NewClientWrapper is a wrapper which shards based on a header key value.
 func NewClientWrapper(key string) client.Wrapper {
 	return func(c client.Client) client.Client {
 		return &shard{

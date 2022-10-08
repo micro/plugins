@@ -44,7 +44,7 @@ func (rv *rvSource) Watch() (source.Watcher, error) {
 	return newWatcher(rv.String(), rv.v, rv.opts)
 }
 
-// Write is unsupported
+// Write is unsupported.
 func (rv *rvSource) Write(cs *source.ChangeSet) error {
 	return nil
 }

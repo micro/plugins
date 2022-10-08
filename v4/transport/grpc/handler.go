@@ -10,14 +10,13 @@ import (
 	"google.golang.org/grpc/peer"
 )
 
-// microTransport satisfies the pb.TransportServer inteface
+// microTransport satisfies the pb.TransportServer inteface.
 type microTransport struct {
 	addr string
 	fn   func(transport.Socket)
 }
 
 func (m *microTransport) Stream(ts pb.Transport_StreamServer) (err error) {
-
 	sock := &grpcTransportSocket{
 		stream: ts,
 		local:  m.addr,

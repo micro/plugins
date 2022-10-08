@@ -19,12 +19,12 @@ var (
 	// DefaultDatabase is the namespace that the bbolt store
 	// will use if no namespace is provided.
 	DefaultDatabase = "micro"
-	// DefaultTable when none is specified
+	// DefaultTable when none is specified.
 	DefaultTable = "micro"
-	// DefaultDir is the default directory for bbolt files
+	// DefaultDir is the default directory for bbolt files.
 	DefaultDir = filepath.Join(os.TempDir(), "micro", "store")
 
-	// bucket used for data storage
+	// bucket used for data storage.
 	dataBucket = "data"
 )
 
@@ -32,7 +32,7 @@ func init() {
 	cmd.DefaultStores["file"] = NewStore
 }
 
-// NewStore returns a memory store
+// NewStore returns a memory store.
 func NewStore(opts ...store.Option) store.Store {
 	s := &fileStore{
 		handles: make(map[string]*fileHandle),
@@ -55,7 +55,7 @@ type fileHandle struct {
 	db  *bolt.DB
 }
 
-// record stored by us
+// record stored by us.
 type record struct {
 	Key       string
 	Value     []byte

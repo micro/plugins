@@ -12,11 +12,11 @@ import (
 
 var (
 	// DefaultPoolMaxStreams maximum streams on a connectioin
-	// (20)
+	// (20).
 	DefaultPoolMaxStreams = 20
 
 	// DefaultPoolMaxIdle maximum idle conns of a pool
-	// (50)
+	// (50).
 	DefaultPoolMaxIdle = 50
 
 	// DefaultMaxRecvMsgSize maximum message that client can receive
@@ -37,7 +37,7 @@ type maxSendMsgSizeKey struct{}
 type grpcDialOptions struct{}
 type grpcCallOptions struct{}
 
-// maximum streams on a connectioin
+// maximum streams on a connectioin.
 func PoolMaxStreams(n int) client.Option {
 	return func(o *client.Options) {
 		if o.Context == nil {
@@ -47,7 +47,7 @@ func PoolMaxStreams(n int) client.Option {
 	}
 }
 
-// maximum idle conns of a pool
+// maximum idle conns of a pool.
 func PoolMaxIdle(d int) client.Option {
 	return func(o *client.Options) {
 		if o.Context == nil {
@@ -57,7 +57,7 @@ func PoolMaxIdle(d int) client.Option {
 	}
 }
 
-// gRPC Codec to be used to encode/decode requests for a given content type
+// gRPC Codec to be used to encode/decode requests for a given content type.
 func Codec(contentType string, c encoding.Codec) client.Option {
 	return func(o *client.Options) {
 		codecs := make(map[string]encoding.Codec)
@@ -72,7 +72,7 @@ func Codec(contentType string, c encoding.Codec) client.Option {
 	}
 }
 
-// AuthTLS should be used to setup a secure authentication using TLS
+// AuthTLS should be used to setup a secure authentication using TLS.
 func AuthTLS(t *tls.Config) client.Option {
 	return func(o *client.Options) {
 		if o.Context == nil {
@@ -102,7 +102,7 @@ func MaxSendMsgSize(s int) client.Option {
 	}
 }
 
-// DialOptions to be used to configure gRPC dial options
+// DialOptions to be used to configure gRPC dial options.
 func DialOptions(opts ...grpc.DialOption) client.CallOption {
 	return func(o *client.CallOptions) {
 		if o.Context == nil {
@@ -112,7 +112,7 @@ func DialOptions(opts ...grpc.DialOption) client.CallOption {
 	}
 }
 
-// CallOptions to be used to configure gRPC call options
+// CallOptions to be used to configure gRPC call options.
 func CallOptions(opts ...grpc.CallOption) client.CallOption {
 	return func(o *client.CallOptions) {
 		if o.Context == nil {

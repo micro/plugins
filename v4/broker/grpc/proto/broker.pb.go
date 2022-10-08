@@ -5,9 +5,11 @@
 Package broker is a generated protocol buffer package.
 
 It is generated from these files:
+
 	github.com/go-micro/plugins/v4/broker/grpc/proto/broker.proto
 
 It has these top-level messages:
+
 	Message
 	Empty
 */

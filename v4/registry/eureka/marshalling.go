@@ -69,7 +69,7 @@ func appToService(app *fargo.Application) []*registry.Service {
 	return services
 }
 
-// only parses first node
+// only parses first node.
 func serviceToInstance(service *registry.Service) (*fargo.Instance, error) {
 	if len(service.Nodes) == 0 {
 		return nil, errors.New("Require nodes")

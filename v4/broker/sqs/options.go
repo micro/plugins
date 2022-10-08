@@ -17,7 +17,7 @@ type waitTimeSecondsKey struct{}
 type StringFromMessageFunc func(m *broker.Message) string
 
 // DeduplicationFunction sets the function used to create the deduplication string
-// for a given message
+// for a given message.
 func DeduplicationFunction(dedup StringFromMessageFunc) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -28,7 +28,7 @@ func DeduplicationFunction(dedup StringFromMessageFunc) broker.Option {
 }
 
 // GroupIDFunction sets the function used to create the group ID string for a
-// given message
+// given message.
 func GroupIDFunction(groupfunc StringFromMessageFunc) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -39,7 +39,7 @@ func GroupIDFunction(groupfunc StringFromMessageFunc) broker.Option {
 }
 
 // MaxReceiveMessages indicates how many messages a receive operation should pull
-// during any single call
+// during any single call.
 func MaxReceiveMessages(max int64) broker.SubscribeOption {
 	return func(o *broker.SubscribeOptions) {
 		if o.Context == nil {
@@ -51,7 +51,7 @@ func MaxReceiveMessages(max int64) broker.SubscribeOption {
 
 // VisibilityTimeout controls how long a message is hidden from other queue consumers
 // before being put back. If a consumer does not delete the message, it will be put back
-// even if it was "processed"
+// even if it was "processed".
 func VisibilityTimeout(seconds int64) broker.SubscribeOption {
 	return func(o *broker.SubscribeOptions) {
 		if o.Context == nil {
@@ -61,7 +61,7 @@ func VisibilityTimeout(seconds int64) broker.SubscribeOption {
 	}
 }
 
-// WaitTimeSeconds controls the length of long polling for available messages
+// WaitTimeSeconds controls the length of long polling for available messages.
 func WaitTimeSeconds(seconds int64) broker.SubscribeOption {
 	return func(o *broker.SubscribeOptions) {
 		if o.Context == nil {
@@ -71,7 +71,7 @@ func WaitTimeSeconds(seconds int64) broker.SubscribeOption {
 	}
 }
 
-// Client receives an instantiated instance of an SQS client which is used instead of initialising a new client
+
 func Client(c *sqs.SQS) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {

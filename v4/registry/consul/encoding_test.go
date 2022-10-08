@@ -9,7 +9,7 @@ import (
 
 func TestEncodingEndpoints(t *testing.T) {
 	eps := []*registry.Endpoint{
-		&registry.Endpoint{
+		{
 			Name: "endpoint1",
 			Request: &registry.Value{
 				Name: "request",
@@ -23,7 +23,7 @@ func TestEncodingEndpoints(t *testing.T) {
 				"foo1": "bar1",
 			},
 		},
-		&registry.Endpoint{
+		{
 			Name: "endpoint2",
 			Request: &registry.Value{
 				Name: "request",
@@ -37,7 +37,7 @@ func TestEncodingEndpoints(t *testing.T) {
 				"foo2": "bar2",
 			},
 		},
-		&registry.Endpoint{
+		{
 			Name: "endpoint3",
 			Request: &registry.Value{
 				Name: "request",

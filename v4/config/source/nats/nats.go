@@ -20,7 +20,7 @@ type nats struct {
 }
 
 // DefaultBucket is the bucket that nats keys will be assumed to have if you
-// haven't specified one
+// haven't specified one.
 var (
 	DefaultBucket = "default"
 	DefaultKey    = "micro_config"

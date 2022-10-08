@@ -18,7 +18,7 @@ func (c *clientWrapper) Call(ctx context.Context, req client.Request, rsp interf
 	return c.Client.Call(ctx, req, rsp, opts...)
 }
 
-// NewClientWrapper creates a blocking side rate limiter
+// NewClientWrapper creates a blocking side rate limiter.
 func NewClientWrapper(rate int, opts ...ratelimit.Option) client.Wrapper {
 	r := ratelimit.New(rate, opts...)
 
@@ -27,7 +27,7 @@ func NewClientWrapper(rate int, opts ...ratelimit.Option) client.Wrapper {
 	}
 }
 
-// NewHandlerWrapper creates a blocking server side rate limiter
+// NewHandlerWrapper creates a blocking server side rate limiter.
 func NewHandlerWrapper(rate int, opts ...ratelimit.Option) server.HandlerWrapper {
 	r := ratelimit.New(rate, opts...)
 

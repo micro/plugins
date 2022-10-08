@@ -4,7 +4,7 @@ import (
 	"github.com/afex/hystrix-go/hystrix"
 )
 
-// CommandConfig is used to tune circuit settings at runtime
+// CommandConfig is used to tune circuit settings at runtime.
 type CommandConfig struct {
 	Timeout                int
 	MaxConcurrentRequests  int
@@ -13,14 +13,14 @@ type CommandConfig struct {
 	ErrorPercentThreshold  int
 }
 
-// Configure applies settings for a set of circuits
+// Configure applies settings for a set of circuits.
 func Configure(cmds map[string]CommandConfig) {
 	for k, v := range cmds {
 		ConfigureCommand(k, v)
 	}
 }
 
-// ConfigureCommand applies settings for a circuit
+// ConfigureCommand applies settings for a circuit.
 func ConfigureCommand(name string, config CommandConfig) {
 	hystrix.ConfigureCommand(name, hystrix.CommandConfig{
 		Timeout:                config.Timeout,
@@ -31,7 +31,7 @@ func ConfigureCommand(name string, config CommandConfig) {
 	})
 }
 
-// ConfigureDefault applies default settings for all circuits
+// ConfigureDefault applies default settings for all circuits.
 func ConfigureDefault(config CommandConfig) {
 	if config.Timeout != 0 {
 		hystrix.DefaultTimeout = config.Timeout

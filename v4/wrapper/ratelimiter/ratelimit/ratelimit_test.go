@@ -89,7 +89,7 @@ func TestRateServerLimit(t *testing.T) {
 			server.Registry(r),
 			server.Transport(tr),
 			// add broker
-			//server.Broker(b),
+			// server.Broker(b),
 			// add the breaker wrapper
 			server.WrapHandler(NewHandlerWrapper(br, false)),
 		)

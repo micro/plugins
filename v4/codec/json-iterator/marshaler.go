@@ -16,10 +16,10 @@ var (
 		SortMapKeys:            false,
 	}.Froze()
 
-	//json            = jsoniter.ConfigCompatibleWithStandardLibrary
+
 	jsonpbMarshaler = &jsonpb.Marshaler{}
 
-	// create buffer pool with 16 instances each preallocated with 256 bytes
+	// create buffer pool with 16 instances each preallocated with 256 bytes.
 	bufferPool = bpool.NewSizedBufferPool(16, 256)
 )
 

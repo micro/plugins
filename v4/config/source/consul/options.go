@@ -14,7 +14,7 @@ type dcKey struct{}
 type tokenKey struct{}
 type configKey struct{}
 
-// WithAddress sets the consul address
+// WithAddress sets the consul address.
 func WithAddress(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -24,7 +24,7 @@ func WithAddress(a string) source.Option {
 	}
 }
 
-// WithPrefix sets the key prefix to use
+// WithPrefix sets the key prefix to use.
 func WithPrefix(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -54,7 +54,7 @@ func WithDatacenter(p string) source.Option {
 	}
 }
 
-// WithToken sets the key token to use
+// WithToken sets the key token to use.
 func WithToken(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -64,7 +64,7 @@ func WithToken(p string) source.Option {
 	}
 }
 
-// WithConfig set consul-specific options
+// WithConfig set consul-specific options.
 func WithConfig(c *api.Config) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

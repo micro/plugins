@@ -30,7 +30,7 @@ func (c cueEncoder) String() string {
 	return "cue"
 }
 
-// NewEncoder : create new cueEncoder
+// NewEncoder : create new cueEncoder.
 func NewEncoder() encoder.Encoder {
 	return cueEncoder{}
 }

@@ -30,7 +30,7 @@ func (x *xrayWrapper) Call(ctx context.Context, req client.Request, rsp interfac
 	return err
 }
 
-// NewCallWrapper accepts Options and returns a Trace Call Wrapper for individual node calls made by the client
+// NewCallWrapper accepts Options and returns a Trace Call Wrapper for individual node calls made by the client.
 func NewCallWrapper(opts ...Option) client.CallWrapper {
 	options := Options{
 		Name:   "go.micro.client.CallFunc",
@@ -60,7 +60,7 @@ func NewCallWrapper(opts ...Option) client.CallWrapper {
 	}
 }
 
-// NewClientWrapper accepts Options and returns a Trace Client Wrapper which tracks high level service calls
+// NewClientWrapper accepts Options and returns a Trace Client Wrapper which tracks high level service calls.
 func NewClientWrapper(opts ...Option) client.Wrapper {
 	options := Options{
 		Name:   "go.micro.client.Call",
@@ -76,7 +76,7 @@ func NewClientWrapper(opts ...Option) client.Wrapper {
 	}
 }
 
-// NewHandlerWrapper accepts Options and returns a Trace Handler Wrapper
+// NewHandlerWrapper accepts Options and returns a Trace Handler Wrapper.
 func NewHandlerWrapper(opts ...Option) server.HandlerWrapper {
 	options := Options{
 		Daemon: "localhost:2000",

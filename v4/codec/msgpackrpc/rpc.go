@@ -277,7 +277,6 @@ func (r *Response) DecodeMsg(mr *msgp.Reader) error {
 	}
 
 	return nil
-
 }
 
 type Notification struct {

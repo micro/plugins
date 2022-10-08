@@ -35,7 +35,7 @@ func (s *testServer) HandleError(ctx context.Context, msg *pb.Request) error {
 	return fmt.Errorf("fake")
 }
 
-// TestHello implements helloworld.GreeterServer
+// TestHello implements helloworld.GreeterServer.
 func (s *testServer) CallPcre(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	if req.Name == "Error" {
 		return &errors.Error{Id: "1", Code: 99, Detail: "detail"}
@@ -45,7 +45,7 @@ func (s *testServer) CallPcre(ctx context.Context, req *pb.Request, rsp *pb.Resp
 	return nil
 }
 
-// TestHello implements helloworld.GreeterServer
+// TestHello implements helloworld.GreeterServer.
 func (s *testServer) CallPcreInvalid(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	if req.Name == "Error" {
 		return &errors.Error{Id: "1", Code: 99, Detail: "detail"}
@@ -55,7 +55,7 @@ func (s *testServer) CallPcreInvalid(ctx context.Context, req *pb.Request, rsp *
 	return nil
 }
 
-// TestHello implements helloworld.GreeterServer
+// TestHello implements helloworld.GreeterServer.
 func (s *testServer) Call(ctx context.Context, req *pb.Request, rsp *pb.Response) error {
 	if req.Name == "Error" {
 		return &errors.Error{Id: "1", Code: 99, Detail: "detail\xc5"}
@@ -66,47 +66,47 @@ func (s *testServer) Call(ctx context.Context, req *pb.Request, rsp *pb.Response
 }
 
 /*
-func BenchmarkServer(b *testing.B) {
-	r := registry.NewMemoryRegistry()
-	br := broker.NewMemoryBroker()
-	tr := tgrpc.NewTransport()
-	s := gsrv.NewServer(
-		server.Broker(br),
-		server.Name("foo"),
-		server.Registry(r),
-		server.Transport(tr),
-	)
-	c := gcli.NewClient(
-		client.Registry(r),
-		client.Broker(br),
-		client.Transport(tr),
-	)
-	ctx := context.TODO()
+	func BenchmarkServer(b *testing.B) {
+		r := registry.NewMemoryRegistry()
+		br := broker.NewMemoryBroker()
+		tr := tgrpc.NewTransport()
+		s := gsrv.NewServer(
+			server.Broker(br),
+			server.Name("foo"),
+			server.Registry(r),
+			server.Transport(tr),
+		)
+		c := gcli.NewClient(
+			client.Registry(r),
+			client.Broker(br),
+			client.Transport(tr),
+		)
+		ctx := context.TODO()
 
-	h := &testServer{}
-	pb.RegisterTestHandler(s, h)
-	if err := s.Start(); err != nil {
-		b.Fatalf("failed to start: %v", err)
-	}
-
-	// check registration
-	services, err := r.GetService("foo")
-	if err != nil || len(services) == 0 {
-		b.Fatalf("failed to get service: %v # %d", err, len(services))
-	}
-
-	defer func() {
-		if err := s.Stop(); err != nil {
-			b.Fatalf("failed to stop: %v", err)
+		h := &testServer{}
+		pb.RegisterTestHandler(s, h)
+		if err := s.Start(); err != nil {
+			b.Fatalf("failed to start: %v", err)
 		}
-	}()
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		c.Call()
-	}
+		// check registration
+		services, err := r.GetService("foo")
+		if err != nil || len(services) == 0 {
+			b.Fatalf("failed to get service: %v # %d", err, len(services))
+		}
 
-}
+		defer func() {
+			if err := s.Stop(); err != nil {
+				b.Fatalf("failed to stop: %v", err)
+			}
+		}()
+
+		b.ResetTimer()
+		for i := 0; i < b.N; i++ {
+			c.Call()
+		}
+
+}.
 */
 func testGRPCServer(t *testing.T, s server.Server, c client.Client, r registry.Registry, testRPC bool) {
 	ctx := context.TODO()

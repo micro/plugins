@@ -12,7 +12,7 @@ import (
 var jsonpbMarshaler = &jsonpb.Marshaler{}
 var jsonpbUnmarshaler = &jsonpb.Unmarshaler{}
 
-// create buffer pool with 16 instances each preallocated with 256 bytes
+// create buffer pool with 16 instances each preallocated with 256 bytes.
 var bufferPool = bpool.NewSizedBufferPool(16, 256)
 var bytesPool = bpool.NewBytePool(16*256, 256)
 

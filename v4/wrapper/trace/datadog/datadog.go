@@ -45,14 +45,14 @@ func (d *ddWrapper) Publish(ctx context.Context, p client.Message, opts ...clien
 	return
 }
 
-// NewClientWrapper returns a Client wrapped in tracer
+// NewClientWrapper returns a Client wrapped in tracer.
 func NewClientWrapper() client.Wrapper {
 	return func(c client.Client) client.Client {
 		return &ddWrapper{c}
 	}
 }
 
-// NewCallWrapper returns a Call Wrapper
+// NewCallWrapper returns a Call Wrapper.
 func NewCallWrapper() client.CallWrapper {
 	return func(cf client.CallFunc) client.CallFunc {
 		return func(ctx context.Context, node *registry.Node, req client.Request, rsp interface{}, opts client.CallOptions) error {
@@ -68,7 +68,7 @@ func NewCallWrapper() client.CallWrapper {
 	}
 }
 
-// NewHandlerWrapper returns a Handler Wrapper
+// NewHandlerWrapper returns a Handler Wrapper.
 func NewHandlerWrapper() server.HandlerWrapper {
 	return func(h server.HandlerFunc) server.HandlerFunc {
 		return func(ctx context.Context, req server.Request, rsp interface{}) (err error) {
@@ -87,7 +87,7 @@ func NewHandlerWrapper() server.HandlerWrapper {
 	}
 }
 
-// NewSubscriberWrapper returns a Subscriber Wrapper
+// NewSubscriberWrapper returns a Subscriber Wrapper.
 func NewSubscriberWrapper() server.SubscriberWrapper {
 	return func(next server.SubscriberFunc) server.SubscriberFunc {
 		return func(ctx context.Context, msg server.Message) (err error) {

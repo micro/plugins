@@ -871,7 +871,6 @@ func (g *grpcServer) Start() error {
 	if l := g.getListener(); l != nil {
 		ts = l
 	} else {
-
 		// check the tls config for secure connect
 		if tc := config.TLSConfig; tc != nil {
 			ts, err = tls.Listen("tcp", config.Address, tc)

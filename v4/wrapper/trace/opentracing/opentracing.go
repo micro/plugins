@@ -98,7 +98,7 @@ func (o *otWrapper) Publish(ctx context.Context, p client.Message, opts ...clien
 	return err
 }
 
-// NewClientWrapper accepts an open tracing Trace and returns a Client Wrapper
+// NewClientWrapper accepts an open tracing Trace and returns a Client Wrapper.
 func NewClientWrapper(ot opentracing.Tracer) client.Wrapper {
 	return func(c client.Client) client.Client {
 		if ot == nil {
@@ -108,7 +108,7 @@ func NewClientWrapper(ot opentracing.Tracer) client.Wrapper {
 	}
 }
 
-// NewCallWrapper accepts an opentracing Tracer and returns a Call Wrapper
+// NewCallWrapper accepts an opentracing Tracer and returns a Call Wrapper.
 func NewCallWrapper(ot opentracing.Tracer) client.CallWrapper {
 	return func(cf client.CallFunc) client.CallFunc {
 		return func(ctx context.Context, node *registry.Node, req client.Request, rsp interface{}, opts client.CallOptions) error {
@@ -130,7 +130,7 @@ func NewCallWrapper(ot opentracing.Tracer) client.CallWrapper {
 	}
 }
 
-// NewHandlerWrapper accepts an opentracing Tracer and returns a Handler Wrapper
+// NewHandlerWrapper accepts an opentracing Tracer and returns a Handler Wrapper.
 func NewHandlerWrapper(ot opentracing.Tracer) server.HandlerWrapper {
 	return func(h server.HandlerFunc) server.HandlerFunc {
 		return func(ctx context.Context, req server.Request, rsp interface{}) error {
@@ -152,7 +152,7 @@ func NewHandlerWrapper(ot opentracing.Tracer) server.HandlerWrapper {
 	}
 }
 
-// NewSubscriberWrapper accepts an opentracing Tracer and returns a Subscriber Wrapper
+// NewSubscriberWrapper accepts an opentracing Tracer and returns a Subscriber Wrapper.
 func NewSubscriberWrapper(ot opentracing.Tracer) server.SubscriberWrapper {
 	return func(next server.SubscriberFunc) server.SubscriberFunc {
 		return func(ctx context.Context, msg server.Message) error {

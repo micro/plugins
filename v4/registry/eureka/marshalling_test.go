@@ -11,19 +11,19 @@ import (
 
 func TestServiceToInstance(t *testing.T) {
 	nodes := []*registry.Node{
-		&registry.Node{
+		{
 			Id:       "node0",
 			Address:  "node0.example.com:1234",
 			Metadata: map[string]string{"foo": "bar"},
 		},
-		&registry.Node{
+		{
 			Id:      "node1",
 			Address: "node1.example.com:9876",
 		},
 	}
 
 	endpoints := []*registry.Endpoint{
-		&registry.Endpoint{
+		{
 			Name:     "endpoint",
 			Request:  &registry.Value{Name: "request-value", Type: "request-value-type", Values: []*registry.Value{}},
 			Response: &registry.Value{Name: "response-value", Type: "response-value-type", Values: []*registry.Value{}},

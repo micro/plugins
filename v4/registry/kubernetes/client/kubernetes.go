@@ -14,7 +14,7 @@ type PodList struct {
 	Items []Pod `json:"items"`
 }
 
-// Pod is the top level item for a pod
+// Pod is the top level item for a pod.
 type Pod struct {
 	Metadata *Meta   `json:"metadata"`
 	Status   *Status `json:"status"`

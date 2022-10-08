@@ -30,18 +30,18 @@ var (
 	labelTypeKey          = "micro.mu/type"
 	labelTypeValueService = "service"
 
-	// used on k8s services to scope a serialised
-	// micro service by pod name
+	// used on k8s services to scope a serialized
+	// micro service by pod name.
 	annotationServiceKeyPrefix = "micro.mu/service-"
 
-	// Pod status
+	// Pod status.
 	podRunning = "Running"
 
-	// label name regex
+	// label name regex.
 	labelRe = regexp.MustCompilePOSIX("[-A-Za-z0-9_.]")
 )
 
-// podSelector
+// podSelector.
 var podSelector = map[string]string{
 	labelTypeKey: labelTypeValueService,
 }
@@ -79,7 +79,7 @@ func configure(k *kregistry, opts ...registry.Option) error {
 	return nil
 }
 
-// serviceName generates a valid service name for k8s labels
+// serviceName generates a valid service name for k8s labels.
 func serviceName(name string) string {
 	aname := make([]byte, len(name))
 
@@ -94,18 +94,18 @@ func serviceName(name string) string {
 	return string(aname)
 }
 
-// Init allows reconfig of options
+// Init allows reconfig of options.
 func (c *kregistry) Init(opts ...registry.Option) error {
 	return configure(c, opts...)
 }
 
-// Options returns the registry Options
+// Options returns the registry Options.
 func (c *kregistry) Options() registry.Options {
 	return c.options
 }
 
 // Register sets a service selector label and an annotation with a
-// serialised version of the service passed in.
+// serialized version of the service passed in.
 func (c *kregistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
 	if len(s.Nodes) == 0 {
 		return errors.New("you must register at least one node")
@@ -141,7 +141,7 @@ func (c *kregistry) Register(s *registry.Service, opts ...registry.RegisterOptio
 	return nil
 }
 
-// Deregister nils out any things set in Register
+// Deregister nils out any things set in Register.
 func (c *kregistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
 	if len(s.Nodes) == 0 {
 		return errors.New("you must deregister at least one node")
@@ -167,7 +167,6 @@ func (c *kregistry) Deregister(s *registry.Service, opts ...registry.DeregisterO
 	}
 
 	return nil
-
 }
 
 // GetService will get all the pods with the given service selector,
@@ -192,7 +191,7 @@ func (c *kregistry) GetService(name string, opts ...registry.GetOption) ([]*regi
 		if pod.Status.Phase != podRunning || pod.Metadata.DeletionTimestamp != "" {
 			continue
 		}
-		// get serialised service from annotation
+		// get serialized service from annotation
 		svcStr, ok := pod.Metadata.Annotations[annotationServiceKeyPrefix+serviceName(name)]
 		if !ok {
 			continue
@@ -222,7 +221,7 @@ func (c *kregistry) GetService(name string, opts ...registry.GetOption) ([]*regi
 	return list, nil
 }
 
-// ListServices will list all the service names
+// ListServices will list all the service names.
 func (c *kregistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
 	pods, err := c.client.ListPods(podSelector)
 	if err != nil {
@@ -263,7 +262,7 @@ func (c *kregistry) ListServices(opts ...registry.ListOption) ([]*registry.Servi
 	return list, nil
 }
 
-// Watch returns a kubernetes watcher
+// Watch returns a kubernetes watcher.
 func (c *kregistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
 	return newWatcher(c, opts...)
 }
@@ -272,7 +271,7 @@ func (c *kregistry) String() string {
 	return "kubernetes"
 }
 
-// NewRegistry creates a kubernetes registry
+// NewRegistry creates a kubernetes registry.
 func NewRegistry(opts ...registry.Option) registry.Registry {
 	k := &kregistry{
 		options: registry.Options{},

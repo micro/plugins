@@ -38,7 +38,6 @@ func TestTryToConnectTLS(t *testing.T) {
 	)
 
 	dialConfig = func(_ string, c amqp.Config) (*amqp.Connection, error) {
-
 		if c.TLSClientConfig != nil {
 			dialTLSCount++
 			return nil, err

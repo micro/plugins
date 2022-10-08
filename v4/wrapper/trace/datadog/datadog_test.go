@@ -116,7 +116,7 @@ func TestClient(t *testing.T) {
 
 			var serverSpan, clientSpan, rootSpan mocktracer.Span
 			for _, s := range spans {
-				// order of traces in buffer is not garanteed
+				// order of traces in buffer is not guaranteed
 				switch s.OperationName() {
 				case "micro.server":
 					serverSpan = s

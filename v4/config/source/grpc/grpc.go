@@ -24,7 +24,6 @@ var (
 )
 
 func (g *grpcSource) Read() (set *source.ChangeSet, err error) {
-
 	var opts []grpc.DialOption
 
 	// check if secure is necessary
@@ -59,7 +58,7 @@ func (g *grpcSource) Watch() (source.Watcher, error) {
 	return newWatcher(rsp)
 }
 
-// Write is unsupported
+// Write is unsupported.
 func (g *grpcSource) Write(cs *source.ChangeSet) error {
 	return nil
 }

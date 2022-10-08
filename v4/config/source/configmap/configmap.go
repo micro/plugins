@@ -19,7 +19,7 @@ type configmap struct {
 	configPath string
 }
 
-// Predefined variables
+// Predefined variables.
 var (
 	DefaultName       = "micro"
 	DefaultConfigPath = ""
@@ -54,7 +54,7 @@ func (k *configmap) Read() (*source.ChangeSet, error) {
 	return cs, nil
 }
 
-// Write is unsupported
+// Write is unsupported.
 func (k *configmap) Write(cs *source.ChangeSet) error {
 	return nil
 }
@@ -75,7 +75,7 @@ func (k *configmap) Watch() (source.Watcher, error) {
 	return w, nil
 }
 
-// NewSource is a factory function
+// NewSource is a factory function.
 func NewSource(opts ...source.Option) source.Source {
 	var (
 		options    = source.NewOptions(opts...)

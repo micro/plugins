@@ -8,7 +8,7 @@ import (
 	"go-micro.dev/v4/config/source"
 )
 
-// Currently a single vault reader
+// Currently a single vault reader.
 type vault struct {
 	secretPath string
 	secretName string
@@ -49,7 +49,7 @@ func (c *vault) Read() (*source.ChangeSet, error) {
 	cs.Checksum = cs.Sum()
 
 	return cs, nil
-	//return nil, nil
+	// return nil, nil
 }
 
 func (c *vault) Write(cs *source.ChangeSet) error {
@@ -66,7 +66,7 @@ func (c *vault) Watch() (source.Watcher, error) {
 	return w, nil
 }
 
-// NewSource creates a new vault source
+// NewSource creates a new vault source.
 func NewSource(opts ...source.Option) source.Source {
 	options := source.NewOptions(opts...)
 

@@ -10,12 +10,12 @@ type mockWatcher struct {
 	stop    chan bool
 }
 
-// Changes returns the results channel
+// Changes returns the results channel.
 func (w *mockWatcher) ResultChan() <-chan watch.Event {
 	return w.results
 }
 
-// Stop closes any channels
+// Stop closes any channels.
 func (w *mockWatcher) Stop() {
 	select {
 	case <-w.stop:

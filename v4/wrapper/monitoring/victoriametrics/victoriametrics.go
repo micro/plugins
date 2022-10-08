@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	// default metric prefix
+	// default metric prefix.
 	DefaultMetricPrefix = "micro_"
-	// default label prefix
+	// default label prefix.
 	DefaultLabelPrefix = "micro_"
 )
 

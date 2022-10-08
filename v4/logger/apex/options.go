@@ -13,32 +13,32 @@ import (
 type handlerKey struct{}
 type levelKey struct{}
 
-// Options is used when applying custom options
+// Options is used when applying custom options.
 type Options struct {
 	log.Options
 }
 
-// WithLevel allows to set the level for Log Output
+// WithLevel allows to set the level for Log Output.
 func WithLevel(level log.Level) log.Option {
 	return setOption(levelKey{}, level)
 }
 
-// WithHandler allows to set a customHandler for Log Output
+// WithHandler allows to set a customHandler for Log Output.
 func WithHandler(handler apexLog.Handler) log.Option {
 	return setOption(handlerKey{}, handler)
 }
 
-// WithTextHandler sets the Text Handler for Log Output
+// WithTextHandler sets the Text Handler for Log Output.
 func WithTextHandler() log.Option {
 	return WithHandler(text.Default)
 }
 
-// WithJSONHandler sets the JSON Handler for Log Output
+// WithJSONHandler sets the JSON Handler for Log Output.
 func WithJSONHandler() log.Option {
 	return WithHandler(json.Default)
 }
 
-// WithCLIHandler sets the CLI Handler for Log Output
+// WithCLIHandler sets the CLI Handler for Log Output.
 func WithCLIHandler() log.Option {
 	return WithHandler(cli.Default)
 }

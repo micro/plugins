@@ -14,7 +14,7 @@ import (
 	"go-micro.dev/v4/client"
 )
 
-// Implements the streamer interface
+// Implements the streamer interface.
 type httpStream struct {
 	sync.RWMutex
 	address string

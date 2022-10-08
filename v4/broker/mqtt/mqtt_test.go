@@ -3,7 +3,7 @@ package mqtt
 import (
 	"testing"
 
-	"github.com/eclipse/paho.mqtt.golang"
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"go-micro.dev/v4/broker"
 )
 

@@ -13,7 +13,7 @@ import (
 	"go-micro.dev/v4/metadata"
 )
 
-// getHTTP returns a http struct
+// getHTTP returns a http struct.
 func getHTTP(url, method string, err error) *awsxray.HTTP {
 	return &awsxray.HTTP{
 		Request: &awsxray.Request{
@@ -26,7 +26,7 @@ func getHTTP(url, method string, err error) *awsxray.HTTP {
 	}
 }
 
-// getRandom generates a random byte slice
+// getRandom generates a random byte slice.
 func getRandom(i int) []byte {
 	b := make([]byte, i)
 	for {
@@ -38,7 +38,7 @@ func getRandom(i int) []byte {
 	}
 }
 
-// getSegment creates a new segment based on whether we're part of an existing flow
+// getSegment creates a new segment based on whether we're part of an existing flow.
 func getSegment(name string, ctx context.Context) *awsxray.Segment {
 	md, _ := metadata.FromContext(ctx)
 	parentId := getParentId(md)
@@ -72,7 +72,7 @@ func getSegment(name string, ctx context.Context) *awsxray.Segment {
 	return s
 }
 
-// getStatus returns a status code from the error
+// getStatus returns a status code from the error.
 func getStatus(err error) int {
 	// no error
 	if err == nil {
@@ -84,7 +84,7 @@ func getStatus(err error) int {
 		return int(e.Code)
 	}
 
-	// try parse marshalled error
+	// try parse marshaled error
 	if e := errors.Parse(err.Error()); e.Code > 0 {
 		return int(e.Code)
 	}
@@ -93,7 +93,7 @@ func getStatus(err error) int {
 	return 500
 }
 
-// getTraceId returns trace header or generates a new one
+// getTraceId returns trace header or generates a new one.
 func getTraceId(md metadata.Metadata) string {
 	// try as is
 	if h, ok := md[awsxray.TraceHeader]; ok {
@@ -109,7 +109,7 @@ func getTraceId(md metadata.Metadata) string {
 	return fmt.Sprintf("%d-%x-%x", 1, time.Now().Unix(), getRandom(12))
 }
 
-// getParentId returns parent header or blank
+// getParentId returns parent header or blank.
 func getParentId(md metadata.Metadata) string {
 	// try as is
 	if h, ok := md[awsxray.TraceHeader]; ok {
@@ -137,7 +137,7 @@ func record(x *awsxray.AWSXRay, s *awsxray.Segment) error {
 	return x.Record(s)
 }
 
-// setCallStatus sets the http section and related status
+// setCallStatus sets the http section and related status.
 func setCallStatus(s *awsxray.Segment, url, method string, err error) {
 	s.HTTP = getHTTP(url, method, err)
 

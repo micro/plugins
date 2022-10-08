@@ -13,7 +13,7 @@ type groupKey struct{}
 type dataIdKey struct{}
 type encoderKey struct{}
 
-// WithAddress sets the nacos address
+// WithAddress sets the nacos address.
 func WithAddress(addrs []string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -23,7 +23,7 @@ func WithAddress(addrs []string) source.Option {
 	}
 }
 
-// WithClientConfig sets the nacos config
+// WithClientConfig sets the nacos config.
 func WithClientConfig(cc constant.ClientConfig) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -33,7 +33,7 @@ func WithClientConfig(cc constant.ClientConfig) source.Option {
 	}
 }
 
-// WithGroup sets nacos config group
+// WithGroup sets nacos config group.
 func WithGroup(g string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -43,7 +43,7 @@ func WithGroup(g string) source.Option {
 	}
 }
 
-// WithDataId sets nacos config dataId
+// WithDataId sets nacos config dataId.
 func WithDataId(id string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

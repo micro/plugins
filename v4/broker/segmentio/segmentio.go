@@ -350,7 +350,6 @@ func (k *kBroker) Subscribe(topic string, handler broker.Handler, opts ...broker
 						generation.Start(cgh.run)
 					}
 				}
-
 			}
 		}
 	}()

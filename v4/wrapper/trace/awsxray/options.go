@@ -15,21 +15,21 @@ type Options struct {
 
 type Option func(o *Options)
 
-// WithName sets the name used for each segment. Use Service Name
+// WithName sets the name used for each segment. Use Service Name.
 func WithName(name string) Option {
 	return func(o *Options) {
 		o.Name = name
 	}
 }
 
-// WithClient sets the XRay Client to use to send segments
+// WithClient sets the XRay Client to use to send segments.
 func WithClient(x *xray.XRay) Option {
 	return func(o *Options) {
 		o.Client = x
 	}
 }
 
-// WithDaemon sets the address of the XRay Daemon to send segements
+// WithDaemon sets the address of the XRay Daemon to send segements.
 func WithDaemon(addr string) Option {
 	return func(o *Options) {
 		o.Daemon = addr

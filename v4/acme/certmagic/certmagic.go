@@ -16,7 +16,7 @@ type certmagicProvider struct {
 	opts acme.Options
 }
 
-// TODO: set self-contained options
+// TODO: set self-contained options.
 func (c *certmagicProvider) setup() {
 	certmagic.DefaultACME.CA = c.opts.CA
 	if c.opts.ChallengeProvider != nil {
@@ -48,7 +48,7 @@ func (c *certmagicProvider) TLSConfig(hosts ...string) (*tls.Config, error) {
 	return certmagic.TLS(hosts)
 }
 
-// NewProvider returns a certmagic provider
+// NewProvider returns a certmagic provider.
 func NewProvider(options ...acme.Option) acme.Provider {
 	opts := acme.DefaultOptions()
 

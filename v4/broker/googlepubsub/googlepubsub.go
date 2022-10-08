@@ -21,7 +21,7 @@ type pubsubBroker struct {
 	options broker.Options
 }
 
-// A pubsub subscriber that manages handling of messages
+// A pubsub subscriber that manages handling of messages.
 type subscriber struct {
 	options broker.SubscribeOptions
 	topic   string
@@ -29,7 +29,7 @@ type subscriber struct {
 	sub     *pubsub.Subscription
 }
 
-// A single publication received by a handler
+// A single publication received by a handler.
 type publication struct {
 	pm    *pubsub.Message
 	m     *broker.Message
@@ -139,7 +139,7 @@ func (b *pubsubBroker) Disconnect() error {
 	return b.client.Close()
 }
 
-// Init not currently implemented
+// Init not currently implemented.
 func (b *pubsubBroker) Init(opts ...broker.Option) error {
 	return nil
 }
@@ -148,7 +148,7 @@ func (b *pubsubBroker) Options() broker.Options {
 	return b.options
 }
 
-// Publish checks if the topic exists and then publishes via google pubsub
+// Publish checks if the topic exists and then publishes via google pubsub.
 func (b *pubsubBroker) Publish(topic string, msg *broker.Message, opts ...broker.PublishOption) (err error) {
 	t := b.client.Topic(topic)
 	ctx := context.Background()
@@ -172,7 +172,7 @@ func (b *pubsubBroker) Publish(topic string, msg *broker.Message, opts ...broker
 	return
 }
 
-// Subscribe registers a subscription to the given topic against the google pubsub api
+// Subscribe registers a subscription to the given topic against the google pubsub api.
 func (b *pubsubBroker) Subscribe(topic string, h broker.Handler, opts ...broker.SubscribeOption) (broker.Subscriber, error) {
 	options := broker.SubscribeOptions{
 		AutoAck: true,
@@ -222,7 +222,7 @@ func (b *pubsubBroker) String() string {
 	return "googlepubsub"
 }
 
-// NewBroker creates a new google pubsub broker
+// NewBroker creates a new google pubsub broker.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
 		Context: context.Background(),

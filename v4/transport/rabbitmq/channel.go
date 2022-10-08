@@ -30,7 +30,6 @@ func newRabbitChannel(conn *amqp.Connection) (*rabbitMQChannel, error) {
 		return nil, err
 	}
 	return rabbitCh, nil
-
 }
 
 func (r *rabbitMQChannel) Connect() error {

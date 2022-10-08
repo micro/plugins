@@ -21,7 +21,7 @@ const (
 )
 
 // NewStream returns an initialized nats stream or an error if the connection to the nats
-// server could not be established
+// server could not be established.
 func NewStream(opts ...Option) (events.Stream, error) {
 	// parse the options
 	options := Options{
@@ -95,11 +95,10 @@ func (s *stream) connectionLost(conn stan.Conn, err error) {
 			s.status = statusConnected
 			return
 		}
-
 	}()
 }
 
-// Publish a message to a topic
+// Publish a message to a topic.
 func (s *stream) Publish(topic string, msg interface{}, opts ...events.PublishOption) error {
 	// validate the topic
 	if len(topic) == 0 {
@@ -149,7 +148,7 @@ func (s *stream) Publish(topic string, msg interface{}, opts ...events.PublishOp
 	return nil
 }
 
-// Consume to a topic
+// Consume to a topic.
 func (s *stream) Consume(topic string, opts ...events.ConsumeOption) (<-chan events.Event, error) {
 	// validate the topic
 	if len(topic) == 0 {

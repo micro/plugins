@@ -45,7 +45,7 @@ func setupPod(name string) *client.Pod {
 	return p
 }
 
-// registers a service against a given pod
+// registers a service against a given pod.
 func register(r registry.Registry, podName string, svc *registry.Service) {
 	os.Setenv("HOSTNAME", podName)
 
@@ -303,7 +303,6 @@ func TestDeregister(t *testing.T) {
 	if !ok || len(*svcData2) == 0 {
 		t.Fatalf("expected to have annotation")
 	}
-
 }
 
 func TestGetService(t *testing.T) {
@@ -419,7 +418,6 @@ func TestListServices(t *testing.T) {
 	if len(services3) != 0 {
 		t.Fatal("expected there to be no services")
 	}
-
 }
 
 func TestWatcher(t *testing.T) {
@@ -454,7 +452,6 @@ func TestWatcher(t *testing.T) {
 	// remove pods
 	teardownRegistry()
 	time.Sleep(time.Millisecond * 100)
-
 }
 
 func hasNodes(a, b []*registry.Node) bool {

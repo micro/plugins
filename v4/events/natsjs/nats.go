@@ -20,7 +20,7 @@ const (
 )
 
 // NewStream returns an initialized nats stream or an error if the connection to the nats
-// server could not be established
+// server could not be established.
 func NewStream(opts ...Option) (events.Stream, error) {
 	// parse the options
 	options := Options{
@@ -68,7 +68,7 @@ func connectToNatsJetStream(options Options) (nats.JetStreamContext, error) {
 	return js, nil
 }
 
-// Publish a message to a topic
+// Publish a message to a topic.
 func (s *stream) Publish(topic string, msg interface{}, opts ...events.PublishOption) error {
 	// validate the topic
 	if len(topic) == 0 {
@@ -118,7 +118,7 @@ func (s *stream) Publish(topic string, msg interface{}, opts ...events.PublishOp
 	return nil
 }
 
-// Consume from a topic
+// Consume from a topic.
 func (s *stream) Consume(topic string, opts ...events.ConsumeOption) (<-chan events.Event, error) {
 	// validate the topic
 	if len(topic) == 0 {
@@ -136,7 +136,6 @@ func (s *stream) Consume(topic string, opts ...events.ConsumeOption) (<-chan eve
 	// setup the subscriber
 	c := make(chan events.Event)
 	handleMsg := func(m *nats.Msg) {
-
 		ctx, cancel := context.WithCancel(context.TODO())
 		defer cancel()
 

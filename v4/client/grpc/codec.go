@@ -36,7 +36,7 @@ var (
 	}
 )
 
-// UseNumber fix unmarshal Number(8234567890123456789) to interface(8.234567890123457e+18)
+// UseNumber fix unmarshal Number(8234567890123456789) to interface(8.234567890123457e+18).
 func UseNumber() {
 	useNumber = true
 }

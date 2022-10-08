@@ -12,7 +12,7 @@ type nameSpace struct{}
 type tokenKey struct{}
 type secretName struct{}
 
-// WithAddress sets the server address
+// WithAddress sets the server address.
 func WithAddress(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -22,7 +22,7 @@ func WithAddress(a string) source.Option {
 	}
 }
 
-// WithResourcePath sets the resource that will be access
+// WithResourcePath sets the resource that will be access.
 func WithResourcePath(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -32,7 +32,7 @@ func WithResourcePath(p string) source.Option {
 	}
 }
 
-// WithNameSpace sets the namespace that its going to be access
+// WithNameSpace sets the namespace that its going to be access.
 func WithNameSpace(n string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -42,7 +42,7 @@ func WithNameSpace(n string) source.Option {
 	}
 }
 
-// WithToken sets the key token to use
+// WithToken sets the key token to use.
 func WithToken(t string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -52,7 +52,7 @@ func WithToken(t string) source.Option {
 	}
 }
 
-// WithSecretName sets the name of the secret to wrap in on a map
+// WithSecretName sets the name of the secret to wrap in on a map.
 func WithSecretName(t string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

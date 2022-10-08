@@ -16,12 +16,12 @@ type response struct {
 	gcodec codec.Codec
 }
 
-// Read the response
+// Read the response.
 func (r *response) Codec() codec.Reader {
 	return r.gcodec
 }
 
-// read the header
+// read the header.
 func (r *response) Header() map[string]string {
 	md, err := r.stream.Header()
 	if err != nil {
@@ -34,7 +34,7 @@ func (r *response) Header() map[string]string {
 	return hdr
 }
 
-// Read the undecoded response
+// Read the undecoded response.
 func (r *response) Read() ([]byte, error) {
 	f := &bytes.Frame{}
 	if err := r.gcodec.ReadBody(f); err != nil {

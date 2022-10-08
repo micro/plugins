@@ -28,7 +28,7 @@ type Router struct {
 	eps map[string]string
 }
 
-// Resolver resolves rpc to http. It explicity maps Foo.Bar to /foo/bar.
+// Resolver resolves rpc to http. It explicitly maps Foo.Bar to /foo/bar.
 type Resolver struct{}
 
 var (
@@ -38,7 +38,7 @@ var (
 	DefaultRouter = &Router{}
 )
 
-// Foo.Bar becomes /foo/bar
+// Foo.Bar becomes /foo/bar.
 func (r *Resolver) Resolve(ep string) string {
 	// replace . with /
 	ep = strings.Replace(ep, ".", "/", -1)
@@ -48,7 +48,7 @@ func (r *Resolver) Resolve(ep string) string {
 	return filepath.Join("/", ep)
 }
 
-// set the nil things
+// set the nil things.
 func (p *Router) setup() {
 	if p.Resolver == nil {
 		p.Resolver = new(Resolver)
@@ -122,7 +122,7 @@ func (p *Router) ProcessMessage(ctx context.Context, msg server.Message) error {
 	return nil
 }
 
-// ServeRequest honours the server.Router interface
+
 func (p *Router) ServeRequest(ctx context.Context, req server.Request, rsp server.Response) error {
 	// rudimentary post based streaming
 	for {
@@ -182,7 +182,7 @@ func (p *Router) ServeRequest(ctx context.Context, req server.Request, rsp serve
 
 		// set response headers
 		hdr = map[string]string{}
-		for k, _ := range hrsp.Header {
+		for k := range hrsp.Header {
 			hdr[k] = hrsp.Header.Get(k)
 		}
 		// write the header

@@ -41,10 +41,8 @@ var addrTestCases = []struct {
 // This test will check if options (here nats addresses) set through either
 // transport.Option or via nats.Option are successfully set.
 func TestInitAddrs(t *testing.T) {
-
 	for _, tc := range addrTestCases {
 		t.Run(tc.name, func(t *testing.T) {
-
 			var tr transport.Transport
 			var addrs []string
 
@@ -98,7 +96,6 @@ var listenAddrTestCases = []struct {
 }
 
 func TestListenAddr(t *testing.T) {
-
 	natsURL := os.Getenv("NATS_URL")
 	if natsURL == "" {
 		log.Logf("NATS_URL is undefined - skipping tests")
@@ -107,7 +104,6 @@ func TestListenAddr(t *testing.T) {
 
 	for _, tc := range listenAddrTestCases {
 		t.Run(tc.address, func(t *testing.T) {
-
 			nOpts := nats.GetDefaultOptions()
 			nOpts.Servers = []string{natsURL}
 			nTport := ntport{
@@ -122,7 +118,7 @@ func TestListenAddr(t *testing.T) {
 				return
 			}
 			if trListener.Addr() != tc.address {
-				//special case - since an always string will be returned
+				// special case - since an always string will be returned
 				if tc.name == "default address" {
 					if strings.Contains(trListener.Addr(), "_INBOX.") {
 						return

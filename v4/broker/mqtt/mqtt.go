@@ -100,7 +100,6 @@ func setAddrs(addrs []string) []string {
 
 		addr = fmt.Sprintf("%s://%s:%d", scheme, host, port)
 		cAddrs = append(cAddrs, addr)
-
 	}
 
 	// default an address if we have none

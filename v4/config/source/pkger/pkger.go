@@ -40,14 +40,13 @@ func (f *file) Read() (*source.ChangeSet, error) {
 	cs.Checksum = cs.Sum()
 
 	return cs, nil
-
 }
 
 func (f *file) Watch() (source.Watcher, error) {
 	return source.NewNoopWatcher()
 }
 
-// Write is unsupported
+// Write is unsupported.
 func (f *file) Write(cs *source.ChangeSet) error {
 	return nil
 }

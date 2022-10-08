@@ -26,7 +26,7 @@ func init() {
 	cmd.DefaultSelectors["label"] = NewSelector
 }
 
-func prioritise(nodes []*registry.Node, labels []label) []*registry.Node {
+func prioritize(nodes []*registry.Node, labels []label) []*registry.Node {
 	var lnodes []*registry.Node
 	marked := make(map[string]bool)
 
@@ -129,11 +129,11 @@ func (r *labelSelector) Select(service string, opts ...selector.SelectOption) (s
 		return nil, selector.ErrNotFound
 	}
 
-	// now prioritise the list based on labels
+	// now prioritize the list based on labels
 	// oh god the O(n)^2 cruft or well not really
 	// more like O(m*n) or something like that
 	if labels, ok := r.so.Context.Value(labelKey{}).([]label); ok {
-		nodes = prioritise(nodes, labels)
+		nodes = prioritize(nodes, labels)
 	}
 
 	return next(nodes), nil
