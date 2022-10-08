@@ -73,7 +73,8 @@ function get_dirs() {
 function run_linter() {
   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
-  print_msg "$(golangci-lint --version)"
+  echo
+  golangci-lint --version
 
   cwd=$(pwd)
   dirs=$1
