@@ -18,7 +18,7 @@ var actions = []string{
 func TestBodyWatcher(t *testing.T) {
 	// set up server with handler to flush strings from ch.
 	ch := make(chan string)
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		flusher, ok := w.(http.Flusher)
 		if !ok {
 			t.Fatal("expected ResponseWriter to be a flusher")
@@ -35,7 +35,7 @@ func TestBodyWatcher(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	req, err := http.NewRequest("GET", ts.URL, nil)
+	req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
 	if err != nil {
 		t.Fatalf("did not expect NewRequest to return err: %v", err)
 	}

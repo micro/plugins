@@ -31,13 +31,14 @@ func (k *k8sWatcher) updateCache() ([]*registry.Result, error) {
 
 	var results []*registry.Result
 
-	for i := range podList.Items {
-		pod := &podList.Items[i]
-		rslts := k.buildPodResults(pod, nil)
+	for _, p := range podList.Items {
+		// Copy to new var as p gets overwritten by the loop
+		pod := p
+		rslts := k.buildPodResults(&pod, nil)
 		results = append(results, rslts...)
 
 		k.Lock()
-		k.pods[pod.Metadata.Name] = pod
+		k.pods[pod.Metadata.Name] = &pod
 		k.Unlock()
 	}
 
@@ -52,69 +53,26 @@ func (k *k8sWatcher) buildPodResults(pod *client.Pod, cache *client.Pod) []*regi
 	ignore := make(map[string]bool)
 
 	if pod.Metadata != nil {
-		for ak, av := range pod.Metadata.Annotations {
-			// check this annotation kv is a service notation
-			if !strings.HasPrefix(ak, annotationServiceKeyPrefix) {
-				continue
-			}
-
-			if av == nil {
-				continue
-			}
-
-			// ignore when we check the cached annotations
-			// as we take care of it here
-			ignore[ak] = true
-
-			// compare against cache.
-			var (
-				cacheExists bool
-				cav         *string
-			)
-
-			if cache != nil && cache.Metadata != nil {
-				cav, cacheExists = cache.Metadata.Annotations[ak]
-				if cacheExists && cav != nil && cav == av {
-					// service notation exists and is identical -
-					// no change result required.
-					continue
-				}
-			}
-
-			rslt := &registry.Result{}
-			if cacheExists {
-				rslt.Action = "update"
-			} else {
-				rslt.Action = "create"
-			}
-
-			// unmarshal service notation from annotation value
-			err := json.Unmarshal([]byte(*av), &rslt.Service)
-			if err != nil {
-				continue
-			}
-
-			results = append(results, rslt)
-		}
+		results, ignore = podBuildResult(pod, cache)
 	}
 
 	// loop through cache annotations to find services
 	// not accounted for above, and "delete" them.
 	if cache != nil && cache.Metadata != nil {
-		for ak, av := range cache.Metadata.Annotations {
-			if ignore[ak] {
+		for annKey, annVal := range cache.Metadata.Annotations {
+			if ignore[annKey] {
 				continue
 			}
 
 			// check this annotation kv is a service notation
-			if !strings.HasPrefix(ak, annotationServiceKeyPrefix) {
+			if !strings.HasPrefix(annKey, annotationServiceKeyPrefix) {
 				continue
 			}
 
 			rslt := &registry.Result{Action: "delete"}
+
 			// unmarshal service notation from annotation value
-			err := json.Unmarshal([]byte(*av), &rslt.Service)
-			if err != nil {
+			if err := json.Unmarshal([]byte(*annVal), &rslt.Service); err != nil {
 				continue
 			}
 
@@ -248,4 +206,55 @@ func newWatcher(kr *kregistry, opts ...registry.WatchOption) (registry.Watcher, 
 	}()
 
 	return k, nil
+}
+
+func podBuildResult(pod *client.Pod, cache *client.Pod) ([]*registry.Result, map[string]bool) {
+	results := make([]*registry.Result, 0, len(pod.Metadata.Annotations))
+	ignore := make(map[string]bool)
+
+	for annKey, annVal := range pod.Metadata.Annotations {
+		// check this annotation kv is a service notation
+		if !strings.HasPrefix(annKey, annotationServiceKeyPrefix) {
+			continue
+		}
+
+		if annVal == nil {
+			continue
+		}
+
+		// ignore when we check the cached annotations
+		// as we take care of it here
+		ignore[annKey] = true
+
+		// compare against cache.
+		var (
+			cacheExists bool
+			cav         *string
+		)
+
+		if cache != nil && cache.Metadata != nil {
+			cav, cacheExists = cache.Metadata.Annotations[annKey]
+			if cacheExists && cav != nil && cav == annVal {
+				// service notation exists and is identical -
+				// no change result required.
+				continue
+			}
+		}
+
+		rslt := &registry.Result{}
+		if cacheExists {
+			rslt.Action = "update"
+		} else {
+			rslt.Action = "create"
+		}
+
+		// unmarshal service notation from annotation value
+		if err := json.Unmarshal([]byte(*annVal), &rslt.Service); err != nil {
+			continue
+		}
+
+		results = append(results, rslt)
+	}
+
+	return results, ignore
 }

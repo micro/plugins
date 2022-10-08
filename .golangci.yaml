@@ -189,6 +189,7 @@ linters:
     - makezero
     - gofumpt
     - nlreturn
+    - tagliatelle
 
     # Can be considered to be enabled
     - gochecknoinits
@@ -204,6 +205,7 @@ linters:
     - godox
     - forcetypeassert
     - gci
+    - noctx
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
