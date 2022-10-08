@@ -2,9 +2,8 @@ name: Unit Tests
 on:
   push:
     branches:
-      - '**'
       - '!main'
-  pull_request:
+      - '**'
 jobs:
   golangci:
     name: Lint
