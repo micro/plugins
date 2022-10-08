@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -9,10 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client/mock"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
+
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client/mock"
 )
 
 var (
@@ -47,6 +49,7 @@ func setupPod(name string) *client.Pod {
 
 // registers a service against a given pod.
 func register(r registry.Registry, podName string, svc *registry.Service) {
+	//nolint:errcheck
 	os.Setenv("HOSTNAME", podName)
 
 	pod := setupPod(podName)
@@ -61,6 +64,7 @@ func register(r registry.Registry, podName string, svc *registry.Service) {
 		logger.Fatalf("did not expect Register() to fail: %v", err)
 	}
 
+	//nolint:errcheck
 	os.Setenv("HOSTNAME", "")
 }
 
@@ -68,18 +72,14 @@ func teardownRegistry() {
 	mock.Teardown(mockClient)
 }
 
-func setupRegistry(opts ...registry.Option) registry.Registry {
+func setupRegistry(_ ...registry.Option) registry.Registry {
 	return &kregistry{
 		client:  mockClient,
 		timeout: time.Second * 1,
 	}
 }
 
-//
-//
 // Tests start here
-//
-//
 
 func TestRegister(t *testing.T) {
 	r := setupRegistry()
@@ -106,6 +106,7 @@ func TestRegister(t *testing.T) {
 	if err := json.Unmarshal([]byte(*svcData), &service); err != nil {
 		t.Fatalf("did not expect register unmarshal to fail %v", err)
 	}
+
 	if !reflect.DeepEqual(svc, service) {
 		t.Fatal("services did not match")
 	}
@@ -278,7 +279,7 @@ func TestDeregister(t *testing.T) {
 	register(r, "pod-2", svc2)
 
 	// deregister one service
-	os.Setenv("HOSTNAME", "pod-1")
+	t.Setenv("HOSTNAME", "pod-1")
 	if err := r.Deregister(svc1); err != nil {
 		t.Fatalf("did not expect Deregister to fail %v", err)
 	}
@@ -395,12 +396,16 @@ func TestListServices(t *testing.T) {
 		t.Fatal("expected services to equal")
 	}
 
-	os.Setenv("HOSTNAME", "pod-1")
-	r.Deregister(svc1)
+	t.Setenv("HOSTNAME", "pod-1")
+	if err = r.Deregister(svc1); err != nil {
+		t.Fatalf("Failed to deregister service: %v", err)
+	}
+
 	services2, err := r.ListServices()
 	if err != nil {
 		t.Fatalf("did not expect ListServices to fail %v", err)
 	}
+
 	if !hasServices(services2, []*registry.Service{
 		{Name: "bar.service", Version: "2"},
 	}) {
@@ -424,7 +429,7 @@ func TestWatcher(t *testing.T) {
 	r := setupRegistry()
 
 	// check that service is blank
-	if _, err := r.GetService("foo.service"); err != registry.ErrNotFound {
+	if _, err := r.GetService("foo.service"); !errors.Is(err, registry.ErrNotFound) {
 		logger.Fatal("expected ErrNotFound")
 	}
 

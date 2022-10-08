@@ -6,10 +6,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client/watch"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
+
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client/watch"
 )
 
 type k8sWatcher struct {
@@ -30,12 +31,13 @@ func (k *k8sWatcher) updateCache() ([]*registry.Result, error) {
 
 	var results []*registry.Result
 
-	for _, pod := range podList.Items {
-		rslts := k.buildPodResults(&pod, nil)
+	for i := range podList.Items {
+		pod := &podList.Items[i]
+		rslts := k.buildPodResults(pod, nil)
 		results = append(results, rslts...)
 
 		k.Lock()
-		k.pods[pod.Metadata.Name] = &pod
+		k.pods[pod.Metadata.Name] = pod
 		k.Unlock()
 	}
 
@@ -46,6 +48,7 @@ func (k *k8sWatcher) updateCache() ([]*registry.Result, error) {
 // and return a list of results to send down the wire.
 func (k *k8sWatcher) buildPodResults(pod *client.Pod, cache *client.Pod) []*registry.Result {
 	var results []*registry.Result
+
 	ignore := make(map[string]bool)
 
 	if pod.Metadata != nil {
@@ -64,8 +67,10 @@ func (k *k8sWatcher) buildPodResults(pod *client.Pod, cache *client.Pod) []*regi
 			ignore[ak] = true
 
 			// compare against cache.
-			var cacheExists bool
-			var cav *string
+			var (
+				cacheExists bool
+				cav         *string
+			)
 
 			if cache != nil && cache.Metadata != nil {
 				cav, cacheExists = cache.Metadata.Annotations[ak]
@@ -129,10 +134,10 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		return
 	}
 
+	//nolint:exhaustive
 	switch event.Type {
+	// Pod was modified
 	case watch.Modified:
-		// Pod was modified
-
 		k.RLock()
 		cache := k.pods[pod.Metadata.Name]
 		k.RUnlock()
@@ -158,11 +163,12 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		k.Lock()
 		k.pods[pod.Metadata.Name] = &pod
 		k.Unlock()
+
 		return
 
+	// Pod was deleted
+	// passing in cache might not return all results
 	case watch.Deleted:
-		// Pod was deleted
-		// passing in cache might not return all results
 		results := k.buildPodResults(&pod, nil)
 
 		for _, result := range results {
@@ -173,6 +179,7 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		k.Lock()
 		delete(k.pods, pod.Metadata.Name)
 		k.Unlock()
+
 		return
 	}
 }
@@ -183,6 +190,7 @@ func (k *k8sWatcher) Next() (*registry.Result, error) {
 	if !ok {
 		return nil, errors.New("result chan closed")
 	}
+
 	return r, nil
 }
 
@@ -235,6 +243,7 @@ func newWatcher(kr *kregistry, opts ...registry.WatchOption) (registry.Watcher, 
 		for event := range watcher.ResultChan() {
 			k.handleEvent(event)
 		}
+
 		k.Stop()
 	}()
 

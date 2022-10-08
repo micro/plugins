@@ -10,9 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/util/cmd"
+
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
 )
 
 type kregistry struct {
@@ -88,6 +89,7 @@ func serviceName(name string) string {
 			aname[i] = '_'
 			continue
 		}
+
 		aname[i] = r
 	}
 
@@ -120,6 +122,7 @@ func (c *kregistry) Register(s *registry.Service, opts ...registry.RegisterOptio
 	if err != nil {
 		return err
 	}
+
 	svc := string(b)
 
 	pod := &client.Pod{
@@ -197,8 +200,9 @@ func (c *kregistry) GetService(name string, opts ...registry.GetOption) ([]*regi
 			continue
 		}
 
-		// unmarshal service string
 		var svc registry.Service
+
+		// unmarshal service string
 		err := json.Unmarshal([]byte(*svcStr), &svc)
 		if err != nil {
 			return nil, fmt.Errorf("could not unmarshal service '%s' from pod annotation", name)
@@ -218,6 +222,7 @@ func (c *kregistry) GetService(name string, opts ...registry.GetOption) ([]*regi
 	for _, val := range svcs {
 		list = append(list, val)
 	}
+
 	return list, nil
 }
 
@@ -235,6 +240,7 @@ func (c *kregistry) ListServices(opts ...registry.ListOption) ([]*registry.Servi
 		if pod.Status.Phase != podRunning || pod.Metadata.DeletionTimestamp != "" {
 			continue
 		}
+
 		for k, v := range pod.Metadata.Annotations {
 			if !strings.HasPrefix(k, annotationServiceKeyPrefix) {
 				continue
@@ -246,19 +252,26 @@ func (c *kregistry) ListServices(opts ...registry.ListOption) ([]*registry.Servi
 			if err := json.Unmarshal([]byte(*v), &svc); err != nil {
 				continue
 			}
+
 			s, ok := svcs[svc.Name+svc.Version]
 			if !ok {
 				svcs[svc.Name+svc.Version] = &svc
 				continue
 			}
+
 			// append to service:version nodes
 			s.Nodes = append(s.Nodes, svc.Nodes...)
 		}
 	}
-	var list []*registry.Service
+
+	i := 0
+	list := make([]*registry.Service, len(svcs))
+
 	for _, s := range svcs {
-		list = append(list, s)
+		list[i] = s
+		i++
 	}
+
 	return list, nil
 }
 
@@ -276,6 +289,9 @@ func NewRegistry(opts ...registry.Option) registry.Registry {
 	k := &kregistry{
 		options: registry.Options{},
 	}
+
+	//nolint:errcheck,gosec
 	configure(k, opts...)
+
 	return k
 }

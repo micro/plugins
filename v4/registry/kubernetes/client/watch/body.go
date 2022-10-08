@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"net/http"
+	"sync/atomic"
 	"time"
 )
 
@@ -36,11 +37,11 @@ func (wr *bodyWatcher) stream() {
 
 	// ignore first few messages from stream,
 	// as they are usually old.
-	ignore := true
+	var ignore atomic.Bool
 
 	go func() {
 		<-time.After(time.Second)
-		ignore = false
+		ignore.Store(false)
 	}()
 
 	go func() {
@@ -52,7 +53,7 @@ func (wr *bodyWatcher) stream() {
 			}
 
 			// ignore for the first second
-			if ignore {
+			if ignore.Load() {
 				continue
 			}
 
