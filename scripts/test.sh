@@ -1,7 +1,6 @@
 #!/bin/bash
 
 MICRO_VERSION="v4"
-LINTER_VERSION="v1.50.0"
 GO_TEST_FLAGS="-v -race -cover -bench=."
 
 RED='\033[0;31m'
@@ -72,7 +71,7 @@ function get_dirs() {
 
 # Run GoLangCi Linters.
 function run_linter() {
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin $LINTER_VERSION
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
   golangci-lint --version
 
