@@ -176,6 +176,9 @@ function create_summary() {
 
 print_msg "Using branch: $GITHUB_REF_NAME"
 
+print_msg "Experiment"
+git diff --name-only origin/main
+
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
