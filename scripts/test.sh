@@ -29,7 +29,7 @@ function print_red() {
   sleep 1
 }
 
-# Print the contents of the directory array. 
+# Print the contents of the directory array.
 function print_list() {
   dirs=$1
 
@@ -65,6 +65,15 @@ function find_all() {
   find $MICRO_VERSION -name 'go.mod' -printf '%h\n'
 }
 
+# Get the dir list based on command type.
+function get_dirs() {
+  if [[ $1 == "all" ]]; then
+    find_all
+  else
+    find_changes
+  fi
+}
+
 # Run GoLangCi Linters.
 function run_linter() {
   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin $LINTER_VERSION
@@ -93,6 +102,42 @@ function run_linter() {
     add_summary "The linter can sometimes autofix some of the issues, if it is supported."
     add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c <go-micro/plugins dir>/.golangci.yaml --fix\n\`\`\`"
     print_red "Linter failed"
+    exit 1
+  fi
+}
+
+# Run Unit tests with RichGo for pretty output.
+function run_test() {
+  cwd=$(pwd)
+  dirs=$1
+  failed="false"
+
+  print_msg "Downloading dependencies..."
+
+  go install github.com/kyoh86/richgo@latest
+
+  for dir in "${dirs[@]}"; do
+    bash -c "cd ${dir}; go mod tidy &>/dev/null"
+  done
+
+  for dir in "${dirs[@]}"; do
+    pushd $dir >/dev/null
+    print_msg "Running unit tests for $dir"
+
+    # Download all modules.
+    go get -v -t -d ./...
+
+    richgo test $GO_TEST_FLAGS ./...
+
+    if [[ $? -ne 0 ]]; then
+      failed="true"
+    fi
+
+    popd >/dev/null
+  done
+
+  if [[ $failed == "true" ]]; then
+    print_red "Tests failed"
     exit 1
   fi
 }
@@ -130,52 +175,10 @@ function create_summary() {
   fi
 }
 
-# Run Unit tests with RichGo for pretty output.
-function run_test() {
-  cwd=$(pwd)
-  dirs=$1
-  failed="false"
-
-  print_msg "Downloading dependencies..."
-
-  go install github.com/kyoh86/richgo@latest
-
-  for dir in "${dirs[@]}"; do
-	  bash -c "cd ${dir}; go mod tidy &>/dev/null" 
-  done
-
-  for dir in "${dirs[@]}"; do
-    pushd $dir >/dev/null
-    print_msg "Running unit tests for $dir"
-
-    # Download all modules.
-    go get -v -t -d ./...
-
-    richgo test $GO_TEST_FLAGS ./...
-
-    if [[ $? -ne 0 ]]; then
-      failed="true"
-    fi
-
-    popd >/dev/null
-  done
-
-  if [[ $failed == "true" ]]; then
-    print_red "Tests failed"
-    exit 1
-  fi
-}
-
-# Get the dir list based on command type.
-function get_dirs() {
-  if [[ $1 == "all" ]]; then
-    find_all
-  else
-    find_changes
-  fi
-}
-
 print_msg "Using branch: $GITHUB_REF_NAME"
+
+print_msg "Experiment"
+git --no-pager diff --name-only origin/main
 
 case $1 in
 "lint")
