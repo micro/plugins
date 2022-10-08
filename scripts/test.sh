@@ -81,7 +81,7 @@ function run_linter() {
   if [[ $failed == "true" ]]; then
     add_summary "## Autofix Linting Issues"
     add_summary "The linter can sometimes autofix some of the issues, if it is supported."
-    add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c \"<go-micro/plugins dir>/.golangci.yaml\" --fix\n\`\`\`"
+    add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c <go-micro/plugins dir>/.golangci.yaml --fix\n\`\`\`"
     print_red "Linter failed"
     exit 1
   fi
