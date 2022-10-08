@@ -41,7 +41,7 @@ func init() {
 	cmd.DefaultStores["natsjs"] = NewStore
 }
 
-// NewStore will create a new NATS JetStream Object Store
+// NewStore will create a new NATS JetStream Object Store.
 func NewStore(opts ...store.Option) store.Store {
 	options := store.Options{
 		Nodes:    []string{},
@@ -64,7 +64,9 @@ func NewStore(opts ...store.Option) store.Store {
 	return n
 }
 
-// Init initialises the store. It must perform any required setup on the backing storage implementation and check that it is ready for use, returning any errors.
+// Init initialises the store. It must perform any required setup on the
+// backing storage implementation and check that it is ready for use,
+// returning any errors.
 func (n *natsStore) Init(opts ...store.Option) error {
 	n.setOption(opts...)
 

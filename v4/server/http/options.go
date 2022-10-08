@@ -2,12 +2,15 @@ package http
 
 import (
 	"context"
+	"net"
 
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/codec"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
 )
+
+type netListener struct{}
 
 func newOptions(opt ...server.Option) server.Options {
 	opts := server.Options{
@@ -45,4 +48,9 @@ func newOptions(opt ...server.Option) server.Options {
 	}
 
 	return opts
+}
+
+// Listener specifies the net.Listener to use instead of the default
+func Listener(l net.Listener) server.Option {
+	return setServerOption(netListener{}, l)
 }

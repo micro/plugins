@@ -56,6 +56,18 @@ func (h *httpServer) newCodec(contentType string) (codec.NewCodec, error) {
 	return nil, fmt.Errorf("Unsupported Content-Type: %s", contentType)
 }
 
+func (h *httpServer) getListener() net.Listener {
+	if h.opts.Context == nil {
+		return nil
+	}
+
+	if l, ok := h.opts.Context.Value(netListener{}).(net.Listener); ok && l != nil {
+		return l
+	}
+
+	return nil
+}
+
 func (h *httpServer) Options() server.Options {
 	h.Lock()
 	opts := h.opts
@@ -246,7 +258,9 @@ func (h *httpServer) Start() error {
 		err error
 	)
 
-	if opts.TLSConfig != nil {
+	if l := h.getListener(); l != nil {
+		ln = l
+	} else if opts.TLSConfig != nil {
 		ln, err = tls.Listen("tcp", opts.Address, opts.TLSConfig)
 	} else {
 		ln, err = net.Listen("tcp", opts.Address)
