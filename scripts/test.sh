@@ -132,13 +132,14 @@ function create_summary() {
 
 # Run Unit tests with RichGo for pretty output.
 function run_test() {
-  go install github.com/kyoh86/richgo@latest
-
   cwd=$(pwd)
   dirs=$1
   failed="false"
 
   print_msg "Downloading dependencies..."
+
+  go install github.com/kyoh86/richgo@latest
+
   for dir in "${dirs[@]}"; do
 	  bash -c "cd ${dir}; go mod tidy &>/dev/null" 
   done
