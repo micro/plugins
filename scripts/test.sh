@@ -54,6 +54,7 @@ function find_changes() {
   # Find all directories that have changed files.
   changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
 
+  # Filter out directories without go.mod files.
   changes=($(find "${changes[@]}" -maxdepth 1 -name 'go.mod' -printf '%h\n'))
 
   echo "${changes[@]}"
@@ -176,16 +177,9 @@ function create_summary() {
 
 print_msg "Using branch: $GITHUB_REF_NAME"
 
-print_msg "Experiment"
-git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u
-
-changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
-echo ${changes[@]}
-
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
-  echo "Dirs: ${dirs[@]}"
   [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
