@@ -48,8 +48,8 @@ function add_summary() {
 # Find directories that contain changes.
 function find_changes() {
   # Pull main branch.
-  git checkout main &>/dev/null
-  git checkout $GITHUB_REF_NAME &>/dev/null
+  git checkout main #&>/dev/null
+  git checkout $GITHUB_REF_NAME #&>/dev/null
 
   # Find all directories that have changed files.
   changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
@@ -176,6 +176,9 @@ function create_summary() {
 }
 
 print_msg "Using branch: $GITHUB_REF_NAME"
+
+git --no-pager diff --name-only origin/main
+git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u
 
 case $1 in
 "lint")
