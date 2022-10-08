@@ -13,18 +13,21 @@ export RICHGO_FORCE_COLOR="true"
 export IN_TRAVIS_CI="true"
 export TRAVIS="true"
 
+# Print a green colored message to the screen.
 function print_msg() {
   printf "\n\n${GREEN}${BAR}${NC}\n"
   printf "${GREEN}| > ${1}${NC}\n"
   printf "${GREEN}${BAR}${NC}\n\n"
 }
 
+# Print a red colored message to the screen.
 function print_red() {
   printf "\n\n${RED}${BAR}${NC}\n"
   printf "${RED}| > ${1}${NC}\n"
   printf "${RED}${BAR}${NC}\n\n"
 }
 
+# Print the contents of the directory array. 
 function print_list() {
   dirs=$1
 
@@ -35,17 +38,18 @@ function print_list() {
   sleep 1
 }
 
+# Add a job summary to GitHub Actions.
 function add_summary() {
   printf "${1}\n" >>$GITHUB_STEP_SUMMARY
 }
 
-# Find directories that contain changes
+# Find directories that contain changes.
 function find_changes() {
-  # Pull main branch
+  # Pull main branch.
   git checkout main &>/dev/null
   git checkout $GITHUB_REF_NAME &>/dev/null
 
-  # Find all directories that have changed files
+  # Find all directories that have changed files.
   hash=$(git merge-base --fork-point main)
   changes=($(git diff --name-only $hash | xargs -d'\n' -I{} dirname {} | sort -u))
 
@@ -54,12 +58,12 @@ function find_changes() {
   echo ${changes[@]}
 }
 
-# Find all go directories
+# Find all go directories.
 function find_all() {
   find $MICRO_VERSION -name 'go.mod' -printf '%h\n'
 }
 
-# Run GoLangCi Linters
+# Run GoLangCi Linters.
 function run_linter() {
   curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin $LINTER_VERSION
 
@@ -91,7 +95,7 @@ function run_linter() {
   fi
 }
 
-# Run unit tests with tparse to create a summary
+# Run unit tests with tparse to create a summary.
 function create_summary() {
   go install github.com/mfridman/tparse@latest
 
@@ -103,8 +107,9 @@ function create_summary() {
   for dir in "${dirs[@]}"; do
     pushd $dir >/dev/null
     print_msg "Creating summary for $dir"
+    add_summary "\n### ${dir}\n"
 
-    # Download all modules
+    # Download all modules.
     go get -v -t -d ./...
 
     go test $GO_TEST_FLAGS -json ./... |
@@ -123,7 +128,7 @@ function create_summary() {
   fi
 }
 
-# Run Unit tests with RichGo for pretty output
+# Run Unit tests with RichGo for pretty output.
 function run_test() {
   go install github.com/kyoh86/richgo@latest
 
@@ -134,7 +139,7 @@ function run_test() {
     pushd $dir >/dev/null
     print_msg "Running unit tests for $dir"
 
-    # Download all modules
+    # Download all modules.
     go get -v -t -d ./...
 
     richgo test $GO_TEST_FLAGS ./...
@@ -152,7 +157,7 @@ function run_test() {
   fi
 }
 
-# Get the dir list based on command type
+# Get the dir list based on command type.
 function get_dirs() {
   if [[ $1 == "all" ]]; then
     find_all
@@ -186,11 +191,11 @@ case $1 in
   create_summary $dirs
   ;;
 "")
-  printf "Please provider a command"
+  printf "Please provide a command [lint, test, summary]."
   exit 1
   ;;
 *)
-  printf "Command not found: $1"
+  printf "Command not found: $1. Select one of [lint, test, summary]"
   exit 1
   ;;
 esac
