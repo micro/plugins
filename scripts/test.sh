@@ -179,21 +179,21 @@ print_msg "Using branch: $GITHUB_REF_NAME"
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   run_linter $dirs
   ;;
 "test")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   run_test $dirs
   ;;
 "summary")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   create_summary $dirs
