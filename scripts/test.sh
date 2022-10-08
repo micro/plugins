@@ -138,7 +138,7 @@ function run_test() {
 
   print_msg "Downloading dependencies..."
   for dir in "${dirs[@]}"; do
-	  bash -c "cd ${dir}; go mod tidy >/dev/null" 
+	  bash -c "cd ${dir}; go mod tidy &>/dev/null" 
   done
 
   for dir in "${dirs[@]}"; do
