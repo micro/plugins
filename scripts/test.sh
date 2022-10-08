@@ -18,6 +18,7 @@ function print_msg() {
   printf "\n\n${GREEN}${BAR}${NC}\n"
   printf "${GREEN}| > ${1}${NC}\n"
   printf "${GREEN}${BAR}${NC}\n\n"
+  sleep 1
 }
 
 # Print a red colored message to the screen.
@@ -25,6 +26,7 @@ function print_red() {
   printf "\n\n${RED}${BAR}${NC}\n"
   printf "${RED}| > ${1}${NC}\n"
   printf "${RED}${BAR}${NC}\n\n"
+  sleep 1
 }
 
 # Print the contents of the directory array. 
