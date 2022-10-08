@@ -95,6 +95,8 @@ function run_linter() {
 function create_summary() {
   go install github.com/mfridman/tparse@latest
 
+  add_summary "## Test Summary"
+
   cwd=$(pwd)
   dirs=$1
   failed="false"
@@ -104,8 +106,6 @@ function create_summary() {
 
     # Download all modules
     go get -v -t -d ./...
-
-    add_summary "## Test Summary"
 
     go test $GO_TEST_FLAGS -json ./... |
       tparse -notests -format=markdown >>$GITHUB_STEP_SUMMARY
@@ -160,7 +160,6 @@ function get_dirs() {
     find_changes
   fi
 }
-
 
 print_msg "Using branch: $GITHUB_REF_NAME"
 
