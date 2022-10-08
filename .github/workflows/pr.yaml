@@ -1,4 +1,4 @@
-name: Run PR Tests
+name: PR Tests
 on:
   push:
     branches:
