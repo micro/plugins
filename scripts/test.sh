@@ -177,7 +177,10 @@ function create_summary() {
 print_msg "Using branch: $GITHUB_REF_NAME"
 
 print_msg "Experiment"
-git diff --name-only origin/main
+git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u
+
+changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
+echo ${changes[@]}
 
 case $1 in
 "lint")
