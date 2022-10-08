@@ -52,8 +52,7 @@ function find_changes() {
   git checkout $GITHUB_REF_NAME &>/dev/null
 
   # Find all directories that have changed files.
-  hash=$(git merge-base --fork-point main)
-  changes=($(git diff --name-only $hash | xargs -d'\n' -I{} dirname {} | sort -u))
+  changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
 
   changes=($(find ${changes[@]} -maxdepth 1 -name 'go.mod' -printf '%h\n'))
 
@@ -176,9 +175,6 @@ function create_summary() {
 }
 
 print_msg "Using branch: $GITHUB_REF_NAME"
-
-print_msg "Experiment"
-git --no-pager diff --name-only origin/main
 
 case $1 in
 "lint")
