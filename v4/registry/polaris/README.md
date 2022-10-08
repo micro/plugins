@@ -17,25 +17,26 @@ poRegUrl := "127.0.0.1:8091"
 poRegNamespace := "default"
 poServiceToken := "nu/0WRA4EqSR1FagrjRj0fZwPXuGlMpX+zCuWu4uMqy8xr1vRjisSbA25aAC3mtU8MeeRsKhQiDAynUR09I="
 
-poReg := polaris.NewRegistry(registry.Addrs(poRegUrl),
+poReg := polaris.NewRegistry(
+    registry.Addrs(poRegUrl),
 		registry.Timeout(time.Second*5),
-		//can use polaris's loadbalance by polairs web console
+		// Can use Polaris's loadbalancer by Polairs web console
 		polaris.GetOneInstance(true),
 		polaris.NameSpace(poRegNamespace),
-		polaris.ServerToken(poServiceToken))
+		polaris.ServerToken(poServiceToken),
+    )
 
-// if polaris.GetOneInstance(true) ,its better to set sr.TTL(0)
+// If polaris.GetOneInstance(true), its better to set sr.TTL(0)
 sel := sr.NewSelector(selector.Registry(poReg), sr.TTL(0))
 
 srv := micro.NewService()
-// cmd will overwrite some option
+// Cmd will overwrite some option
 srv.Init()
-// init twice
+// Init twice
 srv.Init(
 	micro.Registry(poReg),
 	micro.Selector(sel),
 	micro.RegisterInterval(time.Second*5),
 	micro.RegisterTTL(time.Second*10),
 )
-
 ```
