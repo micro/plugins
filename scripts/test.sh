@@ -171,10 +171,6 @@ function create_summary() {
   fi
 }
 
-print_msg "Using branch: $GITHUB_REF_NAME"
-
-env
-
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
