@@ -135,6 +135,12 @@ function run_test() {
   cwd=$(pwd)
   dirs=$1
   failed="false"
+
+  print_msg "Downloading dependencies..."
+  for dir in "${dirs[@]}"; do
+	  bash -c "cd ${dir}; go mod tidy"
+  done
+
   for dir in "${dirs[@]}"; do
     pushd $dir >/dev/null
     print_msg "Running unit tests for $dir"
