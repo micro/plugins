@@ -9,6 +9,10 @@ NC='\033[0m'
 GREEN='\033[0;32m'
 BAR="------------------------------------------------"
 
+export RICHGO_FORCE_COLOR="true"
+export IN_TRAVIS_CI="true"
+export TRAVIS="true"
+
 function print_msg() {
   printf "\n\n${GREEN}${BAR}${NC}\n"
   printf "${GREEN}| > ${1}${NC}\n"
