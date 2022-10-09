@@ -26,7 +26,6 @@ func (r *redisStream) runJanitor() {
 			time.Sleep(janitorFrequency)
 		}
 	}()
-
 }
 
 func (r *redisStream) cleanupConsumers() error {
@@ -58,7 +57,6 @@ func (r *redisStream) cleanupConsumers() error {
 					continue
 				}
 			}
-
 		}
 		d := defaultTrimDuration
 		durationStr := os.Getenv("MICRO_REDIS_TRIM_DURATION")

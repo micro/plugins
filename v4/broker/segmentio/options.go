@@ -25,7 +25,7 @@ func WriterConfig(c kafka.WriterConfig) broker.Option {
 
 type subscribeContextKey struct{}
 
-// SubscribeContext set the context for broker.SubscribeOption
+// SubscribeContext set the context for broker.SubscribeOption.
 func SubscribeContext(ctx context.Context) broker.SubscribeOption {
 	return setSubscribeOption(subscribeContextKey{}, ctx)
 }

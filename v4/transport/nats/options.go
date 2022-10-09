@@ -10,7 +10,7 @@ import (
 type optionsKey struct{}
 
 // Options allow to inject a nats.Options struct for configuring
-// the nats connection
+// the nats connection.
 func Options(nopts nats.Options) transport.Option {
 	return func(o *transport.Options) {
 		if o.Context == nil {

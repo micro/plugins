@@ -41,10 +41,8 @@ var addrTestCases = []struct {
 }
 
 func TestInitAddrs(t *testing.T) {
-
 	for _, tc := range addrTestCases {
 		t.Run(fmt.Sprintf("%s: %s", tc.name, tc.description), func(t *testing.T) {
-
 			var reg registry.Registry
 			var addrs []string
 
@@ -89,12 +87,10 @@ func TestInitAddrs(t *testing.T) {
 				}
 			}
 		})
-
 	}
 }
 
 func TestWatchQueryTopic(t *testing.T) {
-
 	natsURL := os.Getenv("NATS_URL")
 	if natsURL == "" {
 		log.Println("NATS_URL is undefined - skipping tests")

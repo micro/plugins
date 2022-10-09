@@ -21,7 +21,7 @@ type createSubscription struct{}
 type deleteSubscription struct{}
 
 // ClientOption is a broker Option which allows google pubsub client options to be
-// set for the client
+// set for the client.
 func ClientOption(c ...option.ClientOption) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -31,7 +31,7 @@ func ClientOption(c ...option.ClientOption) broker.Option {
 	}
 }
 
-// ProjectID provides an option which sets the google project id
+// ProjectID provides an option which sets the google project id.
 func ProjectID(id string) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -41,7 +41,7 @@ func ProjectID(id string) broker.Option {
 	}
 }
 
-// CreateSubscription prevents the creation of the subscription if it not exists
+// CreateSubscription prevents the creation of the subscription if it not exists.
 func CreateSubscription(b bool) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -52,7 +52,7 @@ func CreateSubscription(b bool) broker.Option {
 	}
 }
 
-// DeleteSubscription prevents the deletion of the subscription if it not exists
+// DeleteSubscription prevents the deletion of the subscription if it not exists.
 func DeleteSubscription(b bool) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {

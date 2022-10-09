@@ -84,7 +84,7 @@ func (m *mkv) List(opts ...store.ListOption) ([]string, error) {
 
 	var keys []string
 
-	//store := make(map[string]string)
+	// store := make(map[string]string)
 	if err := m.Server.Each(func(c net.Addr) error {
 		cc, err := net.Dial("tcp", c.String())
 		if err != nil {

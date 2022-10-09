@@ -24,7 +24,7 @@ func testLog(l log.Logger) {
 	l.Logf(log.ErrorLevel, "Test Logf with level: %s", "error")
 	l.Logf(log.TraceLevel, "Test Logf with level: %s", "trace")
 	l.Logf(log.WarnLevel, "Test Logf with level: %s", "warn")
-	//l.Logf(log.FatalLevel, "Test Logf with level: %s", "fatal")
+	// l.Logf(log.FatalLevel, "Test Logf with level: %s", "fatal")
 }
 
 func TestJSON(t *testing.T) {

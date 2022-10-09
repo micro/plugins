@@ -37,7 +37,6 @@ func TestStream(t *testing.T) {
 			case <-time.After(5 * time.Second):
 				t.Errorf("Failed to receive message within the time limit")
 			case ev = <-ch:
-
 			}
 			assert.NotEmpty(t, ev.ID, "Missing ID")
 			assert.NotEmpty(t, ev.Timestamp, "Missing Timestamp")
@@ -72,7 +71,6 @@ func TestStream(t *testing.T) {
 			case <-time.After(5 * time.Second):
 				t.Errorf("Failed to receive message within the time limit")
 			case <-ch:
-
 			}
 		}
 		select {
@@ -80,11 +78,9 @@ func TestStream(t *testing.T) {
 		case <-ch:
 			t.Errorf("Failed to receive message within the time limit")
 		}
-
 	})
 	// test retry limit
 	t.Run("RetryLimit", func(t *testing.T) {
-
 		ch, err := s.Consume("fooretry", events.WithOffset(start), events.WithRetryLimit(3))
 		assert.NoError(t, err)
 
@@ -177,12 +173,10 @@ func TestStream(t *testing.T) {
 				break loop
 			}
 			delete(seen, tobj.One)
-
 		}
 		assert.True(t, ch1Processed)
 		assert.True(t, ch2Processed)
 	})
-
 }
 
 func TestCleanup(t *testing.T) {
@@ -210,7 +204,6 @@ func TestCleanup(t *testing.T) {
 	cons, err = s.(*redisStream).redisClient.XInfoConsumers(context.Background(), "stream-"+topic, "mygroup").Result()
 	assert.NoError(t, err)
 	assert.Len(t, cons, 0)
-
 }
 
 func TestJanitor(t *testing.T) {
@@ -240,7 +233,6 @@ func TestJanitor(t *testing.T) {
 				continue
 			}
 			ev.Ack()
-
 		}
 	}()
 	for i := 0; i < 10; i++ {
@@ -260,5 +252,4 @@ func TestJanitor(t *testing.T) {
 	cons, err = s.(*redisStream).redisClient.XInfoConsumers(context.Background(), "stream-"+topic, "mygroup").Result()
 	assert.NoError(t, err)
 	assert.Len(t, cons, 1)
-
 }

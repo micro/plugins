@@ -64,7 +64,7 @@ func NewStore(opts ...store.Option) store.Store {
 	return n
 }
 
-// Init initialises the store. It must perform any required setup on the
+// Init initializes the store. It must perform any required setup on the
 // backing storage implementation and check that it is ready for use,
 // returning any errors.
 func (n *natsStore) Init(opts ...store.Option) error {
@@ -401,7 +401,7 @@ func (n *natsStore) List(opts ...store.ListOption) ([]string, error) {
 	return keys, nil
 }
 
-// Close the store
+// Close the store.
 func (n *natsStore) Close() error {
 	n.conn.Close()
 	return nil

@@ -25,7 +25,7 @@ func init() {
 	cmd.DefaultRegistries["nacos"] = NewRegistry
 }
 
-// NewRegistry NewRegistry
+// NewRegistry NewRegistry.
 func NewRegistry(opts ...registry.Option) registry.Registry {
 	n := &nacosRegistry{
 		opts: registry.Options{

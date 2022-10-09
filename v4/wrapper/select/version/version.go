@@ -9,7 +9,7 @@ import (
 	"go-micro.dev/v4/selector"
 )
 
-// NewClientWrapper is a wrapper which selects only latest versions of services
+// NewClientWrapper is a wrapper which selects only latest versions of services.
 func NewClientWrapper() client.Wrapper {
 	return func(c client.Client) client.Client {
 		return &latestVersionWrapper{
@@ -29,7 +29,6 @@ func (w *latestVersionWrapper) Call(ctx context.Context, req client.Request, rsp
 
 func filterLatestVersion() selector.Filter {
 	return func(svcsOld []*registry.Service) []*registry.Service {
-
 		if len(svcsOld) <= 1 {
 			return svcsOld
 		}

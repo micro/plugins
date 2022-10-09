@@ -337,7 +337,6 @@ func (n *ntportListener) Accept(fn func(transport.Socket)) error {
 		default:
 		}
 		sock.Unlock()
-
 	}
 }
 

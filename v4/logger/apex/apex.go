@@ -14,7 +14,7 @@ type logger struct {
 	opts Options
 }
 
-// Fields set fields to always be logged
+// Fields set fields to always be logged.
 func (l *logger) Fields(fields map[string]interface{}) log.Logger {
 	data := make(apexLog.Fields, len(fields))
 	for k, v := range fields {
@@ -23,7 +23,7 @@ func (l *logger) Fields(fields map[string]interface{}) log.Logger {
 	return newLogger(l.WithFields(data))
 }
 
-// Init initializes options
+// Init initializes options.
 func (l *logger) Init(opts ...log.Option) error {
 	options := &Options{}
 	for _, o := range opts {
@@ -31,7 +31,6 @@ func (l *logger) Init(opts ...log.Option) error {
 	}
 
 	if options.Context != nil {
-
 		if h, ok := options.Context.Value(handlerKey{}).(apexLog.Handler); ok {
 			apexLog.SetHandler(h)
 		}
@@ -79,7 +78,7 @@ func (l *logger) Logf(level log.Level, format string, v ...interface{}) {
 	}
 }
 
-// String returns the name of logger
+// String returns the name of logger.
 func (l *logger) String() string {
 	return "apex"
 }
@@ -95,7 +94,7 @@ func newLogger(logInstance apexLog.Interface) log.Logger {
 	}
 }
 
-// New returns a new ApexLogger instance
+// New returns a new ApexLogger instance.
 func New(opts ...log.Option) log.Logger {
 	l := newLogger(apexLog.Log)
 	_ = l.Init(opts...)

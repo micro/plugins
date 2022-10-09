@@ -4,7 +4,7 @@ import (
 	"go-micro.dev/v4/client"
 )
 
-// Response sets the response methods for a service
+// Response sets the response methods for a service.
 func Response(service string, response []MockResponse) client.Option {
 	return func(o *client.Options) {
 		r, ok := responseFromContext(o.Context)
@@ -16,7 +16,7 @@ func Response(service string, response []MockResponse) client.Option {
 	}
 }
 
-// Subscriber sets the subscribers service
+// Subscriber sets the subscribers service.
 func Subscriber(topic string, subscriber MockSubscriber) client.Option {
 	return func(o *client.Options) {
 		r, ok := subscriberFromContext(o.Context)

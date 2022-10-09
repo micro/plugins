@@ -74,16 +74,16 @@ func basictest(s store.Store, t *testing.T) {
 
 	// Write 3 records with various expiry and get with prefix
 	records := []*store.Record{
-		&store.Record{
+		{
 			Key:   "foo",
 			Value: []byte("foofoo"),
 		},
-		&store.Record{
+		{
 			Key:    "foobar",
 			Value:  []byte("foobarfoobar"),
 			Expiry: time.Millisecond * 100,
 		},
-		&store.Record{
+		{
 			Key:    "foobarbaz",
 			Value:  []byte("foobarbazfoobarbaz"),
 			Expiry: 2 * time.Millisecond * 100,
@@ -139,16 +139,16 @@ func basictest(s store.Store, t *testing.T) {
 
 	// Write 3 records with various expiry and get with Suffix
 	records = []*store.Record{
-		&store.Record{
+		{
 			Key:   "foo",
 			Value: []byte("foofoo"),
 		},
-		&store.Record{
+		{
 			Key:    "barfoo",
 			Value:  []byte("barfoobarfoo"),
 			Expiry: time.Millisecond * 100,
 		},
-		&store.Record{
+		{
 			Key:    "bazbarfoo",
 			Value:  []byte("bazbarfoobazbarfoo"),
 			Expiry: 2 * time.Millisecond * 100,

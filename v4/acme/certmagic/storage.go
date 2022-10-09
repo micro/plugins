@@ -15,7 +15,7 @@ import (
 	"go-micro.dev/v4/sync"
 )
 
-// File represents a "File" that will be stored in store.Store - the contents and last modified time
+// File represents a "File" that will be stored in store.Store - the contents and last modified time.
 type File struct {
 	// last modified time
 	LastModified time.Time
@@ -139,7 +139,7 @@ func (s *storage) Stat(key string) (certmagic.KeyInfo, error) {
 	}, nil
 }
 
-// NewStorage returns a certmagic.Storage backed by a go-micro/lock and go-micro/store
+// NewStorage returns a certmagic.Storage backed by a go-micro/lock and go-micro/store.
 func NewStorage(lock sync.Sync, store store.Store) certmagic.Storage {
 	return &storage{
 		lock:  lock,

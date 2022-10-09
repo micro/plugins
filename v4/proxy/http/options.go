@@ -5,7 +5,7 @@ import (
 	"go-micro.dev/v4/server"
 )
 
-// WithBackend provides an option to set the http backend url
+// WithBackend provides an option to set the http backend url.
 func WithBackend(url string) micro.Option {
 	return func(o *micro.Options) {
 		// get the router
@@ -24,7 +24,7 @@ func WithBackend(url string) micro.Option {
 	}
 }
 
-// WithRouter provides an option to set the http router
+// WithRouter provides an option to set the http router.
 func WithRouter(r server.Router) micro.Option {
 	return func(o *micro.Options) {
 		o.Server.Init(server.WithRouter(r))

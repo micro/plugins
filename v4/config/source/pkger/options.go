@@ -8,7 +8,7 @@ import (
 
 type pkgerPathKey struct{}
 
-// WithPath sets the path to pkger
+// WithPath sets the path to pkger.
 func WithPath(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

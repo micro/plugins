@@ -2,8 +2,7 @@ name: Unit Tests
 on:
   push:
     branches:
-    - '**'
-    - '!main'
+      - 'main'
 jobs:
   golangci:
     name: Lint
@@ -17,7 +16,7 @@ jobs:
           go-version: 1.19
           check-latest: true
       - name: Run Linters
-        run: ./scripts/test.sh lint
+        run: ./scripts/test.sh lint all
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -30,7 +29,7 @@ jobs:
           go-version: 1.19
           check-latest: true
       - name: Run Unit Tests
-        run: ./scripts/test.sh test
+        run: ./scripts/test.sh test all
   summary:
     name: Summary
     runs-on: ubuntu-latest
@@ -43,4 +42,4 @@ jobs:
           go-version: 1.19
           check-latest: true
       - name: Create Summary
-        run: ./scripts/test.sh summary
+        run: ./scripts/test.sh summary all

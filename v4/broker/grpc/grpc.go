@@ -28,7 +28,7 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-// grpcBroker is a point to point async broker
+// grpcBroker is a point to point async broker.
 type grpcBroker struct {
 	id      string
 	address string
@@ -150,7 +150,7 @@ func (h *grpcSubscriber) Unsubscribe() error {
 	return h.hb.unsubscribe(h)
 }
 
-// The grpc handler
+// The grpc handler.
 func (h *grpcHandler) Publish(ctx context.Context, msg *proto.Message) (*proto.Empty, error) {
 	if len(msg.Topic) == 0 {
 		return nil, merr.InternalServerError("go.micro.broker", "Topic not found")
@@ -547,7 +547,7 @@ func (h *grpcBroker) String() string {
 	return "grpc"
 }
 
-// NewBroker returns a new grpc broker
+// NewBroker returns a new grpc broker.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	return newGRPCBroker(opts...)
 }

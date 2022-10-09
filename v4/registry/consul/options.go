@@ -8,7 +8,7 @@ import (
 	"go-micro.dev/v4/registry"
 )
 
-// Connect specifies services should be registered as Consul Connect services
+// Connect specifies services should be registered as Consul Connect services.
 func Connect() registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {
@@ -34,7 +34,6 @@ func Config(c *consul.Config) registry.Option {
 // Defaults to true.
 //
 // [1] https://www.consul.io/docs/agent/options.html#allow_stale
-//
 func AllowStale(v bool) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {
@@ -48,7 +47,6 @@ func AllowStale(v bool) registry.Option {
 // Consul. See `Consul API` for more information [1].
 //
 // [1] https://godoc.org/github.com/hashicorp/consul/api#QueryOptions
-//
 func QueryOptions(q *consul.QueryOptions) registry.Option {
 	return func(o *registry.Options) {
 		if q == nil {
@@ -61,13 +59,11 @@ func QueryOptions(q *consul.QueryOptions) registry.Option {
 	}
 }
 
-//
 // TCPCheck will tell the service provider to check the service address
 // and port every `t` interval. It will enabled only if `t` is greater than 0.
 // See `TCP + Interval` for more information [1].
 //
 // [1] https://www.consul.io/docs/agent/checks.html
-//
 func TCPCheck(t time.Duration) registry.Option {
 	return func(o *registry.Options) {
 		if t <= time.Duration(0) {

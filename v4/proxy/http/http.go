@@ -15,7 +15,7 @@ import (
 	"go-micro.dev/v4/server"
 )
 
-// Router will proxy rpc requests as http POST requests. It is a server.Router
+// Router will proxy rpc requests as http POST requests. It is a server.Router.
 type Router struct {
 	// Converts RPC Foo.Bar to /foo/bar
 	Resolver *Resolver
@@ -28,17 +28,17 @@ type Router struct {
 	eps map[string]string
 }
 
-// Resolver resolves rpc to http. It explicity maps Foo.Bar to /foo/bar
+// Resolver resolves rpc to http. It explicitly maps Foo.Bar to /foo/bar.
 type Resolver struct{}
 
 var (
-	// The default backend
+	// DefaultBackend is the default backend address.
 	DefaultBackend = "http://localhost:9090"
-	// The default router
+	// DefaultRouter is the default router.
 	DefaultRouter = &Router{}
 )
 
-// Foo.Bar becomes /foo/bar
+// Foo.Bar becomes /foo/bar.
 func (r *Resolver) Resolve(ep string) string {
 	// replace . with /
 	ep = strings.Replace(ep, ".", "/", -1)
@@ -48,7 +48,7 @@ func (r *Resolver) Resolve(ep string) string {
 	return filepath.Join("/", ep)
 }
 
-// set the nil things
+// set the nil things.
 func (p *Router) setup() {
 	if p.Resolver == nil {
 		p.Resolver = new(Resolver)
@@ -106,6 +106,7 @@ func (p *Router) Endpoint(rpcEp string) (string, error) {
 // RegisterEndpoint registers a http endpoint against an RPC endpoint.
 // It converts relative paths into backend:endpoint. Anything prefixed
 // with http:// or https:// will be left as is.
+//
 //	RegisterEndpoint("Foo.Bar", "/foo/bar")
 //	RegisterEndpoint("Greeter.Hello", "/helloworld")
 //	RegisterEndpoint("Greeter.Hello", "http://localhost:8080/")
@@ -121,7 +122,7 @@ func (p *Router) ProcessMessage(ctx context.Context, msg server.Message) error {
 	return nil
 }
 
-// ServeRequest honours the server.Router interface
+
 func (p *Router) ServeRequest(ctx context.Context, req server.Request, rsp server.Response) error {
 	// rudimentary post based streaming
 	for {
@@ -181,7 +182,7 @@ func (p *Router) ServeRequest(ctx context.Context, req server.Request, rsp serve
 
 		// set response headers
 		hdr = map[string]string{}
-		for k, _ := range hrsp.Header {
+		for k := range hrsp.Header {
 			hdr[k] = hrsp.Header.Get(k)
 		}
 		// write the header
@@ -205,20 +206,20 @@ func (p *Router) ServeRequest(ctx context.Context, req server.Request, rsp serve
 //
 // Create a new router to the http backend
 //
-// 	r := NewSingleHostRouter("http://localhost:10001")
+//	r := NewSingleHostRouter("http://localhost:10001")
 //
 //	// Add additional routes
 //	r.RegisterEndpoint("Hello.World", "/helloworld")
 //
-// 	// Create your new service
-// 	service := micro.NewService(
-// 		micro.Name("greeter"),
+//	// Create your new service
+//	service := micro.NewService(
+//		micro.Name("greeter"),
 //		// Set the router
 //		http.WithRouter(r),
-// 	)
+//	)
 //
-// 	// Run the service
-// 	service.Run()
+//	// Run the service
+//	service.Run()
 func NewSingleHostRouter(url string) *Router {
 	return &Router{
 		Resolver: new(Resolver),
@@ -233,7 +234,7 @@ func NewSingleHostRouter(url string) *Router {
 //
 // Usage:
 //
-// 	service := NewService(
+//	service := NewService(
 //		micro.Name("greeter"),
 //		// Sets the default http endpoint
 //		http.WithBackend("http://localhost:10001"),
@@ -244,7 +245,7 @@ func NewSingleHostRouter(url string) *Router {
 //	// register an endpoint
 //	http.RegisterEndpoint("Hello.World", "/helloworld")
 //
-// 	service := NewService(
+//	service := NewService(
 //		micro.Name("greeter"),
 //		// Set the http endpoint
 //		http.WithBackend("http://localhost:10001"),
@@ -260,6 +261,7 @@ func NewService(opts ...micro.Option) micro.Service {
 }
 
 // RegisterEndpoint registers a http endpoint against an RPC endpoint
+//
 //	RegisterEndpoint("Foo.Bar", "/foo/bar")
 //	RegisterEndpoint("Greeter.Hello", "/helloworld")
 //	RegisterEndpoint("Greeter.Hello", "http://localhost:8080/")

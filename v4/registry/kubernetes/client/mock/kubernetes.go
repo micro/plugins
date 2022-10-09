@@ -94,7 +94,6 @@ func NewClient() *Client {
 
 // Teardown ...
 func Teardown(c *Client) {
-
 	for _, p := range c.Pods {
 		pstr, _ := json.Marshal(p)
 

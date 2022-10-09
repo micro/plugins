@@ -54,7 +54,6 @@ func (r *rkv) Read(key string, opts ...store.ReadOption) ([]*store.Record, error
 		// TODO Limit Offset
 
 		keys = append(keys, fkeys...)
-
 	} else {
 		keys = []string{rkey}
 	}
@@ -165,7 +164,7 @@ func (r *rkv) configure() error {
 
 	redisOptions, err := redis.ParseURL(nodes[0])
 	if err != nil {
-		//Backwards compatibility
+		// Backwards compatibility
 		redisOptions = &redis.Options{
 			Addr:     nodes[0],
 			Password: "", // no password set

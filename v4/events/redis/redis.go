@@ -102,7 +102,6 @@ func (r *redisStream) Publish(topic string, msg interface{}, opts ...events.Publ
 		Stream: fmt.Sprintf("stream-%s", event.Topic),
 		Values: map[string]interface{}{"event": string(bytes), "attempt": 1},
 	}).Err()
-
 }
 
 func (r *redisStream) Consume(topic string, opts ...events.ConsumeOption) (<-chan events.Event, error) {
@@ -146,7 +145,6 @@ func (r *redisStream) consumeWithGroup(topic, group string, options events.Consu
 				logger.Errorf("Error deleting consumer %s", err)
 			}
 			close(ch)
-
 		}()
 
 		start := "-"
@@ -237,7 +235,7 @@ func (r *redisStream) consumeWithGroup(topic, group string, options events.Consu
 	return ch, nil
 }
 
-// callWithRetry tries the call and reattempts uf we see a connection pool timeout error
+// callWithRetry tries the call and reattempts uf we see a connection pool timeout error.
 func callWithRetry(f func() error, retries int) error {
 	var err error
 	for i := 0; i < retries; i++ {
@@ -347,5 +345,4 @@ func incrementID(id string) string {
 	}
 	i++
 	return fmt.Sprintf("%s-%d", parts[0], i)
-
 }

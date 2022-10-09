@@ -15,7 +15,7 @@ var newOAuthClient = func(c clientcredentials.Config) *http.Client {
 	return c.Client(oauth2.NoContext)
 }
 
-// Enable OAuth 2.0 Client Credentials Grant Flow
+// Enable OAuth 2.0 Client Credentials Grant Flow.
 func OAuth2ClientCredentials(clientID, clientSecret, tokenURL string) registry.Option {
 	return func(o *registry.Options) {
 		c := clientcredentials.Config{

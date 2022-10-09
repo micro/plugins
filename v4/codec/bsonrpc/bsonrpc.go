@@ -42,7 +42,7 @@ func (b *bsonCodec) Write(m *codec.Message, body interface{}) error {
 		_, err = b.rwc.Write(data)
 		return err
 	default:
-		return fmt.Errorf("Unrecognised message type: %v", m.Type)
+		return fmt.Errorf("Unrecognized message type: %v", m.Type)
 	}
 }
 
@@ -58,7 +58,7 @@ func (b *bsonCodec) ReadHeader(m *codec.Message, mt codec.MessageType) error {
 	case codec.Event:
 		io.Copy(b.buf, b.rwc)
 	default:
-		return fmt.Errorf("Unrecognised message type: %v", mt)
+		return fmt.Errorf("Unrecognized message type: %v", mt)
 	}
 	return nil
 }
@@ -74,7 +74,7 @@ func (b *bsonCodec) ReadBody(body interface{}) error {
 			return bson.Unmarshal(b.buf.Bytes(), body)
 		}
 	default:
-		return fmt.Errorf("Unrecognised message type: %v", b.mt)
+		return fmt.Errorf("Unrecognized message type: %v", b.mt)
 	}
 	return nil
 }

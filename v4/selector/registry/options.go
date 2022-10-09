@@ -7,7 +7,7 @@ import (
 	"go-micro.dev/v4/selector"
 )
 
-// Set the registry cache ttl
+// Set the registry cache ttl.
 func TTL(t time.Duration) selector.Option {
 	return func(o *selector.Options) {
 		if o.Context == nil {

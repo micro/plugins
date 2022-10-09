@@ -11,7 +11,7 @@ type prefixKey struct{}
 type nameKey struct{}
 type namespaceKey struct{}
 
-// WithNamespace is an option to add namespace of configmap
+// WithNamespace is an option to add namespace of configmap.
 func WithNamespace(s string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -21,7 +21,7 @@ func WithNamespace(s string) source.Option {
 	}
 }
 
-// WithName is an option to add name of configmap
+// WithName is an option to add name of configmap.
 func WithName(s string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -31,7 +31,7 @@ func WithName(s string) source.Option {
 	}
 }
 
-// WithConfigPath option for setting a custom path to kubeconfig
+// WithConfigPath option for setting a custom path to kubeconfig.
 func WithConfigPath(s string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

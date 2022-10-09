@@ -129,7 +129,7 @@ type updates struct {
 }
 
 var (
-	// You should change this if using secure
+	// You should change this if using secure.
 	DefaultSecret = []byte("micro-gossip-key") // exactly 16 bytes
 	ExpiryTick    = time.Second * 1            // needs to be smaller than registry.RegisterTTL
 	MaxPacketSize = 512
@@ -181,7 +181,7 @@ func configure(g *gossipRegistry, opts ...registry.Option) error {
 	// sane good default options
 	c.LogOutput = io.Discard // log to /dev/null
 	c.PushPullInterval = 0   // disable expensive tcp push/pull
-	c.ProtocolVersion = 4    // suport latest stable features
+	c.ProtocolVersion = 4    // support latest stable features
 
 	// set config from options
 	if config, ok := g.options.Context.Value(configKey{}).(*memberlist.Config); ok && config != nil {
@@ -496,7 +496,7 @@ func (g *gossipRegistry) Stop() error {
 	return nil
 }
 
-// connectLoop attempts to reconnect to the memberlist
+// connectLoop attempts to reconnect to the memberlist.
 func (g *gossipRegistry) connectLoop() {
 	// try every second
 	ticker := time.NewTicker(1 * time.Second)
@@ -582,7 +582,7 @@ func (g *gossipRegistry) expiryLoop(updates *updates) {
 	}
 }
 
-// process member events
+// process member events.
 func (g *gossipRegistry) eventLoop() {
 	g.RLock()
 	done := g.done
@@ -628,7 +628,6 @@ func (g *gossipRegistry) run() {
 			g.Lock()
 			if service, ok := g.services[u.Service.Name]; !ok {
 				g.services[u.Service.Name] = []*registry.Service{u.Service}
-
 			} else {
 				g.services[u.Service.Name] = regutil.Merge(service, []*registry.Service{u.Service})
 			}
@@ -753,7 +752,6 @@ func (g *gossipRegistry) Register(s *registry.Service, opts ...registry.Register
 }
 
 func (g *gossipRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
-
 	log.Debugf("[gossip] Registry deregistering service: %s", s.Name)
 
 	b, err := json.Marshal(s)

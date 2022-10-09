@@ -10,7 +10,7 @@ import (
 type addressKey struct{}
 type configKey struct{}
 
-// WithAddress sets the nacos address
+// WithAddress sets the nacos address.
 func WithAddress(addrs []string) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {
@@ -20,7 +20,7 @@ func WithAddress(addrs []string) registry.Option {
 	}
 }
 
-// WithClientConfig sets the nacos config
+// WithClientConfig sets the nacos config.
 func WithClientConfig(cc constant.ClientConfig) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 MICRO_VERSION="v4"
-LINTER_VERSION="v1.50.0"
 GO_TEST_FLAGS="-v -race -cover -bench=."
 
 RED='\033[0;31m'
@@ -29,7 +28,7 @@ function print_red() {
   sleep 1
 }
 
-# Print the contents of the directory array. 
+# Print the contents of the directory array.
 function print_list() {
   dirs=$1
 
@@ -47,17 +46,13 @@ function add_summary() {
 
 # Find directories that contain changes.
 function find_changes() {
-  # Pull main branch.
-  git checkout main &>/dev/null
-  git checkout $GITHUB_REF_NAME &>/dev/null
-
   # Find all directories that have changed files.
-  hash=$(git merge-base --fork-point main)
-  changes=($(git diff --name-only $hash | xargs -d'\n' -I{} dirname {} | sort -u))
+  changes=($(git diff --name-only origin/main | xargs -d'\n' -I{} dirname {} | sort -u))
 
-  changes=($(find ${changes[@]} -maxdepth 1 -name 'go.mod' -printf '%h\n'))
+  # Filter out directories without go.mod files.
+  changes=($(find "${changes[@]}" -maxdepth 1 -name 'go.mod' -printf '%h\n'))
 
-  echo ${changes[@]}
+  echo "${changes[@]}"
 }
 
 # Find all go directories.
@@ -65,10 +60,20 @@ function find_all() {
   find $MICRO_VERSION -name 'go.mod' -printf '%h\n'
 }
 
+# Get the dir list based on command type.
+function get_dirs() {
+  if [[ $1 == "all" ]]; then
+    find_all
+  else
+    find_changes
+  fi
+}
+
 # Run GoLangCi Linters.
 function run_linter() {
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin $LINTER_VERSION
+  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
+  echo
   golangci-lint --version
 
   cwd=$(pwd)
@@ -93,6 +98,42 @@ function run_linter() {
     add_summary "The linter can sometimes autofix some of the issues, if it is supported."
     add_summary "\`\`\`bash\ncd <your plugin>\ngolangci-lint run -c <go-micro/plugins dir>/.golangci.yaml --fix\n\`\`\`"
     print_red "Linter failed"
+    exit 1
+  fi
+}
+
+# Run Unit tests with RichGo for pretty output.
+function run_test() {
+  cwd=$(pwd)
+  dirs=$1
+  failed="false"
+
+  print_msg "Downloading dependencies..."
+
+  go install github.com/kyoh86/richgo@latest
+
+  for dir in "${dirs[@]}"; do
+    bash -c "cd ${dir}; go mod tidy &>/dev/null"
+  done
+
+  for dir in "${dirs[@]}"; do
+    pushd $dir >/dev/null
+    print_msg "Running unit tests for $dir"
+
+    # Download all modules.
+    go get -v -t -d ./...
+
+    richgo test $GO_TEST_FLAGS ./...
+
+    if [[ $? -ne 0 ]]; then
+      failed="true"
+    fi
+
+    popd >/dev/null
+  done
+
+  if [[ $failed == "true" ]]; then
+    print_red "Tests failed"
     exit 1
   fi
 }
@@ -130,71 +171,24 @@ function create_summary() {
   fi
 }
 
-# Run Unit tests with RichGo for pretty output.
-function run_test() {
-  cwd=$(pwd)
-  dirs=$1
-  failed="false"
-
-  print_msg "Downloading dependencies..."
-
-  go install github.com/kyoh86/richgo@latest
-
-  for dir in "${dirs[@]}"; do
-	  bash -c "cd ${dir}; go mod tidy &>/dev/null" 
-  done
-
-  for dir in "${dirs[@]}"; do
-    pushd $dir >/dev/null
-    print_msg "Running unit tests for $dir"
-
-    # Download all modules.
-    go get -v -t -d ./...
-
-    richgo test $GO_TEST_FLAGS ./...
-
-    if [[ $? -ne 0 ]]; then
-      failed="true"
-    fi
-
-    popd >/dev/null
-  done
-
-  if [[ $failed == "true" ]]; then
-    print_red "Tests failed"
-    exit 1
-  fi
-}
-
-# Get the dir list based on command type.
-function get_dirs() {
-  if [[ $1 == "all" ]]; then
-    find_all
-  else
-    find_changes
-  fi
-}
-
-print_msg "Using branch: $GITHUB_REF_NAME"
-
 case $1 in
 "lint")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   run_linter $dirs
   ;;
 "test")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   run_test $dirs
   ;;
 "summary")
   dirs=($(get_dirs $2))
-  [[ "${#dirs[@]}" -eq 0 ]] && exit 0
+  [[ "${#dirs[@]}" -eq 0 ]] && print_red "No changed Go files detected" && exit 0
 
   print_list $dirs
   create_summary $dirs

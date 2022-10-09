@@ -31,7 +31,6 @@ func (m *configMapValue) Decode(e encoder.Encoder, b []byte) error {
 }
 
 func makeMap(e encoder.Encoder, kv api.KVPairs, stripPrefix string) (map[string]interface{}, error) {
-
 	data := make(map[string]interface{})
 
 	// consul guarantees lexicographic order, so no need to sort

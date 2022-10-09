@@ -34,7 +34,6 @@ func (l *zaplog) Init(opts ...logger.Option) error {
 
 	if zcconfig, ok := l.opts.Context.Value(encoderConfigKey{}).(zapcore.EncoderConfig); ok {
 		zapConfig.EncoderConfig = zcconfig
-
 	}
 
 	// Set log Level if not default
@@ -162,7 +161,7 @@ func (l *zaplog) Options() logger.Options {
 	return l.opts
 }
 
-// New builds a new logger based on options
+// New builds a new logger based on options.
 func NewLogger(opts ...logger.Option) (logger.Logger, error) {
 	// Default options
 	options := logger.Options{

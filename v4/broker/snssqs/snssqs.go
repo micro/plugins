@@ -31,7 +31,7 @@ const (
 	defaultValidateHeaderOnPublish = false
 )
 
-// Amazon Services
+// Amazon Services.
 type awsServices struct {
 	svcSqs    *sqs.SQS
 	svcSns    *sns.SNS
@@ -40,7 +40,7 @@ type awsServices struct {
 	options   broker.Options
 }
 
-// A subscriber (poller) to an SQS queue
+// A subscriber (poller) to an SQS queue.
 type subscriber struct {
 	options   broker.SubscribeOptions
 	queueName string
@@ -49,7 +49,7 @@ type subscriber struct {
 	exit      chan bool
 }
 
-// A wrapper around an SQS message published on an SQS queue and delivered via subscriber
+// A wrapper around an SQS message published on an SQS queue and delivered via subscriber.
 type sqsEvent struct {
 	sMessage  *sqs.Message
 	svc       *sqs.SQS
@@ -64,7 +64,7 @@ func init() {
 }
 
 // run is designed to run as a goroutine and poll SQS for new messages. Note that it's possible to receive
-// more than one message from a single poll depending on the options configured for the plugin
+// more than one message from a single poll depending on the options configured for the plugin.
 func (s *subscriber) run(hdlr broker.Handler) {
 	logger.Debugf("SQS subscription started. Queue:%s, URL: %s", s.queueName, s.URL)
 
@@ -196,7 +196,7 @@ func (b *awsServices) Options() broker.Options {
 	return b.options
 }
 
-// AWS SDK manages the server address internally
+// AWS SDK manages the server address internally.
 func (b *awsServices) Address() string {
 	return ""
 }
@@ -232,12 +232,12 @@ func (b *awsServices) Connect() error {
 	return nil
 }
 
-// Disconnect does nothing as there's no live connection to terminate
+// Disconnect does nothing as there's no live connection to terminate.
 func (b *awsServices) Disconnect() error {
 	return nil
 }
 
-// Init initializes a broker and configures an AWS session and SNSSQS struct
+// Init initializes a broker and configures an AWS session and SNSSQS struct.
 func (b *awsServices) Init(opts ...broker.Option) error {
 	for _, o := range opts {
 		o(&b.options)
@@ -246,9 +246,8 @@ func (b *awsServices) Init(opts ...broker.Option) error {
 	return nil
 }
 
-// Publish publishes a message via SNS
+// Publish publishes a message via SNS.
 func (b *awsServices) Publish(topic string, msg *broker.Message, opts ...broker.PublishOption) error {
-
 	options := broker.PublishOptions{}
 	for _, o := range opts {
 		o(&options)
@@ -275,7 +274,7 @@ func (b *awsServices) Publish(topic string, msg *broker.Message, opts ...broker.
 	}.String()
 
 	input := &sns.PublishInput{
-		Message:  aws.String(string(msg.Body[:])),
+		Message:  aws.String(string(msg.Body)),
 		TopicArn: &topicArn,
 	}
 	input.MessageAttributes = copyMessageHeader(options.Context, msg)
@@ -289,7 +288,7 @@ func (b *awsServices) Publish(topic string, msg *broker.Message, opts ...broker.
 	return nil
 }
 
-// Subscribe subscribes to an SQS queue, starting a goroutine to poll for messages
+// Subscribe subscribes to an SQS queue, starting a goroutine to poll for messages.
 func (b *awsServices) Subscribe(queueName string, h broker.Handler, opts ...broker.SubscribeOption) (broker.Subscriber, error) {
 	queueURL, err := b.urlFromQueueName(queueName)
 	if err != nil {
@@ -331,7 +330,7 @@ func (b *awsServices) urlFromQueueName(queueName string) (string, error) {
 	return *resultURL.QueueUrl, nil
 }
 
-// String returns the name of the broker plugin
+// String returns the name of the broker plugin.
 func (b *awsServices) String() string {
 	return "snssqs"
 }
@@ -369,7 +368,7 @@ func (b *awsServices) getSTSConfig() *aws.Config {
 	return nil
 }
 
-// NewBroker creates a new broker with options
+// NewBroker creates a new broker with options.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
 		Context: context.Background(),
@@ -413,7 +412,7 @@ func buildMessageHeader(attribs map[string]*sqs.MessageAttributeValue) map[strin
 	return res
 }
 
-// ValidateBody Validate message for the lowest requirements of both SNS and SQS
+// ValidateBody Validate message for the lowest requirements of both SNS and SQS.
 func ValidateBody(msg *broker.Message) error {
 	// SNS requirements
 	if len(msg.Body) > 256*1024 {

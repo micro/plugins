@@ -6,7 +6,7 @@ import (
 	"go-micro.dev/v4/broker"
 )
 
-// Context related keys and funcs
+// Context related keys and funcs.
 type authKey struct{}
 type connectHeaderKey struct{}
 type connectTimeoutKey struct{}
@@ -21,7 +21,7 @@ type authRecord struct {
 	password string
 }
 
-// setSubscribeOption returns a function to setup a context with given value
+// setSubscribeOption returns a function to setup a context with given value.
 func setSubscribeOption(k, v interface{}) broker.SubscribeOption {
 	return func(o *broker.SubscribeOptions) {
 		if o.Context == nil {
@@ -31,7 +31,7 @@ func setSubscribeOption(k, v interface{}) broker.SubscribeOption {
 	}
 }
 
-// setBrokerOption returns a function to setup a context with given value
+// setBrokerOption returns a function to setup a context with given value.
 func setBrokerOption(k, v interface{}) broker.Option {
 	return func(o *broker.Options) {
 		if o.Context == nil {
@@ -41,7 +41,7 @@ func setBrokerOption(k, v interface{}) broker.Option {
 	}
 }
 
-// setPublishOption returns a function to setup a context with given value
+// setPublishOption returns a function to setup a context with given value.
 func setPublishOption(k, v interface{}) broker.PublishOption {
 	return func(o *broker.PublishOptions) {
 		if o.Context == nil {

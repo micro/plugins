@@ -45,10 +45,8 @@ var addrTestCases = []struct {
 
 // TestInitAddrs tests issue #100. Ensures that if the addrs is set by an option in init it will be used.
 func TestInitAddrs(t *testing.T) {
-
 	for _, tc := range addrTestCases {
 		t.Run(fmt.Sprintf("%s: %s", tc.name, tc.description), func(t *testing.T) {
-
 			var br broker.Broker
 			var addrs []string
 
@@ -92,6 +90,5 @@ func TestInitAddrs(t *testing.T) {
 				}
 			}
 		})
-
 	}
 }

@@ -13,14 +13,14 @@ type Options struct {
 
 type configKey struct{}
 
-// WithConfig pass zap.Config to logger
+// WithConfig pass zap.Config to logger.
 func WithConfig(c zap.Config) logger.Option {
 	return logger.SetOption(configKey{}, c)
 }
 
 type encoderConfigKey struct{}
 
-// WithEncoderConfig pass zapcore.EncoderConfig to logger
+// WithEncoderConfig pass zapcore.EncoderConfig to logger.
 func WithEncoderConfig(c zapcore.EncoderConfig) logger.Option {
 	return logger.SetOption(encoderConfigKey{}, c)
 }

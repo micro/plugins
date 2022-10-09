@@ -18,7 +18,7 @@ func WithServiceName(a string) source.Option {
 	}
 }
 
-// WithPath sets the key prefix to use
+// WithPath sets the key prefix to use.
 func WithPath(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

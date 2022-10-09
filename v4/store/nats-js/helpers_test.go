@@ -129,30 +129,30 @@ func NewLogWrapper() *LogWrapper {
 type LogWrapper struct {
 }
 
-// Noticef logs a notice statement
+// Noticef logs a notice statement.
 func (l *LogWrapper) Noticef(format string, v ...interface{}) {
 }
 
-// Warnf logs a warning statement
+// Warnf logs a warning statement.
 func (l *LogWrapper) Warnf(format string, v ...interface{}) {
 	fmt.Printf(format+"\n", v...)
 }
 
-// Fatalf logs a fatal statement
+// Fatalf logs a fatal statement.
 func (l *LogWrapper) Fatalf(format string, v ...interface{}) {
 	fmt.Printf(format+"\n", v...)
 }
 
-// Errorf logs an error statement
+// Errorf logs an error statement.
 func (l *LogWrapper) Errorf(format string, v ...interface{}) {
 	fmt.Printf(format+"\n", v...)
 }
 
-// Debugf logs a debug statement
+// Debugf logs a debug statement.
 func (l *LogWrapper) Debugf(format string, v ...interface{}) {
 }
 
-// Tracef logs a trace statement
+// Tracef logs a trace statement.
 func (l *LogWrapper) Tracef(format string, v ...interface{}) {
 	fmt.Printf(format+"\n", v...)
 }

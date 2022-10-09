@@ -9,35 +9,35 @@ import (
 
 func TestPrioritiseFunc(t *testing.T) {
 	nodes := []*registry.Node{
-		&registry.Node{
+		{
 			Id: "1",
 			Metadata: map[string]string{
 				"key1": "val1",
 			},
 		},
-		&registry.Node{
+		{
 			Id: "2",
 			Metadata: map[string]string{
 				"key2": "val2",
 			},
 		},
-		&registry.Node{
+		{
 			Id: "3",
 			Metadata: map[string]string{
 				"key1": "val1",
 			},
 		},
-		&registry.Node{
+		{
 			Id: "4",
 		},
 	}
 
 	labels := []label{
-		label{"key2", "val2"},
+		{"key2", "val2"},
 	}
 
-	lnodes := prioritise(nodes, labels)
-	t.Log("Prioritised node list #1")
+	lnodes := prioritize(nodes, labels)
+	t.Log("Prioritized node list #1")
 	for _, node := range lnodes {
 		t.Logf("Node %+v", node)
 	}
@@ -47,12 +47,12 @@ func TestPrioritiseFunc(t *testing.T) {
 	}
 
 	labels = []label{
-		label{"key1", "val1"},
-		label{"key2", "val2"},
+		{"key1", "val1"},
+		{"key2", "val2"},
 	}
 
-	lnodes = prioritise(nodes, labels)
-	t.Log("Prioritised node list #2")
+	lnodes = prioritize(nodes, labels)
+	t.Log("Prioritized node list #2")
 	for _, node := range lnodes {
 		t.Logf("Node %+v", node)
 	}
@@ -81,13 +81,13 @@ func TestLabelSelector(t *testing.T) {
 		Name:    "bar",
 		Version: "latest",
 		Nodes: []*registry.Node{
-			&registry.Node{
+			{
 				Id: "1",
 				Metadata: map[string]string{
 					"key1": "val1",
 				},
 			},
-			&registry.Node{
+			{
 				Id: "2",
 				Metadata: map[string]string{
 					"key2": "val2",
@@ -100,13 +100,13 @@ func TestLabelSelector(t *testing.T) {
 		Name:    "bar",
 		Version: "1.0.0",
 		Nodes: []*registry.Node{
-			&registry.Node{
+			{
 				Id: "3",
 				Metadata: map[string]string{
 					"key1": "val1",
 				},
 			},
-			&registry.Node{
+			{
 				Id: "4",
 			},
 		},

@@ -36,7 +36,7 @@ func Quorum(n int) registry.Option {
 }
 
 // Options allow to inject a nats.Options struct for configuring
-// the nats connection
+// the nats connection.
 func Options(nopts nats.Options) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {

@@ -29,7 +29,7 @@ func getServiceRecords(ctx context.Context) map[string]map[string]*record {
 	return services
 }
 
-// Services is an option that preloads service data
+// Services is an option that preloads service data.
 func Services(s map[string][]*registry.Service) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {

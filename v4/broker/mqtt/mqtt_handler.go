@@ -5,14 +5,14 @@ import (
 	"go-micro.dev/v4/broker"
 )
 
-// mqttPub is a broker.Event
+// mqttPub is a broker.Event.
 type mqttPub struct {
 	topic string
 	msg   *broker.Message
 	err   error
 }
 
-// mqttPub is a broker.Subscriber
+// mqttPub is a broker.Subscriber.
 type mqttSub struct {
 	opts   broker.SubscribeOptions
 	topic  string

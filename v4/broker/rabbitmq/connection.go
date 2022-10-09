@@ -27,7 +27,7 @@ var (
 
 	// The amqp library does not seem to set these when using amqp.DialConfig
 	// (even though it says so in the comments) so we set them manually to make
-	// sure to not brake any existing functionality
+	// sure to not brake any existing functionality.
 	defaultHeartbeat = 10 * time.Second
 	defaultLocale    = "en_US"
 
@@ -58,7 +58,7 @@ type rabbitMQConn struct {
 	waitConnection chan struct{}
 }
 
-// Exchange is the rabbitmq exchange
+// Exchange is the rabbitmq exchange.
 type Exchange struct {
 	// Name of the exchange
 	Name string
@@ -121,7 +121,7 @@ func (r *rabbitMQConn) reconnect(secure bool, config *amqp.Config) {
 			r.Lock()
 			r.connected = true
 			r.Unlock()
-			//unblock resubscribe cycle - close channel
+			// unblock resubscribe cycle - close channel
 			//at this point channel is created and unclosed - close it without any additional checks
 			close(r.waitConnection)
 		}

@@ -84,7 +84,6 @@ func (nw *watcher) callBackHandle(services []model.Instance, err error) {
 	serviceName := services[0].ServiceName
 
 	if nw.cacheServices[serviceName] == nil {
-
 		nw.Lock()
 		nw.cacheServices[serviceName] = services
 		nw.Unlock()
@@ -99,14 +98,14 @@ func (nw *watcher) callBackHandle(services []model.Instance, err error) {
 			for _, cacheService := range nw.cacheServices[serviceName] {
 				if subscribeService.InstanceId == cacheService.InstanceId {
 					if !reflect.DeepEqual(subscribeService, cacheService) {
-						//update instance
+						// update instance
 						nw.next <- &registry.Result{Action: "update", Service: buildRegistryService(&subscribeService)}
 						return
 					}
 					create = false
 				}
 			}
-			//new instance
+			// new instance
 			if create {
 				log.Println("create", subscribeService.ServiceName, subscribeService.Port)
 
@@ -138,7 +137,6 @@ func (nw *watcher) callBackHandle(services []model.Instance, err error) {
 			}
 		}
 	}
-
 }
 
 func buildRegistryService(v *model.Instance) (s *registry.Service) {

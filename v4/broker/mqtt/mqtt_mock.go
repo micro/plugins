@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eclipse/paho.mqtt.golang"
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
 
 type mockClient struct {
@@ -162,7 +162,7 @@ func (m *mockClient) SubscribeMultiple(topics map[string]byte, h mqtt.MessageHan
 		return nil
 	}
 
-	for topic, _ := range topics {
+	for topic := range topics {
 		m.subs[topic] = append(m.subs[topic], h)
 	}
 

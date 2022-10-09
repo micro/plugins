@@ -51,7 +51,7 @@ func (s *roundrobin) Call(ctx context.Context, req client.Request, rsp interface
 	return s.Client.Call(ctx, req, rsp, nOpts...)
 }
 
-// NewClientWrapper is a wrapper which roundrobins requests
+// NewClientWrapper is a wrapper which roundrobins requests.
 func NewClientWrapper() client.Wrapper {
 	return func(c client.Client) client.Client {
 		return &roundrobin{

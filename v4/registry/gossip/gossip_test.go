@@ -97,7 +97,6 @@ func TestGossipRegistryBroadcast(t *testing.T) {
 	if err := r2.Deregister(svc2); err != nil {
 		t.Fatal(err)
 	}
-
 }
 func TestGossipRegistryRetry(t *testing.T) {
 	if tr := os.Getenv("TRAVIS"); len(tr) > 0 {

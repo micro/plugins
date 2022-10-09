@@ -76,7 +76,7 @@ func (w *watcher) handle(oldCmp interface{}, newCmp interface{}) {
 	w.ch <- cs
 }
 
-// Next
+// Next.
 func (w *watcher) Next() (*source.ChangeSet, error) {
 	select {
 	case cs := <-w.ch:
@@ -86,7 +86,7 @@ func (w *watcher) Next() (*source.ChangeSet, error) {
 	}
 }
 
-// Stop
+// Stop.
 func (w *watcher) Stop() error {
 	select {
 	case <-w.exit:

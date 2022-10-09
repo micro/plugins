@@ -18,7 +18,8 @@ var zeroKey [32]byte
 // This is the preferred usage as it gives the ultimate flexibility for determining the keys used.
 //
 // Usage:
-//    `myClient.MyCall(ctx, req, shard.Strategy(req.ID))`
+//
+//	`myClient.MyCall(ctx, req, shard.Strategy(req.ID))`
 func Strategy(keys ...string) client.CallOption {
 	return client.WithSelectOption(NewSelector(keys))
 }

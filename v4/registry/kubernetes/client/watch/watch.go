@@ -11,7 +11,7 @@ type Watch interface {
 // EventType defines the possible types of events.
 type EventType string
 
-// EventTypes used
+// EventTypes used.
 const (
 	Added    EventType = "ADDED"
 	Modified EventType = "MODIFIED"

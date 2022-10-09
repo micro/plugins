@@ -50,7 +50,7 @@ func (s *sqlStore) Close() error {
 	return s.db.Close()
 }
 
-// List all the known records
+// List all the known records.
 func (s *sqlStore) List(opts ...store.ListOption) ([]string, error) {
 	rows, err := s.db.Query(fmt.Sprintf("SELECT `key`, value, expiry FROM %s.%s;", s.database, s.table))
 	if err != nil {
@@ -88,7 +88,7 @@ func (s *sqlStore) List(opts ...store.ListOption) ([]string, error) {
 	return records, nil
 }
 
-// Read all records with keys
+// Read all records with keys.
 func (s *sqlStore) Read(key string, opts ...store.ReadOption) ([]*store.Record, error) {
 	var options store.ReadOptions
 	for _, o := range opts {
@@ -119,7 +119,7 @@ func (s *sqlStore) Read(key string, opts ...store.ReadOption) ([]*store.Record, 
 	return records, nil
 }
 
-// Write records
+// Write records.
 func (s *sqlStore) Write(r *store.Record, opts ...store.WriteOption) error {
 	timeCached := time.Now().Add(r.Expiry)
 	_, err := s.writePrepare.Exec(r.Key, r.Value, timeCached, r.Value, timeCached)
@@ -130,7 +130,7 @@ func (s *sqlStore) Write(r *store.Record, opts ...store.WriteOption) error {
 	return nil
 }
 
-// Delete records with keys
+// Delete records with keys.
 func (s *sqlStore) Delete(key string, opts ...store.DeleteOption) error {
 	result, err := s.deletePrepare.Exec(key)
 	if err != nil {
@@ -213,7 +213,7 @@ func (s *sqlStore) configure() error {
 	s.database = database
 	s.table = table
 
-	// initialise the database
+	// initialize the database
 	return s.initDB()
 }
 
@@ -221,7 +221,7 @@ func (s *sqlStore) String() string {
 	return "mysql"
 }
 
-// New returns a new micro Store backed by sql
+// New returns a new micro Store backed by sql.
 func NewStore(opts ...store.Option) store.Store {
 	var options store.Options
 	for _, o := range opts {

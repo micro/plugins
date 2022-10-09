@@ -72,7 +72,6 @@ func BenchmarkSaramaCodecSegmentioPublish(b *testing.B) {
 			b.Fatal(err)
 		}
 	}
-
 }
 
 func BenchmarkSaramaCodecJsonSubscribe(b *testing.B) {

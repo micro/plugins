@@ -22,13 +22,13 @@ const (
 	defaultWaitSeconds       = 10
 )
 
-// Amazon SQS Broker
+// Amazon SQS Broker.
 type sqsBroker struct {
 	svc     *sqs.SQS
 	options broker.Options
 }
 
-// A subscriber (poller) to an SQS queue
+// A subscriber (poller) to an SQS queue.
 type subscriber struct {
 	options   broker.SubscribeOptions
 	queueName string
@@ -37,7 +37,7 @@ type subscriber struct {
 	exit      chan bool
 }
 
-// A wrapper around a message published on an SQS queue and delivered via subscriber
+// A wrapper around a message published on an SQS queue and delivered via subscriber.
 type publication struct {
 	sMessage  *sqs.Message
 	svc       *sqs.SQS
@@ -52,7 +52,7 @@ func init() {
 }
 
 // run is designed to run as a goroutine and poll SQS for new messages. Note that it's possible to receive
-// more than one message from a single poll depending on the options configured for the plugin
+// more than one message from a single poll depending on the options configured for the plugin.
 func (s *subscriber) run(hdlr broker.Handler) {
 	log.Infof("SQS subscription started. Queue:%s, URL: %s", s.queueName, s.URL)
 	for {
@@ -143,9 +143,7 @@ func (s *subscriber) handleMessage(msg *sqs.Message, hdlr broker.Handler) {
 				log.Errorf("Failed auto-acknowledge of message: %s", err.Error())
 			}
 		}
-
 	}
-
 }
 
 func (s *subscriber) Options() broker.SubscribeOptions {
@@ -210,12 +208,12 @@ func (b *sqsBroker) Connect() error {
 	return nil
 }
 
-// Disconnect does nothing as there's no live connection to terminate
+// Disconnect does nothing as there's no live connection to terminate.
 func (b *sqsBroker) Disconnect() error {
 	return nil
 }
 
-// Init initializes a broker and configures an AWS session and SQS struct
+// Init initializes a broker and configures an AWS session and SQS struct.
 func (b *sqsBroker) Init(opts ...broker.Option) error {
 	for _, o := range opts {
 		o(&b.options)
@@ -224,7 +222,7 @@ func (b *sqsBroker) Init(opts ...broker.Option) error {
 	return nil
 }
 
-// Publish publishes a message via SQS
+// Publish publishes a message via SQS.
 func (b *sqsBroker) Publish(queueName string, msg *broker.Message, opts ...broker.PublishOption) error {
 	queueURL, err := b.urlFromQueueName(queueName)
 	if err != nil {
@@ -252,7 +250,7 @@ func (b *sqsBroker) Publish(queueName string, msg *broker.Message, opts ...broke
 	return nil
 }
 
-// Subscribe subscribes to an SQS queue, starting a goroutine to poll for messages
+// Subscribe subscribes to an SQS queue, starting a goroutine to poll for messages.
 func (b *sqsBroker) Subscribe(queueName string, h broker.Handler, opts ...broker.SubscribeOption) (broker.Subscriber, error) {
 	queueURL, err := b.urlFromQueueName(queueName)
 	if err != nil {
@@ -294,7 +292,7 @@ func (b *sqsBroker) urlFromQueueName(queueName string) (string, error) {
 	return *resultURL.QueueUrl, nil
 }
 
-// String returns the name of the broker plugin
+// String returns the name of the broker plugin.
 func (b *sqsBroker) String() string {
 	return "sqs"
 }
@@ -346,7 +344,7 @@ func (b *sqsBroker) generateDedupID(m *broker.Message) *string {
 	return nil
 }
 
-// NewBroker creates a new broker with options
+// NewBroker creates a new broker with options.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
 		Context: context.Background(),

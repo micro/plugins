@@ -10,7 +10,7 @@ import (
 type addressKey struct{}
 type pathKey struct{}
 
-// WithAddress sets the consul address
+// WithAddress sets the consul address.
 func WithAddress(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -20,7 +20,7 @@ func WithAddress(a string) source.Option {
 	}
 }
 
-// WithPath sets the key prefix to use
+// WithPath sets the key prefix to use.
 func WithPath(p string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -30,7 +30,7 @@ func WithPath(p string) source.Option {
 	}
 }
 
-// WithTLS sets the TLS config for the service
+// WithTLS sets the TLS config for the service.
 func WithTLS(t *tls.Config) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

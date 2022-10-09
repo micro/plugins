@@ -9,7 +9,7 @@ import (
 	"go-micro.dev/v4/config/source"
 )
 
-// Currently a single consul reader
+// Currently a single consul reader.
 type consul struct {
 	prefix      string
 	stripPrefix string
@@ -20,7 +20,7 @@ type consul struct {
 
 var (
 	// DefaultPrefix is the prefix that consul keys will be assumed to have if you
-	// haven't specified one
+	// haven't specified one.
 	DefaultPrefix = "/micro/config/"
 )
 
@@ -55,7 +55,7 @@ func (c *consul) Read() (*source.ChangeSet, error) {
 	return cs, nil
 }
 
-// Write is unsupported
+// Write is unsupported.
 func (c *consul) Write(cs *source.ChangeSet) error {
 	return nil
 }
@@ -72,7 +72,7 @@ func (c *consul) Watch() (source.Watcher, error) {
 	return w, nil
 }
 
-// NewSource creates a new consul source
+// NewSource creates a new consul source.
 func NewSource(opts ...source.Option) source.Source {
 	options := source.NewOptions(opts...)
 

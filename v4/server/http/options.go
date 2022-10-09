@@ -50,7 +50,7 @@ func newOptions(opt ...server.Option) server.Options {
 	return opts
 }
 
-// Listener specifies the net.Listener to use instead of the default
+// Listener specifies the net.Listener to use instead of the default.
 func Listener(l net.Listener) server.Option {
 	return setServerOption(netListener{}, l)
 }

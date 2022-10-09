@@ -11,7 +11,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// NewCallWrapper accepts an opentracing Tracer and returns a Call Wrapper
+// NewCallWrapper accepts an opentracing Tracer and returns a Call Wrapper.
 func NewCallWrapper(opts ...Option) client.CallWrapper {
 	options := Options{}
 	for _, o := range opts {
@@ -38,7 +38,7 @@ func NewCallWrapper(opts ...Option) client.CallWrapper {
 	}
 }
 
-// NewHandlerWrapper accepts an opentracing Tracer and returns a Handler Wrapper
+// NewHandlerWrapper accepts an opentracing Tracer and returns a Handler Wrapper.
 func NewHandlerWrapper(opts ...Option) server.HandlerWrapper {
 	options := Options{}
 	for _, o := range opts {
@@ -65,7 +65,7 @@ func NewHandlerWrapper(opts ...Option) server.HandlerWrapper {
 	}
 }
 
-// NewSubscriberWrapper accepts an opentracing Tracer and returns a Subscriber Wrapper
+// NewSubscriberWrapper accepts an opentracing Tracer and returns a Subscriber Wrapper.
 func NewSubscriberWrapper(opts ...Option) server.SubscriberWrapper {
 	options := Options{}
 	for _, o := range opts {

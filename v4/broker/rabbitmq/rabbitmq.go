@@ -74,7 +74,6 @@ func (s *subscriber) Topic() string {
 }
 
 func (s *subscriber) Unsubscribe() error {
-
 	s.unsub <- true
 
 	// Need to wait on subscriber to exit if autoack is disabled
@@ -93,7 +92,6 @@ func (s *subscriber) Unsubscribe() error {
 }
 
 func (s *subscriber) resubscribe() {
-
 	s.wg.Add(1)
 	defer s.wg.Done()
 
@@ -101,18 +99,17 @@ func (s *subscriber) resubscribe() {
 	maxResubscribeDelay := 30 * time.Second
 	expFactor := time.Duration(2)
 	reSubscribeDelay := minResubscribeDelay
-	//loop until unsubscribe
+	// loop until unsubscribe
 	for {
-
 		select {
 		// unsubscribe case
 		case <-s.unsub:
 			return
-		//check shutdown case
+		// check shutdown case
 		case <-s.r.conn.close:
-			//yep, its shutdown case
+			// yep, its shutdown case
 			return
-			//wait until we reconect to rabbit
+			// wait until we reconect to rabbit
 		case <-s.r.conn.waitConnection:
 			// When the connection is disconnected, the waitConnection will be re-assigned, so '<-s.r.conn.waitConnection' maybe blocked.
 			// Here, it returns once a second, and then the latest waitconnection will be used
@@ -228,7 +225,6 @@ func (r *rbroker) Publish(topic string, msg *broker.Message, opts ...broker.Publ
 		if value, ok := options.Context.Value(appID{}).(string); ok {
 			m.AppId = value
 		}
-
 	}
 
 	for k, v := range msg.Header {
@@ -391,7 +387,6 @@ func NewBroker(opts ...broker.Option) broker.Broker {
 }
 
 func (r *rbroker) getExchange() Exchange {
-
 	ex := DefaultExchange
 
 	if e, ok := r.opts.Context.Value(exchangeKey{}).(string); ok {

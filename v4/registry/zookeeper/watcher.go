@@ -126,7 +126,7 @@ func (zw *zookeeperWatcher) watchKey(key string) {
 				zw.writeRespChan(&watchResponse{e, srv, err})
 			}
 			if e.Type == zk.EventNodeDeleted {
-				//The Node was deleted - stop watching
+				// The Node was deleted - stop watching
 				return
 			}
 		case <-zw.stop:
@@ -137,7 +137,6 @@ func (zw *zookeeperWatcher) watchKey(key string) {
 }
 
 func (zw *zookeeperWatcher) watch() {
-
 	services := func() []string {
 		if len(zw.wo.Service) > 0 {
 			return []string{zw.wo.Service}
@@ -149,7 +148,7 @@ func (zw *zookeeperWatcher) watch() {
 		return allServices
 	}
 
-	//watch every service
+	// watch every service
 	for _, service := range services() {
 		sPath := childPath(prefix, service)
 		if sPath == prefix {

@@ -77,7 +77,7 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 				w.NoColor = false
 			},
 		)
-		//level = logger.DebugLevel
+		// level = logger.DebugLevel
 		l.zLog = zerolog.New(consOut).
 			Level(zerolog.DebugLevel).
 			With().Timestamp().Stack().Logger()
@@ -158,7 +158,7 @@ func (l *zeroLogger) Options() logger.Options {
 	return l.opts.Options
 }
 
-// NewLogger builds a new logger based on options
+// NewLogger builds a new logger based on options.
 func NewLogger(opts ...logger.Option) logger.Logger {
 	// Default options
 	options := Options{

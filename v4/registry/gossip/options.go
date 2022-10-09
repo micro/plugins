@@ -15,7 +15,7 @@ type advertiseKey struct{}
 type connectTimeoutKey struct{}
 type connectRetryKey struct{}
 
-// helper for setting registry options
+// helper for setting registry options.
 func setRegistryOption(k, v interface{}) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {
@@ -31,28 +31,28 @@ func Secret(k []byte) registry.Option {
 	return setRegistryOption(secretKey{}, k)
 }
 
-// Address to bind to - host:port
+// Address to bind to - host:port.
 func Address(a string) registry.Option {
 	return setRegistryOption(addressKey{}, a)
 }
 
-// Config sets *memberlist.Config for configuring gossip
+// Config sets *memberlist.Config for configuring gossip.
 func Config(c *memberlist.Config) registry.Option {
 	return setRegistryOption(configKey{}, c)
 }
 
-// The address to advertise for other gossip members to connect to - host:port
+// The address to advertise for other gossip members to connect to - host:port.
 func Advertise(a string) registry.Option {
 	return setRegistryOption(advertiseKey{}, a)
 }
 
-// ConnectTimeout sets the registry connect timeout. Use -1 to specify infinite timeout
+// ConnectTimeout sets the registry connect timeout. Use -1 to specify infinite timeout.
 func ConnectTimeout(td time.Duration) registry.Option {
 	return setRegistryOption(connectTimeoutKey{}, td)
 }
 
 // ConnectRetry enables reconnect to registry then connection closed,
-// use with ConnectTimeout to specify how long retry
+// use with ConnectTimeout to specify how long retry.
 func ConnectRetry(v bool) registry.Option {
 	return setRegistryOption(connectRetryKey{}, v)
 }

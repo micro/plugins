@@ -20,12 +20,12 @@ type rbroker struct {
 	stompConn *stomp.Conn
 }
 
-// init registers the STOMP broker
+// init registers the STOMP broker.
 func init() {
 	cmd.DefaultBrokers["stomp"] = NewBroker
 }
 
-// stompHeaderToMap converts STOMP header to broker friendly header
+// stompHeaderToMap converts STOMP header to broker friendly header.
 func stompHeaderToMap(h *frame.Header) map[string]string {
 	m := map[string]string{}
 	for i := 0; i < h.Len(); i++ {
@@ -35,7 +35,7 @@ func stompHeaderToMap(h *frame.Header) map[string]string {
 	return m
 }
 
-// defaults sets 'sane' STOMP default
+// defaults sets 'sane' STOMP default.
 func (r *rbroker) defaults() {
 	ConnectTimeout(30 * time.Second)(&r.opts)
 	VirtualHost("/")(&r.opts)
@@ -233,7 +233,7 @@ func (r *rbroker) String() string {
 	return "stomp"
 }
 
-// NewBroker returns a STOMP broker
+// NewBroker returns a STOMP broker.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	r := &rbroker{
 		opts: broker.Options{

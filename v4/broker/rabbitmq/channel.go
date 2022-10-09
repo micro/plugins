@@ -33,7 +33,6 @@ func newRabbitChannel(conn *amqp.Connection, prefetchCount int, prefetchGlobal b
 		return nil, err
 	}
 	return rabbitCh, nil
-
 }
 
 func (r *rabbitMQChannel) Connect(prefetchCount int, prefetchGlobal bool, confirmPublish bool) error {

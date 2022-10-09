@@ -11,7 +11,7 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-// Currently a single etcd reader
+// Currently a single etcd reader.
 type etcd struct {
 	prefix      string
 	stripPrefix string

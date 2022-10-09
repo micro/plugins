@@ -2,7 +2,7 @@ package stream
 
 import "crypto/tls"
 
-// Options which are used to configure the redis stream
+// Options which are used to configure the redis stream.
 type Options struct {
 	Address   string
 	User      string
@@ -10,7 +10,7 @@ type Options struct {
 	TLSConfig *tls.Config
 }
 
-// Option is a function which configures options
+// Option is a function which configures options.
 type Option func(o *Options)
 
 // Address sets the Redis address option.

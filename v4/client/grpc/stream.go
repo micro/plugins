@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// Implements the streamer interface
+// Implements the streamer interface.
 type grpcStream struct {
 	sync.RWMutex
 	closed   bool

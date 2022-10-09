@@ -60,7 +60,7 @@ func detectNamespace() (string, error) {
 	}
 }
 
-// NewClientByHost sets up a client by host
+// NewClientByHost sets up a client by host.
 func NewClientByHost(host string) Kubernetes {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
@@ -82,7 +82,7 @@ func NewClientByHost(host string) Kubernetes {
 	}
 }
 
-// NewClientInCluster should work similarily to the official api
+// NewClientInCluster should work similarly to the official api
 // NewInClient by setting up a client configuration for use within
 // a k8s pod.
 func NewClientInCluster() Kubernetes {

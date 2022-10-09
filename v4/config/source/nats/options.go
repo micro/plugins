@@ -14,7 +14,7 @@ type (
 	keyKey    struct{}
 )
 
-// WithUrl sets the nats url
+// WithUrl sets the nats url.
 func WithUrl(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -24,7 +24,7 @@ func WithUrl(a string) source.Option {
 	}
 }
 
-// WithBucket sets the nats key
+// WithBucket sets the nats key.
 func WithBucket(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
@@ -34,7 +34,7 @@ func WithBucket(a string) source.Option {
 	}
 }
 
-// WithKey sets the nats key
+// WithKey sets the nats key.
 func WithKey(a string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {

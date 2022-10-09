@@ -31,7 +31,6 @@ func TestGetClient(t *testing.T) {
 
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-
 			if tc.isIncluster {
 				os.Setenv("KUBERNETES_SERVICE_HOST", "127.0.0.1")
 				os.Setenv("KUBERNETES_SERVICE_PORT", "443")

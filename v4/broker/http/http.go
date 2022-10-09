@@ -33,7 +33,7 @@ func init() {
 	cmd.DefaultBrokers["http"] = NewBroker
 }
 
-// HTTP Broker is a point to point async broker
+// HTTP Broker is a point to point async broker.
 type httpBroker struct {
 	id      string
 	address string
@@ -708,7 +708,7 @@ func (h *httpBroker) String() string {
 	return "http"
 }
 
-// NewBroker returns a new http broker
+// NewBroker returns a new http broker.
 func NewBroker(opts ...broker.Option) broker.Broker {
 	return newHttpBroker(opts...)
 }

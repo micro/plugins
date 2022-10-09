@@ -61,7 +61,6 @@ func TestMemoryTransport(t *testing.T) {
 			t.Logf("Client Received %s", string(m.Body))
 		}
 	}
-
 }
 
 func TestListener(t *testing.T) {

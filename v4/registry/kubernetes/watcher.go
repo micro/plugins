@@ -63,7 +63,7 @@ func (k *k8sWatcher) buildPodResults(pod *client.Pod, cache *client.Pod) []*regi
 			// as we take care of it here
 			ignore[ak] = true
 
-			// compare aginst cache.
+			// compare against cache.
 			var cacheExists bool
 			var cav *string
 
@@ -175,10 +175,9 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		k.Unlock()
 		return
 	}
-
 }
 
-// Next will block until a new result comes in
+// Next will block until a new result comes in.
 func (k *k8sWatcher) Next() (*registry.Result, error) {
 	r, ok := <-k.next
 	if !ok {
@@ -187,7 +186,7 @@ func (k *k8sWatcher) Next() (*registry.Result, error) {
 	return r, nil
 }
 
-// Stop will cancel any requests, and close channels
+// Stop will cancel any requests, and close channels.
 func (k *k8sWatcher) Stop() {
 	k.watcher.Stop()
 

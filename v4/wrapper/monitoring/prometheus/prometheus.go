@@ -12,9 +12,9 @@ import (
 )
 
 var (
-	// default metric prefix
+	// default metric prefix.
 	DefaultMetricPrefix = "micro_"
-	// default label prefix
+	// default label prefix.
 	DefaultLabelPrefix = "micro_"
 
 	opsCounter           *prometheus.CounterVec
@@ -49,7 +49,6 @@ func ServiceID(id string) Option {
 }
 
 func init() {
-
 	if opsCounter == nil {
 		opsCounter = prometheus.NewCounterVec(
 			prometheus.CounterOpts{
@@ -104,7 +103,6 @@ func init() {
 			}
 		}
 	}
-
 }
 
 type wrapper struct {
@@ -114,7 +112,6 @@ type wrapper struct {
 }
 
 func NewClientWrapper(opts ...Option) client.Wrapper {
-
 	options := Options{}
 	for _, opt := range opts {
 		opt(&options)
@@ -164,7 +161,6 @@ func (w *wrapper) CallFunc(ctx context.Context, node *registry.Node, req client.
 	}
 
 	return err
-
 }
 
 func (w *wrapper) Call(ctx context.Context, req client.Request, rsp interface{}, opts ...client.CallOption) error {

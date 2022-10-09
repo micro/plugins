@@ -17,7 +17,7 @@ type grpcRequest struct {
 	codec       codec.Codec
 }
 
-// service Struct.Method /service.Struct/Method
+// service Struct.Method /service.Struct/Method.
 func methodToGRPC(service, method string) string {
 	// no method or already grpc method
 	if len(method) == 0 || method[0] == '/' {

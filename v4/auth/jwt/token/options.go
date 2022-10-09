@@ -17,21 +17,21 @@ type Options struct {
 
 type Option func(o *Options)
 
-// WithStore sets the token providers store
+// WithStore sets the token providers store.
 func WithStore(s store.Store) Option {
 	return func(o *Options) {
 		o.Store = s
 	}
 }
 
-// WithPublicKey sets the JWT public key
+// WithPublicKey sets the JWT public key.
 func WithPublicKey(key string) Option {
 	return func(o *Options) {
 		o.PublicKey = key
 	}
 }
 
-// WithPrivateKey sets the JWT private key
+// WithPrivateKey sets the JWT private key.
 func WithPrivateKey(key string) Option {
 	return func(o *Options) {
 		o.PrivateKey = key
@@ -43,7 +43,7 @@ func NewOptions(opts ...Option) Options {
 	for _, o := range opts {
 		o(&options)
 	}
-	//set default store
+	// set default store
 	if options.Store == nil {
 		options.Store = store.DefaultStore
 	}
@@ -57,20 +57,20 @@ type GenerateOptions struct {
 
 type GenerateOption func(o *GenerateOptions)
 
-// WithExpiry for the generated account's token expires
+// WithExpiry for the generated account's token expires.
 func WithExpiry(d time.Duration) GenerateOption {
 	return func(o *GenerateOptions) {
 		o.Expiry = d
 	}
 }
 
-// NewGenerateOptions from a slice of options
+// NewGenerateOptions from a slice of options.
 func NewGenerateOptions(opts ...GenerateOption) GenerateOptions {
 	var options GenerateOptions
 	for _, o := range opts {
 		o(&options)
 	}
-	//set default Expiry of token
+	// set default Expiry of token
 	if options.Expiry == 0 {
 		options.Expiry = time.Minute * 15
 	}

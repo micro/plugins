@@ -8,7 +8,7 @@ import (
 
 type dirOptionKey struct{}
 
-// DirOption is a file store Option to set the directory for the file store
+// DirOption is a file store Option to set the directory for the file store.
 func DirOption(dir string) store.Option {
 	return func(o *store.Options) {
 		if o.Context == nil {

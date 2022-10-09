@@ -94,7 +94,7 @@ func (s *sqlStore) createDB(database, table string) error {
 
 func (s *sqlStore) initDB(database, table string) error {
 	if s.db == nil {
-		return errors.New("Database connection not initialised")
+		return errors.New("Database connection not initialized")
 	}
 
 	// Create the namespace's database
@@ -171,7 +171,7 @@ func (s *sqlStore) configure() error {
 	// get DB
 	database, table := s.getDB(s.options.Database, s.options.Table)
 
-	// initialise the database
+	// initialize the database
 	return s.initDB(database, table)
 }
 
@@ -207,7 +207,7 @@ func (s *sqlStore) Init(opts ...store.Option) error {
 	return s.configure()
 }
 
-// List all the known records
+// List all the known records.
 func (s *sqlStore) List(opts ...store.ListOption) ([]string, error) {
 	var options store.ListOptions
 	for _, o := range opts {
@@ -259,7 +259,6 @@ func (s *sqlStore) List(opts ...store.ListOption) ([]string, error) {
 		} else {
 			keys = append(keys, record.Key)
 		}
-
 	}
 	rowErr := rows.Close()
 	if rowErr != nil {
@@ -272,7 +271,7 @@ func (s *sqlStore) List(opts ...store.ListOption) ([]string, error) {
 	return keys, nil
 }
 
-// Read a single key
+// Read a single key.
 func (s *sqlStore) Read(key string, opts ...store.ReadOption) ([]*store.Record, error) {
 	var options store.ReadOptions
 	for _, o := range opts {
@@ -326,7 +325,7 @@ func (s *sqlStore) Read(key string, opts ...store.ReadOption) ([]*store.Record, 
 	return records, nil
 }
 
-// Read Many records
+// Read Many records.
 func (s *sqlStore) read(key string, options store.ReadOptions) ([]*store.Record, error) {
 	pattern := "%"
 	if options.Prefix {
@@ -403,7 +402,7 @@ func (s *sqlStore) read(key string, options store.ReadOptions) ([]*store.Record,
 	return records, nil
 }
 
-// Write records
+// Write records.
 func (s *sqlStore) Write(r *store.Record, opts ...store.WriteOption) error {
 	var options store.WriteOptions
 	for _, o := range opts {
@@ -439,7 +438,7 @@ func (s *sqlStore) Write(r *store.Record, opts ...store.WriteOption) error {
 	return nil
 }
 
-// Delete records with keys
+// Delete records with keys.
 func (s *sqlStore) Delete(key string, opts ...store.DeleteOption) error {
 	var options store.DeleteOptions
 	for _, o := range opts {
@@ -478,7 +477,7 @@ func (s *sqlStore) String() string {
 	return "cockroach"
 }
 
-// NewStore returns a new micro Store backed by sql
+// NewStore returns a new micro Store backed by sql.
 func NewStore(opts ...store.Option) store.Store {
 	options := store.Options{
 		Database: DefaultDatabase,

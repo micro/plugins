@@ -26,7 +26,6 @@ func getClient(configPath string) (*kubernetes.Clientset, error) {
 }
 
 func makeMap(kv map[string]string) map[string]interface{} {
-
 	data := make(map[string]interface{})
 
 	for k, v := range kv {

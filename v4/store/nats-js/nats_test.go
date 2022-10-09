@@ -280,7 +280,6 @@ func TestDeleteBucket(t *testing.T) {
 	if len(r) > 0 {
 		t.Fatal("Length of record list should be 0 after bucket deletion", len(r))
 	}
-
 }
 
 func basicTest(s store.Store, t *testing.T) error {

@@ -34,7 +34,7 @@ func WithLevelHooks(hooks logrus.LevelHooks) logger.Option {
 type reportCallerKey struct{}
 
 // warning to use this option. because logrus doest not open CallerDepth option
-// this will only print this package
+// this will only print this package.
 func ReportCaller() logger.Option {
 	return logger.SetOption(reportCallerKey{}, true)
 }
