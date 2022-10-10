@@ -1,3 +1,4 @@
+// Package watch implements the k8s watcher.
 package watch
 
 import "encoding/json"

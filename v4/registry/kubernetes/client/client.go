@@ -26,46 +26,6 @@ type client struct {
 	opts *api.Options
 }
 
-// ListPods ...
-func (c *client) ListPods(labels map[string]string) (*PodList, error) {
-	var pods PodList
-	err := api.NewRequest(c.opts).Get().Resource("pods").Params(&api.Params{LabelSelector: labels}).Do().Into(&pods)
-
-	return &pods, err
-}
-
-// UpdatePod ...
-func (c *client) UpdatePod(name string, p *Pod) (*Pod, error) {
-	var pod Pod
-	err := api.NewRequest(c.opts).Patch().Resource("pods").Name(name).Body(p).Do().Into(&pod)
-
-	return &pod, err
-}
-
-// WatchPods ...
-func (c *client) WatchPods(labels map[string]string) (watch.Watch, error) {
-	return api.NewRequest(c.opts).Get().Resource("pods").Params(&api.Params{LabelSelector: labels}).Watch()
-}
-
-func detectNamespace() (string, error) {
-	nsPath := path.Join(serviceAccountPath, "namespace")
-
-	// Make sure it's a file and we can read it
-	if s, err := os.Stat(nsPath); err != nil {
-		return "", err
-	} else if s.IsDir() {
-		return "", ErrReadNamespace
-	}
-
-	// Read the file, and cast to a string
-	ns, err := os.ReadFile(path.Clean(nsPath))
-	if err != nil {
-		return string(ns), err
-	}
-
-	return string(ns), nil
-}
-
 // NewClientByHost sets up a client by host.
 func NewClientByHost(host string) Kubernetes {
 	tr := &http.Transport{
@@ -139,4 +99,44 @@ func NewClientInCluster() Kubernetes {
 			BearerToken: &token,
 		},
 	}
+}
+
+// ListPods ...
+func (c *client) ListPods(labels map[string]string) (*PodList, error) {
+	var pods PodList
+	err := api.NewRequest(c.opts).Get().Resource("pods").Params(&api.Params{LabelSelector: labels}).Do().Decode(&pods)
+
+	return &pods, err
+}
+
+// UpdatePod ...
+func (c *client) UpdatePod(name string, p *Pod) (*Pod, error) {
+	var pod Pod
+	err := api.NewRequest(c.opts).Patch().Resource("pods").Name(name).Body(p).Do().Decode(&pod)
+
+	return &pod, err
+}
+
+// WatchPods ...
+func (c *client) WatchPods(labels map[string]string) (watch.Watch, error) {
+	return api.NewRequest(c.opts).Get().Resource("pods").Params(&api.Params{LabelSelector: labels}).Watch()
+}
+
+func detectNamespace() (string, error) {
+	nsPath := path.Join(serviceAccountPath, "namespace")
+
+	// Make sure it's a file and we can read it
+	if s, err := os.Stat(nsPath); err != nil {
+		return "", err
+	} else if s.IsDir() {
+		return "", ErrReadNamespace
+	}
+
+	// Read the file, and cast to a string
+	ns, err := os.ReadFile(path.Clean(nsPath))
+	if err != nil {
+		return string(ns), err
+	}
+
+	return string(ns), nil
 }

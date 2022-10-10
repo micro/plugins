@@ -13,6 +13,10 @@ import (
 	"github.com/go-micro/plugins/v4/registry/kubernetes/client/watch"
 )
 
+var (
+	deleteAction = "delete"
+)
+
 type k8sWatcher struct {
 	registry *kregistry
 	watcher  watch.Watch
@@ -69,7 +73,7 @@ func (k *k8sWatcher) buildPodResults(pod *client.Pod, cache *client.Pod) []*regi
 				continue
 			}
 
-			rslt := &registry.Result{Action: "delete"}
+			rslt := &registry.Result{Action: deleteAction}
 
 			// unmarshal service notation from annotation value
 			if err := json.Unmarshal([]byte(*annVal), &rslt.Service); err != nil {
@@ -113,7 +117,7 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		for _, result := range results {
 			// pod isnt running
 			if pod.Status.Phase != podRunning || pod.Metadata.DeletionTimestamp != "" {
-				result.Action = "delete"
+				result.Action = deleteAction
 			}
 			k.next <- result
 		}
@@ -130,7 +134,7 @@ func (k *k8sWatcher) handleEvent(event watch.Event) {
 		results := k.buildPodResults(&pod, nil)
 
 		for _, result := range results {
-			result.Action = "delete"
+			result.Action = deleteAction
 			k.next <- result
 		}
 

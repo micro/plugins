@@ -3,7 +3,6 @@ package kubernetes
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"regexp"
@@ -12,6 +11,8 @@ import (
 
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/util/cmd"
+
+	"github.com/pkg/errors"
 
 	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
 )
@@ -40,6 +41,12 @@ var (
 
 	// label name regex.
 	labelRe = regexp.MustCompilePOSIX("[-A-Za-z0-9_.]")
+)
+
+// Err are all package errors.
+var (
+	ErrNoHostname   = errors.New("failed to get podname from HOSTNAME variable")
+	ErrNoNodesFound = errors.New("you must provide at least one node")
 )
 
 // podSelector.
@@ -110,12 +117,16 @@ func (c *kregistry) Options() registry.Options {
 // serialized version of the service passed in.
 func (c *kregistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
 	if len(s.Nodes) == 0 {
-		return errors.New("you must register at least one node")
+		return ErrNoNodesFound
 	}
 
-	// TODO: grab podname from somewhere better than this.
-	podName := os.Getenv("HOSTNAME")
 	svcName := s.Name
+
+	// TODO: grab podname from somewhere better than this.
+	podName, err := getPodName()
+	if err != nil {
+		return errors.Wrap(err, "failed to register")
+	}
 
 	// encode micro service
 	b, err := json.Marshal(s)
@@ -147,12 +158,16 @@ func (c *kregistry) Register(s *registry.Service, opts ...registry.RegisterOptio
 // Deregister nils out any things set in Register.
 func (c *kregistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
 	if len(s.Nodes) == 0 {
-		return errors.New("you must deregister at least one node")
+		return ErrNoNodesFound
 	}
 
-	// TODO: grab podname from somewhere better than this.
-	podName := os.Getenv("HOSTNAME")
 	svcName := s.Name
+
+	// TODO: grab podname from somewhere better than env var.
+	podName, err := getPodName()
+	if err != nil {
+		return errors.Wrap(err, "failed to deregister")
+	}
 
 	pod := &client.Pod{
 		Metadata: &client.Meta{
@@ -294,4 +309,13 @@ func NewRegistry(opts ...registry.Option) registry.Registry {
 	configure(k, opts...)
 
 	return k
+}
+
+func getPodName() (string, error) {
+	podName := os.Getenv("HOSTNAME")
+	if len(podName) == 0 {
+		return "", ErrNoHostname
+	}
+
+	return podName, nil
 }

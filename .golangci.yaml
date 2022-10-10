@@ -190,6 +190,8 @@ linters:
     - gofumpt
     - nlreturn
     - tagliatelle
+    - nosnakecase
+    - errchkjson
 
     # Can be considered to be enabled
     - gochecknoinits

@@ -2,36 +2,25 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 
+	"github.com/pkg/errors"
 	log "go-micro.dev/v4/logger"
 )
 
 // Errors ...
 var (
-	ErrNotFound = errors.New("K8s: not found")
-	ErrDecode   = errors.New("K8s: error decoding")
-	ErrOther    = errors.New("K8s: error")
+	ErrNoPodName = errors.New("no pod name provided")
+	ErrNotFound  = errors.New("pod not found")
+	ErrDecode    = errors.New("error decoding")
+	ErrOther     = errors.New("unspecified error occurred in k8s registry")
 )
-
-// Status is an object that is returned when a request
-// failed or delete succeeded.
-// type Status struct {
-// 	Kind    string `json:"kind"`
-// 	Status  string `json:"status"`
-// 	Message string `json:"message"`
-// 	Reason  string `json:"reason"`
-// 	Code    int    `json:"code"`
-// }
 
 // Response ...
 type Response struct {
 	res *http.Response
 	err error
-
-	body []byte
 }
 
 // Error returns an error.
@@ -44,51 +33,58 @@ func (r *Response) StatusCode() int {
 	return r.res.StatusCode
 }
 
-// Into decode body into `data`.
-func (r *Response) Into(data interface{}) error {
+// Decode decodes body into `data`.
+func (r *Response) Decode(data interface{}) error {
 	if r.err != nil {
 		return r.err
 	}
 
-	defer r.res.Body.Close()
+	var err error
+	defer func() {
+		nerr := r.res.Body.Close()
+		if err != nil {
+			err = nerr
+		}
+	}()
+
 	decoder := json.NewDecoder(r.res.Body)
-	err := decoder.Decode(&data)
-	if err != nil {
-		return ErrDecode
+
+	if err := decoder.Decode(&data); err != nil {
+		return errors.Wrap(ErrDecode, err.Error())
 	}
 
 	return r.err
 }
 
-func newResponse(res *http.Response, err error) *Response {
-	r := &Response{
-		res: res,
+func newResponse(r *http.Response, err error) *Response {
+	resp := &Response{
+		res: r,
 		err: err,
 	}
 
 	if err != nil {
-		return r
+		return resp
 	}
 
-	if r.res.StatusCode == http.StatusOK ||
-		r.res.StatusCode == http.StatusCreated ||
-		r.res.StatusCode == http.StatusNoContent {
-		// Non error status code
-		return r
+	// Check if request is successful.
+	s := resp.res.StatusCode
+	if s == http.StatusOK || s == http.StatusCreated || s == http.StatusNoContent {
+		return resp
 	}
 
-	if r.res.StatusCode == http.StatusNotFound {
-		r.err = ErrNotFound
-		return r
+	if resp.res.StatusCode == http.StatusNotFound {
+		resp.err = ErrNotFound
+		return resp
 	}
 
-	log.Errorf("K8s: request failed with code %v", r.res.StatusCode)
+	log.Errorf("K8s: request failed with code %v", resp.res.StatusCode)
 
-	b, err := io.ReadAll(r.res.Body)
+	b, err := io.ReadAll(resp.res.Body)
 	if err == nil {
-		log.Error("K8s: request failed with body:")
-		log.Error(string(b))
+		log.Errorf("K8s: request failed with body: %s", string(b))
 	}
-	r.err = ErrOther
-	return r
+
+	resp.err = ErrOther
+
+	return resp
 }
