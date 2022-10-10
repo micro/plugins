@@ -54,7 +54,7 @@ func NewRegistry(opts ...registry.Option) registry.Registry {
 			Timeout: time.Second * 5,
 		},
 		register:       make(map[string]string),
-		getOneInstance: true,
+		getOneInstance: false,
 	}
 	token := os.Getenv("POLARIS_TOKEN")
 	if token != "" {
