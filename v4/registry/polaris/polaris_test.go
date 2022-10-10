@@ -176,20 +176,20 @@ func TestDeregister(t *testing.T) {
 	service1 := genService("test-deregister", "v1", "127.0.0.1:6100")
 	service2 := genService("test-deregister", "v2", "127.0.0.1:6101")
 
-	assertNoError(t, reg.Register(&service1))
+	assertNoError(t, reg.Register(&service1, registry.RegisterTTL(time.Second*30)))
 	time.Sleep(regWait)
 	services, err := reg.GetService(service1.Name)
 	assertNoError(t, err)
 	assertEqual(t, 1, len(services))
 
-	assertNoError(t, reg.Register(&service2))
+	assertNoError(t, reg.Register(&service2, registry.RegisterTTL(time.Second*30)))
 	time.Sleep(regWait)
 	services, err = reg.GetService(service2.Name)
 	assertNoError(t, err)
 	assertEqual(t, 2, len(services))
 
 	assertNoError(t, reg.Deregister(&service1))
-	time.Sleep(regWait)
+	time.Sleep(regWait * 2)
 	services, err = reg.GetService(service1.Name)
 	assertNoError(t, err)
 	assertEqual(t, 1, len(services))
