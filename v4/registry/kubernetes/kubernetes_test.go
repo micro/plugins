@@ -2,112 +2,81 @@ package kubernetes
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"strconv"
 	"testing"
 	"time"
 
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
-	"github.com/go-micro/plugins/v4/registry/kubernetes/client/mock"
 	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
+
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client"
+	"github.com/go-micro/plugins/v4/registry/kubernetes/client/mock"
 )
 
 var (
 	mockClient = mock.NewClient()
 	podIP      = 1
+	testData   = []*registry.Service{
+		{
+			Name:    "test1",
+			Version: "1.0.1",
+			Nodes:   []*registry.Node{},
+		},
+		{
+			Name:    "test2",
+			Version: "1.0.2",
+			Nodes:   []*registry.Node{},
+		},
+		{
+			Name:    "test3",
+			Version: "1.0.3",
+			Nodes:   []*registry.Node{},
+		},
+		{
+			Name:    "test4",
+			Version: "1.0.4",
+			Nodes:   []*registry.Node{},
+		},
+	}
 )
-
-func setupPod(name string) *client.Pod {
-	p, ok := mockClient.Pods[name]
-	if ok || p != nil {
-		return p
-	}
-
-	// inc pod
-	podIP++
-
-	p = &client.Pod{
-		Metadata: &client.Meta{
-			Name:        name,
-			Labels:      make(map[string]*string),
-			Annotations: make(map[string]*string),
-		},
-		Status: &client.Status{
-			PodIP: "10.0.0." + strconv.Itoa(podIP),
-			Phase: podRunning,
-		},
-	}
-
-	mockClient.Pods[name] = p
-	return p
-}
-
-// registers a service against a given pod.
-func register(r registry.Registry, podName string, svc *registry.Service) {
-	os.Setenv("HOSTNAME", podName)
-
-	pod := setupPod(podName)
-
-	svc.Nodes = append(svc.Nodes, &registry.Node{
-		Id:       svc.Name + ":" + pod.Metadata.Name,
-		Address:  fmt.Sprintf("%s:%d", pod.Status.PodIP, 80),
-		Metadata: map[string]string{},
-	})
-
-	if err := r.Register(svc); err != nil {
-		logger.Fatalf("did not expect Register() to fail: %v", err)
-	}
-
-	os.Setenv("HOSTNAME", "")
-}
-
-func teardownRegistry() {
-	mock.Teardown(mockClient)
-}
-
-func setupRegistry(opts ...registry.Option) registry.Registry {
-	return &kregistry{
-		client:  mockClient,
-		timeout: time.Second * 1,
-	}
-}
-
-//
-//
-// Tests start here
-//
-//
 
 func TestRegister(t *testing.T) {
 	r := setupRegistry()
 	defer teardownRegistry()
 
 	svc := &registry.Service{Name: "foo.service", Version: "1"}
-	register(r, "pod-1", svc)
+	pods := []string{"pod-1", "pod-2", "pod-3"}
+	for _, p := range pods {
+		register(t, r, p, svc)
+	}
 
 	// check pod has correct labels/annotations
-	p := mockClient.Pods["pod-1"]
-	svcLabel, ok := p.Metadata.Labels[svcSelectorPrefix+"foo.service"]
-	if !ok || *svcLabel != svcSelectorValue {
-		t.Fatalf("expected to have pod selector label")
-	}
-
-	svcData, ok := p.Metadata.Annotations[annotationServiceKeyPrefix+"foo.service"]
-	if !ok || len(*svcData) == 0 {
-		t.Fatalf("expected to have annotation")
-	}
-
-	// unmarshal service data from annotation and compare
-	// service passed in to .Register()
 	var service *registry.Service
-	if err := json.Unmarshal([]byte(*svcData), &service); err != nil {
-		t.Fatalf("did not expect register unmarshal to fail %v", err)
+	for _, p := range pods {
+		pod := mockClient.Pods[p]
+		svcLabel, ok := pod.Metadata.Labels[svcSelectorPrefix+"foo.service"]
+		if !ok || *svcLabel != svcSelectorValue {
+			t.Fatalf("expected to have pod selector label")
+		}
+
+		svcData, ok := pod.Metadata.Annotations[annotationServiceKeyPrefix+"foo.service"]
+		if !ok || len(*svcData) == 0 {
+			t.Fatalf("expected to have annotation")
+		}
+
+		// unmarshal service data from annotation and compare
+		// service passed in to .Register()
+		if err := json.Unmarshal([]byte(*svcData), &service); err != nil {
+			t.Fatalf("did not expect register unmarshal to fail %v", err)
+		}
 	}
+
 	if !reflect.DeepEqual(svc, service) {
-		t.Fatal("services did not match")
+		t.Errorf("Svc: %+v\n Service: %+v\n", svc, service)
+		t.Fatalf("services did not match")
 	}
 }
 
@@ -118,8 +87,8 @@ func TestRegisterTwoDifferentServicesOnePod(t *testing.T) {
 	svc1 := &registry.Service{Name: "foo.service"}
 	svc2 := &registry.Service{Name: "bar.service"}
 
-	register(r, "pod-1", svc1)
-	register(r, "pod-1", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-1", svc2)
 
 	// check pod has correct labels/annotations
 	p := mockClient.Pods["pod-1"]
@@ -163,8 +132,8 @@ func TestRegisterTwoDifferentServicesTwoPods(t *testing.T) {
 
 	svc1 := &registry.Service{Name: "foo.service"}
 	svc2 := &registry.Service{Name: "bar.service"}
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	// check pod-1 has correct labels/annotations
 	p1 := mockClient.Pods["pod-1"]
@@ -225,8 +194,8 @@ func TestRegisterSingleVersionedServiceTwoPods(t *testing.T) {
 
 	svc1 := &registry.Service{Name: "foo.service"}
 	svc2 := &registry.Service{Name: "foo.service"}
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	// check pod-1 has correct labels/annotations
 	p1 := mockClient.Pods["pod-1"]
@@ -274,14 +243,11 @@ func TestDeregister(t *testing.T) {
 
 	svc1 := &registry.Service{Name: "foo.service"}
 	svc2 := &registry.Service{Name: "foo.service"}
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	// deregister one service
-	os.Setenv("HOSTNAME", "pod-1")
-	if err := r.Deregister(svc1); err != nil {
-		t.Fatalf("did not expect Deregister to fail %v", err)
-	}
+	deregister(t, r, "pod-1", svc1)
 
 	// check pod-1 has correct labels/annotations
 	p1 := mockClient.Pods["pod-1"]
@@ -310,7 +276,7 @@ func TestGetService(t *testing.T) {
 	defer teardownRegistry()
 
 	svc1 := &registry.Service{Name: "foo.service"}
-	register(r, "pod-1", svc1)
+	register(t, r, "pod-1", svc1)
 
 	service, err := r.GetService("foo.service")
 	if err != nil {
@@ -329,8 +295,8 @@ func TestGetServiceSameServiceTwoPods(t *testing.T) {
 
 	svc1 := &registry.Service{Name: "foo.service", Version: "1"}
 	svc2 := &registry.Service{Name: "foo.service", Version: "1"}
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	service, err := r.GetService("foo.service")
 	if err != nil {
@@ -356,8 +322,8 @@ func TestGetServiceTwoVersionsTwoPods(t *testing.T) {
 	svc1 := &registry.Service{Name: "foo.service", Version: "1"}
 	svc2 := &registry.Service{Name: "foo.service", Version: "2"}
 
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	service, err := r.GetService("foo.service")
 	if err != nil {
@@ -381,8 +347,8 @@ func TestListServices(t *testing.T) {
 	svc1 := &registry.Service{Name: "foo.service", Version: "1"}
 	svc2 := &registry.Service{Name: "bar.service", Version: "2"}
 
-	register(r, "pod-1", svc1)
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-1", svc1)
+	register(t, r, "pod-2", svc2)
 
 	services, err := r.ListServices()
 	if err != nil {
@@ -395,12 +361,13 @@ func TestListServices(t *testing.T) {
 		t.Fatal("expected services to equal")
 	}
 
-	os.Setenv("HOSTNAME", "pod-1")
-	r.Deregister(svc1)
+	deregister(t, r, "pod-1", svc1)
+
 	services2, err := r.ListServices()
 	if err != nil {
 		t.Fatalf("did not expect ListServices to fail %v", err)
 	}
+
 	if !hasServices(services2, []*registry.Service{
 		{Name: "bar.service", Version: "2"},
 	}) {
@@ -420,17 +387,17 @@ func TestListServices(t *testing.T) {
 	}
 }
 
-func TestWatcher(t *testing.T) {
+func TestRegistration(t *testing.T) {
 	r := setupRegistry()
 
 	// check that service is blank
-	if _, err := r.GetService("foo.service"); err != registry.ErrNotFound {
+	if _, err := r.GetService("foo.service"); !errors.Is(err, registry.ErrNotFound) {
 		logger.Fatal("expected ErrNotFound")
 	}
 
 	// setup svc
 	svc1 := &registry.Service{Name: "foo.service", Version: "1"}
-	register(r, "pod-1", svc1)
+	register(t, r, "pod-1", svc1)
 
 	if routes, err := r.GetService("foo.service"); err != nil {
 		t.Fatalf("Querying service returned an error: %v", err)
@@ -440,7 +407,7 @@ func TestWatcher(t *testing.T) {
 
 	// setup svc
 	svc2 := &registry.Service{Name: "foo.service", Version: "1"}
-	register(r, "pod-2", svc2)
+	register(t, r, "pod-2", svc2)
 	time.Sleep(time.Millisecond * 100)
 
 	if routes, err := r.GetService("foo.service"); err != nil {
@@ -452,6 +419,63 @@ func TestWatcher(t *testing.T) {
 	// remove pods
 	teardownRegistry()
 	time.Sleep(time.Millisecond * 100)
+}
+
+func TestWatcher(t *testing.T) {
+	r := setupRegistry()
+	defer teardownRegistry()
+
+	w, err := r.Watch()
+	if err != nil {
+		t.Fatalf("failed to start watcher: %v", err)
+	}
+	defer w.Stop()
+
+	for i, service := range testData {
+		podName := "pod-" + strconv.Itoa(i)
+
+		// Register service
+		register(t, r, podName, service)
+
+		for {
+			res, err := w.Next()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if res.Service.Name != service.Name {
+				continue
+			}
+
+			if res.Action != "create" {
+				t.Fatalf("Expected create event got %s for %s", res.Action, res.Service.Name)
+			}
+
+			validateSrv(t, service, res.Service)
+			break
+		}
+
+		// Deregister service
+		deregister(t, r, podName, service)
+
+		for {
+			res, err := w.Next()
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if res.Service.Name != service.Name {
+				continue
+			}
+
+			if res.Action != "delete" {
+				continue
+			}
+
+			validateSrv(t, service, res.Service)
+			break
+		}
+	}
 }
 
 func hasNodes(a, b []*registry.Node) bool {
@@ -486,4 +510,101 @@ func hasServices(a, b []*registry.Service) bool {
 		}
 	}
 	return found == len(b)
+}
+
+func setupPod(name string) *client.Pod {
+	p, ok := mockClient.Pods[name]
+	if ok || p != nil {
+		return p
+	}
+
+	// inc pod
+	podIP++
+
+	p = &client.Pod{
+		Metadata: &client.Meta{
+			Name:        name,
+			Labels:      make(map[string]*string),
+			Annotations: make(map[string]*string),
+		},
+		Status: &client.Status{
+			PodIP: "10.0.0." + strconv.Itoa(podIP),
+			Phase: podRunning,
+		},
+	}
+
+	mockClient.Pods[name] = p
+
+	return p
+}
+
+// registers a service against a given pod.
+func register(t *testing.T, r registry.Registry, podName string, svc *registry.Service) {
+	t.Helper()
+
+	t.Setenv("HOSTNAME", podName)
+
+	pod := setupPod(podName)
+
+	svc.Nodes = append(svc.Nodes, &registry.Node{
+		Id:       svc.Name + ":" + pod.Metadata.Name,
+		Address:  fmt.Sprintf("%s:%d", pod.Status.PodIP, 80),
+		Metadata: map[string]string{},
+	})
+
+	if err := r.Register(svc); err != nil {
+		t.Fatalf("did not expect Register() to fail: %v", err)
+	}
+}
+
+func deregister(t *testing.T, r registry.Registry, podName string, svc *registry.Service) {
+	t.Helper()
+
+	t.Setenv("HOSTNAME", podName)
+
+	if err := r.Deregister(svc); err != nil {
+		t.Fatalf("did not expect Deregister() to fail: %v", err)
+	}
+}
+
+func teardownRegistry() {
+	mock.Teardown(mockClient)
+}
+
+func setupRegistry(_ ...registry.Option) registry.Registry {
+	return &kregistry{
+		client:  mockClient,
+		timeout: time.Second * 1,
+	}
+}
+
+func validateSrv(t *testing.T, service, s *registry.Service) {
+	t.Helper()
+
+	if s == nil {
+		t.Fatalf("Expected one result for %s got nil", service.Name)
+	}
+
+	if s.Name != service.Name {
+		t.Fatalf("Expected name %s got %s", service.Name, s.Name)
+	}
+
+	if s.Version != service.Version {
+		t.Fatalf("Expected version %s got %s", service.Version, s.Version)
+	}
+
+	if len(s.Nodes) != 1 {
+		t.Errorf("Nodes: %v", s.Nodes)
+		t.Fatalf("Expected 1 node, got %d", len(s.Nodes))
+	}
+
+	node := s.Nodes[0]
+
+	if node.Id != service.Nodes[0].Id {
+		t.Fatalf("Expected node id %s got %s", service.Nodes[0].Id, node.Id)
+	}
+
+	if node.Address != service.Nodes[0].Address {
+		t.Fatalf("Expected node address %s got %s", service.Nodes[0].Address, node.Address)
+	}
 }

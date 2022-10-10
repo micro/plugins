@@ -2,15 +2,20 @@ package watch
 
 import (
 	"bufio"
+	"context"
 	"encoding/json"
 	"net/http"
+	"sync/atomic"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 // bodyWatcher scans the body of a request for chunks.
 type bodyWatcher struct {
+	ctx     context.Context
+	stop    context.CancelFunc
 	results chan Event
-	stop    chan struct{}
 	res     *http.Response
 	req     *http.Request
 }
@@ -23,10 +28,10 @@ func (wr *bodyWatcher) ResultChan() <-chan Event {
 // Stop cancels the request.
 func (wr *bodyWatcher) Stop() {
 	select {
-	case <-wr.stop:
+	case <-wr.ctx.Done():
 		return
 	default:
-		close(wr.stop)
+		wr.stop()
 		close(wr.results)
 	}
 }
@@ -36,27 +41,30 @@ func (wr *bodyWatcher) stream() {
 
 	// ignore first few messages from stream,
 	// as they are usually old.
-	ignore := true
+	var ignore atomic.Bool
 
 	go func() {
 		<-time.After(time.Second)
-		ignore = false
+		ignore.Store(false)
 	}()
 
 	go func() {
+		//nolint:errcheck
+		defer wr.res.Body.Close()
+
 		for {
-			// read a line
+			// Read a line
 			b, err := reader.ReadBytes('\n')
 			if err != nil {
 				break
 			}
 
-			// ignore for the first second
-			if ignore {
+			// Ignore for the first second
+			if ignore.Load() {
 				continue
 			}
 
-			// send the event
+			// Send the event
 			var event Event
 			if err := json.Unmarshal(b, &event); err != nil {
 				continue
@@ -69,24 +77,28 @@ func (wr *bodyWatcher) stream() {
 	}()
 }
 
-// NewBodyWatcher creates a k8s body watcher for
-// a given http request.
+// NewBodyWatcher creates a k8s body watcher for a given http request.
 func NewBodyWatcher(req *http.Request, client *http.Client) (Watch, error) {
-	stop := make(chan struct{})
-	req.Cancel = stop
+	ctx, cancel := context.WithCancel(context.Background())
 
+	req = req.WithContext(ctx)
+
+	//nolint:bodyclose
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		cancel()
+		return nil, errors.Wrap(err, "body watcher failed to make http request")
 	}
 
 	wr := &bodyWatcher{
+		ctx:     ctx,
 		results: make(chan Event),
-		stop:    stop,
+		stop:    cancel,
 		req:     req,
 		res:     res,
 	}
 
 	go wr.stream()
+
 	return wr, nil
 }
