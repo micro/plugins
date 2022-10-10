@@ -26,7 +26,7 @@ var (
 	defaultAddr = "127.0.0.1:8091"
 )
 
-type poRegistry struct {
+type polarisRegistry struct {
 	options registry.Options
 	sync.RWMutex
 	register map[string]string
@@ -35,10 +35,6 @@ type poRegistry struct {
 	serverToken string
 	provider    api.ProviderAPI
 	consumer    api.ConsumerAPI
-	service     string
-	host        string
-	port        int
-	isShutdown  bool
 	// only get one instance for use polaris's loadbalance
 	getOneInstance bool
 }
@@ -48,7 +44,7 @@ func init() {
 }
 
 func NewRegistry(opts ...registry.Option) registry.Registry {
-	e := &poRegistry{
+	e := &polarisRegistry{
 		options: registry.Options{
 			Timeout: time.Second * 5,
 		},
@@ -68,10 +64,11 @@ func NewRegistry(opts ...registry.Option) registry.Registry {
 		opts = append(opts, registry.Addrs(address))
 	}
 	configure(e, opts...)
+
 	return e
 }
 
-func configure(e *poRegistry, opts ...registry.Option) error {
+func configure(e *polarisRegistry, opts ...registry.Option) error {
 
 	for _, o := range opts {
 		o(&e.options)
@@ -131,28 +128,28 @@ func servicePath(s string) string {
 	return path.Join(prefix, strings.Replace(s, "/", "-", -1))
 }
 
-func (e *poRegistry) addInstance(nodeId, id string) {
+func (e *polarisRegistry) addInstance(nodeId, id string) {
 	e.register[nodeId] = id
 }
-func (e *poRegistry) getInstance(nodeId string) string {
+func (e *polarisRegistry) getInstance(nodeId string) string {
 	if id, ok := e.register[nodeId]; ok {
 		return id
 	}
 	return ""
 }
-func (e *poRegistry) delInstance(nodeId string) {
+func (e *polarisRegistry) delInstance(nodeId string) {
 	delete(e.register, nodeId)
 }
 
-func (e *poRegistry) Init(opts ...registry.Option) error {
+func (e *polarisRegistry) Init(opts ...registry.Option) error {
 	return configure(e, opts...)
 }
 
-func (e *poRegistry) Options() registry.Options {
+func (e *polarisRegistry) Options() registry.Options {
 	return e.options
 }
 
-func (e *poRegistry) registerNode(s *registry.Service, node *registry.Node, opts ...registry.RegisterOption) error {
+func (e *polarisRegistry) registerNode(s *registry.Service, node *registry.Node, opts ...registry.RegisterOption) error {
 
 	service := &registry.Service{
 		Name:      s.Name,
@@ -209,7 +206,7 @@ func (e *poRegistry) registerNode(s *registry.Service, node *registry.Node, opts
 		req.RetryCount = &retryCount
 		mm := map[string]string{}
 		mm["node_path"] = nodePath(service.Name, node.Id)
-		mm["micro_service"] = encode(service)
+		mm["Micro-Service"] = encode(service)
 
 		req.Metadata = mm
 
@@ -224,7 +221,7 @@ func (e *poRegistry) registerNode(s *registry.Service, node *registry.Node, opts
 	return nil
 }
 
-func (e *poRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
+func (e *polarisRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
 	if len(s.Nodes) != 1 {
 		return errors.New("Require must one node")
 	}
@@ -267,7 +264,7 @@ func (e *poRegistry) Deregister(s *registry.Service, opts ...registry.Deregister
 	return nil
 }
 
-func (e *poRegistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
+func (e *polarisRegistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
 	if len(s.Nodes) != 1 {
 		return errors.New("Require must one node")
 	}
@@ -285,7 +282,7 @@ func (e *poRegistry) Register(s *registry.Service, opts ...registry.RegisterOpti
 	return gerr
 }
 
-func (e *poRegistry) GetService(name string, opts ...registry.GetOption) ([]*registry.Service, error) {
+func (e *polarisRegistry) GetService(name string, opts ...registry.GetOption) ([]*registry.Service, error) {
 	timeout := e.options.Timeout
 	retryCount := 3
 
@@ -324,21 +321,28 @@ func (e *poRegistry) GetService(name string, opts ...registry.GetOption) ([]*reg
 	serviceMap := map[string]*registry.Service{}
 
 	for _, n := range inss {
-		if !n.IsHealthy() {
-			continue
-		}
-		if n.IsIsolated() {
-			continue
-		}
 		m := n.GetMetadata()
-		// nodePath := m["node_path"]
 		if m == nil {
 			logger.Errorf("[error] fail to GetMetadata, name is %v", name)
 			return nil, errors.New("fail to GetMetadata")
 		}
-		// logger.Infof("ins %v %v", n.IsHealthy(), n.GetPort())
-		microService := m["micro_service"]
+
+		microService := m["Micro-Service"]
 		if sn := decode([]byte(microService)); sn != nil {
+			if !n.IsHealthy() {
+				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", sn.Name, sn.Version, len(sn.Nodes))
+				logger.Log(logger.WarnLevel, "Service not healthy according to Polaris", msg)
+
+				continue
+			}
+
+			if n.IsIsolated() {
+				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", sn.Name, sn.Version, len(sn.Nodes))
+				logger.Log(logger.WarnLevel, "Service is isolated according to Polaris", msg)
+
+				continue
+			}
+
 			s, ok := serviceMap[sn.Version]
 			if !ok {
 				s = &registry.Service{
@@ -362,15 +366,15 @@ func (e *poRegistry) GetService(name string, opts ...registry.GetOption) ([]*reg
 	return services, nil
 }
 
-func (e *poRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
+func (e *polarisRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
 	services := make([]*registry.Service, 0)
 	return services, errors.New("not support")
 }
 
-func (e *poRegistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
+func (e *polarisRegistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
 	return newPoWatcher(e, e.options.Timeout, opts...)
 }
 
-func (e *poRegistry) String() string {
+func (e *polarisRegistry) String() string {
 	return "polaris"
 }

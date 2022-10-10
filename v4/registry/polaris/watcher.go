@@ -12,7 +12,7 @@ type poWatcher struct {
 	opts    registry.WatchOptions
 }
 
-func newPoWatcher(e *poRegistry, timeout time.Duration, opts ...registry.WatchOption) (registry.Watcher, error) {
+func newPoWatcher(e *polarisRegistry, timeout time.Duration, opts ...registry.WatchOption) (registry.Watcher, error) {
 	w := &poWatcher{
 		stop:    make(chan bool, 1),
 		timeout: timeout,

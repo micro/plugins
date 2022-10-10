@@ -7,6 +7,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[0;32m'
 BAR="-------------------------------------------------------------------------------"
+HAS_DEPS=("polaris" "redis")
 
 export RICHGO_FORCE_COLOR="true"
 export IN_TRAVIS_CI="true"
@@ -44,6 +45,45 @@ function add_summary() {
   printf "${1}\n" >>$GITHUB_STEP_SUMMARY
 }
 
+# Install dependencies, usually servers.
+#
+# Can can be used to run an script needed to complete tests.
+#
+# To run a script add it to the HAS_DEPS variable, e.g.: ("redis" "nats").
+# And make sure to add a script to deps/<name>.sh
+#
+# Export the PIDs of all dependencies to DEP_PIDS array, such that they can be
+# killed after the tests have finished.
+function install_deps() {
+  for dep in "${HAS_DEPS[@]}"; do
+    if grep -q "${dep}" <<<"${1}"; then
+      script="deps/${dep}.sh"
+
+      # Check if script exists
+      if [[ -f "${script}" ]]; then
+        echo "Installing depencies for $dep"
+        bash "${script}"
+      fi
+    fi
+  done
+}
+
+# Kill all PIDs of setups.
+function kill_deps() {
+  # Itterate over all PIDs and kill them.
+  if [[ "${#DEP_PIDS[@]}" -ne 0 ]]; then
+    for dep_pid in "${DEP_PIDS[@]}"; do
+      echo "Killing:"
+      ps -aux | grep "${dep_pid}"
+
+      kill "${dep_pid}"
+    done
+  fi
+
+  # Reset variable.
+  export DEP_PIDS=""
+}
+
 # Find directories that contain changes.
 function find_changes() {
   # Find all directories that have changed files.
@@ -71,7 +111,7 @@ function get_dirs() {
 
 # Run GoLangCi Linters.
 function run_linter() {
-  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
+  curl -sSfL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b $(go env GOPATH)/bin
 
   echo
   golangci-lint --version
@@ -80,7 +120,7 @@ function run_linter() {
   dirs=$1
   failed="false"
   for dir in "${dirs[@]}"; do
-    pushd $dir >/dev/null
+    pushd "${dir}" >/dev/null
     print_msg "Running linter on ${dir}"
 
     golangci-lint run --out-format github-actions -c "${cwd}/.golangci.yaml"
@@ -117,17 +157,25 @@ function run_test() {
   done
 
   for dir in "${dirs[@]}"; do
-    pushd $dir >/dev/null
+    pushd "${dir}" >/dev/null
     print_msg "Running unit tests for $dir"
+
+    # Install dependencies if required.
+    install_deps $dir
 
     # Download all modules.
     go get -v -t -d ./...
 
+    # Run tests.
     richgo test $GO_TEST_FLAGS ./...
 
+    # Keep track of exit code.
     if [[ $? -ne 0 ]]; then
       failed="true"
     fi
+
+    # Kill all depdency processes.
+    kill_deps
 
     popd >/dev/null
   done
@@ -148,8 +196,12 @@ function create_summary() {
   dirs=$1
   failed="false"
   for dir in "${dirs[@]}"; do
-    pushd $dir >/dev/null
+    pushd "${dir}" >/dev/null
     print_msg "Creating summary for $dir"
+
+    # Install dependencies if required.
+    install_deps $dir
+
     add_summary "\n### ${dir}\n"
 
     # Download all modules.
@@ -161,6 +213,9 @@ function create_summary() {
     if [[ $? -ne 0 ]]; then
       failed="true"
     fi
+
+    # Kill all depdency processes.
+    kill_deps
 
     popd >/dev/null
   done
