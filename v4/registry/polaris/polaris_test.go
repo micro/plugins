@@ -90,7 +90,7 @@ func TestRegister(t *testing.T) {
 	//wait for Deregister
 	//if Deregister be interrupt ,will effect other test with same address
 	defer time.Sleep(time.Second * 10)
-	//polairs reg effect time
+	//polairs reg wait time
 	regWait := time.Second * 5
 	reg := genRegistry()
 	{
@@ -158,40 +158,50 @@ func TestRegister(t *testing.T) {
 
 }
 
-// func TestDeregister(t *testing.T) {
-// 	reg := genRegistry()
-// 	service1 := genService("test-deregister", "127.0.0.1:6100")
-// 	service2 := genService("test-deregister", "127.0.0.1:6101")
+func TestListService(t *testing.T) {
+	//wait for Deregister
+	//if Deregister be interrupt ,will effect other test with same address
+	t.Logf("no support ListServices")
 
-// 	assertNoError(t, reg.Register(&service1))
-// 	services, err := reg.GetService(service1.Name)
-// 	assertNoError(t, err)
-// 	assertEqual(t, 1, len(services))
+}
 
-// 	assertNoError(t, reg.Register(&service2))
-// 	services, err = reg.GetService(service2.Name)
-// 	assertNoError(t, err)
-// 	assertEqual(t, 2, len(services))
+func TestDeregister(t *testing.T) {
+	//wait for Deregister
+	//if Deregister be interrupt ,will effect other test with same address
+	defer time.Sleep(time.Second * 10)
+	//polairs reg wait time
+	regWait := time.Second * 5
 
-// 	assertNoError(t, reg.Deregister(&service1))
-// 	services, err = reg.GetService(service1.Name)
-// 	assertNoError(t, err)
-// 	assertEqual(t, 1, len(services))
+	reg := genRegistry()
+	service1 := genService("test-deregister", "v1", "127.0.0.1:6100")
+	service2 := genService("test-deregister", "v2", "127.0.0.1:6101")
 
-// 	assertNoError(t, reg.Deregister(&service2))
-// 	services, err = reg.GetService(service1.Name)
-// 	assertNoError(t, err)
-// 	assertEqual(t, 0, len(services))
-// }
+	assertNoError(t, reg.Register(&service1))
+	time.Sleep(regWait)
+	services, err := reg.GetService(service1.Name)
+	assertNoError(t, err)
+	assertEqual(t, 1, len(services))
 
-// func TestGetService(t *testing.T) {
-// 	reg := genRegistry()
-// 	services, err := reg.GetService("one")
-// 	assertNoError(t, err)
-// 	assertEqual(t, 1, len(services))
-// 	assertEqual(t, "one", services[0].Name)
-// 	assertEqual(t, 1, len(services[0].Nodes))
-// }
+	assertNoError(t, reg.Register(&service2))
+	time.Sleep(regWait)
+	services, err = reg.GetService(service2.Name)
+	assertNoError(t, err)
+	assertEqual(t, 2, len(services))
+
+	assertNoError(t, reg.Deregister(&service1))
+	time.Sleep(regWait)
+	services, err = reg.GetService(service1.Name)
+	assertNoError(t, err)
+	assertEqual(t, 1, len(services))
+
+	assertNoError(t, reg.Deregister(&service2))
+	time.Sleep(regWait)
+	services, err = reg.GetService(service1.Name)
+	if err != registry.ErrNotFound {
+		t.Error("expected err got nil")
+	}
+	assertEqual(t, 0, len(services))
+}
 
 func BenchmarkGetService(b *testing.B) {
 	reg := genRegistry()

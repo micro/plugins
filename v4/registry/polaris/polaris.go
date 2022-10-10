@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"os"
 	"path"
-	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -364,55 +363,8 @@ func (e *poRegistry) GetService(name string, opts ...registry.GetOption) ([]*reg
 }
 
 func (e *poRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
-	versions := make(map[string]*registry.Service)
-
-	timeout := e.options.Timeout
-	retryCount := 3
-	// DiscoverEchoServer
-	req := &api.GetAllInstancesRequest{}
-	req.Namespace = e.namespace
-	req.Service = e.serverToken
-	req.Timeout = &timeout
-	req.RetryCount = &retryCount
-	insResp, err := e.consumer.GetAllInstances(req)
-	if err != nil {
-		logger.Errorf("[error] fail to GetAllInstances, err is %v", err)
-		return nil, err
-	}
-	inss := insResp.GetInstances()
-
-	if len(inss) == 0 {
-		return []*registry.Service{}, registry.ErrNotFound
-	}
-
-	for _, n := range inss {
-		m := n.GetMetadata()
-		// nodePath := m["node_path"]
-		if m == nil {
-			logger.Error("[error] fail to GetMetadata")
-			return nil, err
-		}
-		microService := m["micro_service"]
-		if sn := decode([]byte(microService)); sn != nil {
-			v, ok := versions[sn.Name+sn.Version]
-			if !ok {
-				versions[sn.Name+sn.Version] = sn
-				continue
-			}
-			// append to service:version nodes
-			v.Nodes = append(v.Nodes, sn.Nodes...)
-		}
-	}
-
-	services := make([]*registry.Service, 0, len(versions))
-	for _, service := range versions {
-		services = append(services, service)
-	}
-
-	// sort the services
-	sort.Slice(services, func(i, j int) bool { return services[i].Name < services[j].Name })
-
-	return services, nil
+	services := make([]*registry.Service, 0)
+	return services, errors.New("not support")
 }
 
 func (e *poRegistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
