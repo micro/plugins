@@ -21,7 +21,7 @@ wget -q "${package_url}"
 
 
 # Unzip package
-unzip "*.linux.amd64.zip"
+unzip -o "*.linux.amd64.zip"
 
 package_name=$(find . -maxdepth 1 -name "polaris*" -type d)
 if [ ! -d "${package_name}" ]; then
@@ -53,7 +53,4 @@ popd || exit 1
 export POLARIS_ADDR="127.0.0.1:8091"
 
 printf "\nPolaris installed successfully on ${POLARIS_ADDR}\n"
-
-pids=($(pgrep polaris))
-cleanup_cmd="kill ${pids[@]}"
 
