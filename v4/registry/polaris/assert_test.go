@@ -21,6 +21,10 @@ func assertEqual(tb testing.TB, expected, actual interface{}) {
 
 func assertSrvLen(tb testing.TB, expected int, srvs []*registry.Service) {
 	if len(srvs) != expected {
+		tb.Log("About to error:")
+		for _, srv := range srvs {
+			tb.Logf("Name: %v, Version: %v, Node #1: %+v, Metadata: %+v", srv.Name, srv.Version, srv.Nodes[0], srv.Metadata)
+		}
 		tb.Errorf("Unexpected service length: %d. Services: %+v", len(srvs), srvs)
 	}
 }
