@@ -48,11 +48,12 @@ func genService(name, version, addr string) registry.Service {
 		},
 		Nodes: []*registry.Node{
 			{
-				Id:      name + version + addr,
+				Id:      name + "-" + version + "-" + uuid.NewString(),
 				Address: addr,
 			},
 		},
 	}
+
 	return service
 }
 
@@ -202,7 +203,7 @@ func TestDeregister(t *testing.T) {
 	t.Log("Deregister nr. 2")
 	assertNoError(t, reg.Deregister(&service2))
 	time.Sleep(regWait)
-	services, err = reg.GetService(service1.Name)
+	services, err = reg.GetService(service2.Name)
 	if !errors.Is(err, registry.ErrNotFound) {
 		t.Error("expected err got nil")
 	}
