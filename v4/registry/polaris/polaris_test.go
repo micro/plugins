@@ -62,7 +62,7 @@ func TestRegister(t *testing.T) {
 	defer time.Sleep(time.Second * 10)
 
 	// Polaris reg wait time
-	regWait := time.Second * 5
+	regWait := time.Second * 8
 
 	t.Log("Creating new registry")
 	reg := newRegistry()
@@ -167,7 +167,7 @@ func TestDeregister(t *testing.T) {
 	defer time.Sleep(time.Second * 10)
 
 	// Polaris reg wait time
-	regWait := time.Second * 5
+	regWait := time.Second * 8
 
 	t.Log("Creating new registry")
 	reg := newRegistry()
@@ -180,7 +180,7 @@ func TestDeregister(t *testing.T) {
 	time.Sleep(regWait)
 	services, err := reg.GetService(service1.Name)
 	assertNoError(t, err)
-	assertEqual(t, 1, len(services))
+	assertSrvLen(t, 1, services)
 
 	// Register 2
 	t.Log("Register nr. 2")
@@ -188,7 +188,7 @@ func TestDeregister(t *testing.T) {
 	time.Sleep(regWait)
 	services, err = reg.GetService(service2.Name)
 	assertNoError(t, err)
-	assertEqual(t, 2, len(services))
+	assertSrvLen(t, 2, services)
 
 	// Deregister 1
 	t.Log("Deregister nr. 1")
@@ -196,7 +196,7 @@ func TestDeregister(t *testing.T) {
 	time.Sleep(regWait * 2)
 	services, err = reg.GetService(service1.Name)
 	assertNoError(t, err)
-	assertEqual(t, 1, len(services))
+	assertSrvLen(t, 1, services)
 
 	// Deregister 2
 	t.Log("Deregister nr. 2")
@@ -206,7 +206,7 @@ func TestDeregister(t *testing.T) {
 	if !errors.Is(err, registry.ErrNotFound) {
 		t.Error("expected err got nil")
 	}
-	assertEqual(t, 0, len(services))
+	assertSrvLen(t, 0, services)
 }
 
 func BenchmarkGetService(b *testing.B) {
@@ -231,14 +231,14 @@ func BenchmarkGetService(b *testing.B) {
 
 	// Give Polaris some time to register the service.
 	// One second should work, but some safety margin added.
-	time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 5)
 
 	b.Log("Starting benchmark")
 	b.StartTimer()
 	for n := 0; n < b.N; n++ {
 		services, err := reg.GetService(srvName)
 		assertNoError(b, err)
-		assertEqual(b, 1, len(services))
+		assertSrvLen(b, 1, services)
 		assertEqual(b, srvName, services[0].Name)
 	}
 }
