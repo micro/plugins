@@ -202,12 +202,12 @@ func TestDeregister(t *testing.T) {
 	// Deregister 2
 	t.Log("Deregister nr. 2")
 	assertNoError(t, reg.Deregister(&service2))
-	time.Sleep(regWait)
-	services, err = reg.GetService(service2.Name)
+	time.Sleep(regWait * 2)
+	servicesList, err := reg.GetService(service2.Name)
 	if !errors.Is(err, registry.ErrNotFound) {
 		t.Error("expected err got nil")
 	}
-	assertSrvLen(t, 0, services)
+	assertSrvLen(t, 0, servicesList)
 }
 
 func BenchmarkGetService(b *testing.B) {
