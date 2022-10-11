@@ -89,7 +89,7 @@ func TestRegister(t *testing.T) {
 		}
 
 		for i, item := range services {
-			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID%v\n",
+			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID: %v\n",
 				i, item.Name, item.Version, len(item.Nodes), item.Nodes[0].Address, item.Nodes[0].Id)
 		}
 
@@ -120,7 +120,7 @@ func TestRegister(t *testing.T) {
 		}
 
 		for i, item := range services {
-			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID%v\n", i, item.Name, item.Version, len(item.Nodes), item.Nodes[0].Address, item.Nodes[0].Id)
+			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID: %v\n", i, item.Name, item.Version, len(item.Nodes), item.Nodes[0].Address, item.Nodes[0].Id)
 		}
 		if len(services) != 1 {
 			t.Errorf("expected %v, got %v", 1, len(services))
@@ -151,7 +151,7 @@ func TestRegister(t *testing.T) {
 		}
 
 		for i, item := range services {
-			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID%v\n", i, item.Name, item.Version,
+			t.Logf("ID: %d, Name: %s, Version: %v, Node Count %v, First Node Address %v, First Node ID: %v\n", i, item.Name, item.Version,
 				len(item.Nodes), item.Nodes[0].Address, item.Nodes[0].Id)
 		}
 

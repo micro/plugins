@@ -7,11 +7,11 @@ RED='\033[0;31m'
 NC='\033[0m'
 GREEN='\033[0;32m'
 BAR="-------------------------------------------------------------------------------"
-HAS_DEPS=("polaris" "redis")
+HAS_DEPS=("polaris")
 
 export RICHGO_FORCE_COLOR="true"
-export IN_TRAVIS_CI="true"
-export TRAVIS="true"
+# export IN_TRAVIS_CI="true"
+# export TRAVIS="true"
 
 # Print a green colored message to the screen.
 function print_msg() {
@@ -51,18 +51,17 @@ function add_summary() {
 #
 # To run a script add it to the HAS_DEPS variable, e.g.: ("redis" "nats").
 # And make sure to add a script to deps/<name>.sh
-#
-# Export the PIDs of all dependencies to DEP_PIDS array, such that they can be
-# killed after the tests have finished.
 function install_deps() {
   for dep in "${HAS_DEPS[@]}"; do
     if grep -q "${dep}" <<<"${1}"; then
-      script="deps/${dep}.sh"
+      script="scripts/deps/${dep}.sh"
 
       # Check if script exists
       if [[ -f "${script}" ]]; then
         echo "Installing depencies for $dep"
         bash "${script}"
+        echo "$dep"
+        return 0
       fi
     fi
   done
@@ -70,18 +69,22 @@ function install_deps() {
 
 # Kill all PIDs of setups.
 function kill_deps() {
-  # Itterate over all PIDs and kill them.
-  if [[ "${#DEP_PIDS[@]}" -ne 0 ]]; then
-    for dep_pid in "${DEP_PIDS[@]}"; do
-      echo "Killing:"
-      ps -aux | grep "${dep_pid}"
+  for dep in "${HAS_DEPS[@]}"; do
+    if grep -q "${dep}" <<<"${1}"; then
+      # Itterate over all PIDs and kill them.
+      pids=($(pgrep "$dep"))
+      if [[ "${#pids[@]}" -ne 0 ]]; then
+        echo "Killing:"
+      fi
 
-      kill "${dep_pid}"
-    done
-  fi
+      for dep_pid in "${pids[@]}"; do
+        ps -aux | grep -v "grep" | grep "${dep_pid}"
 
-  # Reset variable.
-  export DEP_PIDS=""
+        kill "${dep_pid}"
+        return 0
+      done
+    fi
+  done
 }
 
 # Find directories that contain changes.
@@ -157,11 +160,12 @@ function run_test() {
   done
 
   for dir in "${dirs[@]}"; do
-    pushd "${dir}" >/dev/null
     print_msg "Running unit tests for $dir"
 
     # Install dependencies if required.
-    install_deps $dir
+    install_deps "${dir}"
+
+    pushd "${dir}" >/dev/null
 
     # Download all modules.
     go get -v -t -d ./...
@@ -174,10 +178,10 @@ function run_test() {
       failed="true"
     fi
 
-    # Kill all depdency processes.
-    kill_deps
-
     popd >/dev/null
+
+    # Kill all depdency processes.
+    kill_deps "${dir}"
   done
 
   if [[ $failed == "true" ]]; then
@@ -196,11 +200,11 @@ function create_summary() {
   dirs=$1
   failed="false"
   for dir in "${dirs[@]}"; do
+    # Install dependencies if required.
+    install_deps "${dir}"
+
     pushd "${dir}" >/dev/null
     print_msg "Creating summary for $dir"
-
-    # Install dependencies if required.
-    install_deps $dir
 
     add_summary "\n### ${dir}\n"
 
@@ -214,10 +218,10 @@ function create_summary() {
       failed="true"
     fi
 
-    # Kill all depdency processes.
-    kill_deps
-
     popd >/dev/null
+
+    # Kill all depdency processes.
+    kill_deps "${dir}"
   done
 
   if [[ $failed == "true" ]]; then

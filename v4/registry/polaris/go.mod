@@ -3,6 +3,7 @@ module github.com/go-micro/plugins/v4/registry/polaris
 go 1.18
 
 require (
+	github.com/google/uuid v1.3.0
 	github.com/polarismesh/polaris-go v1.1.0
 	go-micro.dev/v4 v4.9.0
 )
@@ -23,7 +24,6 @@ require (
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
