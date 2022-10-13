@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/aws/aws-sdk-go v1.38.69
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	golang.org/x/text v0.3.6
 )
 

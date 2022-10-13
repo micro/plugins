@@ -54,7 +54,7 @@ require (
 	github.com/nats-io/nats.go v1.16.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.1
-	go-micro.dev/v4 v4.8.1
+	go-micro.dev/v4 v4.9.0
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90 // indirect
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
 	golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde // indirect

@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/wrapper/trace/opentelemetry
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	go.opentelemetry.io/otel v1.8.0
 	go.opentelemetry.io/otel/trace v1.8.0
 )

@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/config/source/runtimevar
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	gocloud.dev v0.17.0
 )
 

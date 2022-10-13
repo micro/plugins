@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/sync/etcd
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	go.etcd.io/etcd/client/v3 v3.5.0
 )
 
@@ -13,6 +13,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
+	github.com/google/uuid v1.2.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect

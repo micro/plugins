@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/streadway/amqp v1.0.0
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	gocloud.dev v0.25.0
 	gocloud.dev/pubsub/rabbitpubsub v0.25.0
 )
