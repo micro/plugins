@@ -43,6 +43,7 @@ type service struct {
 type rServer struct {
 	mu         sync.Mutex // protects the serviceMap
 	serviceMap map[string]*service
+	logger     logger.Logger
 }
 
 // Is this an exported - upper case - name?
@@ -63,7 +64,7 @@ func isExportedOrBuiltinType(t reflect.Type) bool {
 
 // prepareEndpoint() returns a methodType for the provided method or nil
 // in case if the method was unsuitable.
-func prepareEndpoint(method reflect.Method) *methodType {
+func prepareEndpoint(method reflect.Method, log logger.Logger) *methodType {
 	mtype := method.Type
 	mname := method.Name
 	var replyType, argType, contextType reflect.Type
@@ -86,9 +87,7 @@ func prepareEndpoint(method reflect.Method) *methodType {
 		replyType = mtype.In(3)
 		contextType = mtype.In(1)
 	default:
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Errorf("method %v of %v has wrong number of ins: %v", mname, mtype, mtype.NumIn())
-		}
+		log.Logf(logger.ErrorLevel, "method %v of %v has wrong number of ins: %v", mname, mtype, mtype.NumIn())
 		return nil
 	}
 
@@ -96,9 +95,7 @@ func prepareEndpoint(method reflect.Method) *methodType {
 		// check stream type
 		streamType := reflect.TypeOf((*server.Stream)(nil)).Elem()
 		if !argType.Implements(streamType) {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("%v argument does not implement Streamer interface: %v", mname, argType)
-			}
+			log.Logf(logger.ErrorLevel, "%v argument does not implement Streamer interface: %v", mname, argType)
 			return nil
 		}
 	} else {
@@ -106,40 +103,30 @@ func prepareEndpoint(method reflect.Method) *methodType {
 
 		// First arg need not be a pointer.
 		if !isExportedOrBuiltinType(argType) {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("%v argument type not exported: %v", mname, argType)
-			}
+			log.Logf(logger.ErrorLevel, "%v argument type not exported: %v", mname, argType)
 			return nil
 		}
 
 		if replyType.Kind() != reflect.Ptr {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("method %v reply type not a pointer: %v", mname, replyType)
-			}
+			log.Logf(logger.ErrorLevel, "method %v reply type not a pointer: %v", mname, replyType)
 			return nil
 		}
 
 		// Reply type must be exported.
 		if !isExportedOrBuiltinType(replyType) {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("method %v reply type not exported: %v", mname, replyType)
-			}
+			log.Logf(logger.ErrorLevel, "method %v reply type not exported: %v", mname, replyType)
 			return nil
 		}
 	}
 
 	// Endpoint() needs one out.
 	if mtype.NumOut() != 1 {
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Errorf("method %v has wrong number of outs: %v", mname, mtype.NumOut())
-		}
+		log.Logf(logger.ErrorLevel, "method %v has wrong number of outs: %v", mname, mtype.NumOut())
 		return nil
 	}
 	// The return type of the method must be error.
 	if returnType := mtype.Out(0); returnType != typeOfError {
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Errorf("method %v returns %v not error", mname, returnType.String())
-		}
+		log.Logf(logger.ErrorLevel, "method %v returns %v not error", mname, returnType.String())
 		return nil
 	}
 	return &methodType{method: method, ArgType: argType, ReplyType: replyType, ContextType: contextType, stream: stream}
@@ -148,6 +135,7 @@ func prepareEndpoint(method reflect.Method) *methodType {
 func (server *rServer) register(rcvr interface{}) error {
 	server.mu.Lock()
 	defer server.mu.Unlock()
+	log := server.logger
 	if server.serviceMap == nil {
 		server.serviceMap = make(map[string]*service)
 	}
@@ -160,9 +148,7 @@ func (server *rServer) register(rcvr interface{}) error {
 	}
 	if !isExported(sname) {
 		s := "rpc Register: type " + sname + " is not exported"
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Error(s)
-		}
+		log.Log(logger.ErrorLevel, s)
 		return errors.New(s)
 	}
 	if _, present := server.serviceMap[sname]; present {
@@ -174,16 +160,14 @@ func (server *rServer) register(rcvr interface{}) error {
 	// Install the methods
 	for m := 0; m < s.typ.NumMethod(); m++ {
 		method := s.typ.Method(m)
-		if mt := prepareEndpoint(method); mt != nil {
+		if mt := prepareEndpoint(method, log); mt != nil {
 			s.method[method.Name] = mt
 		}
 	}
 
 	if len(s.method) == 0 {
 		s := "rpc Register: type " + sname + " has no exported methods of suitable type"
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Error(s)
-		}
+		log.Log(logger.ErrorLevel, s)
 		return errors.New(s)
 	}
 	server.serviceMap[s.name] = s

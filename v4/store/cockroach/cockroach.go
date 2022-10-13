@@ -482,6 +482,7 @@ func NewStore(opts ...store.Option) store.Store {
 	options := store.Options{
 		Database: DefaultDatabase,
 		Table:    DefaultTable,
+		Logger:   logger.DefaultLogger,
 	}
 
 	for _, o := range opts {
@@ -496,9 +497,7 @@ func NewStore(opts ...store.Option) store.Store {
 	s.databases = make(map[string]bool)
 	// best-effort configure the store
 	if err := s.configure(); err != nil {
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Error("Error configuring store ", err)
-		}
+		s.options.Logger.Log(logger.ErrorLevel, "Error configuring store ", err)
 	}
 
 	// return store
