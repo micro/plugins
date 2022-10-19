@@ -1,3 +1,4 @@
+// Package api ...
 package api
 
 import (
@@ -32,6 +33,31 @@ type Request struct {
 type Params struct {
 	LabelSelector map[string]string
 	Watch         bool
+}
+
+// Options ...
+type Options struct {
+	Host        string
+	Namespace   string
+	BearerToken *string
+	Client      *http.Client
+}
+
+// NewRequest creates a k8s api request.
+func NewRequest(opts *Options) *Request {
+	req := Request{
+		header:    make(http.Header),
+		params:    make(url.Values),
+		client:    opts.Client,
+		namespace: opts.Namespace,
+		host:      opts.Host,
+	}
+
+	if opts.BearerToken != nil {
+		req.SetHeader("Authorization", "Bearer "+*opts.BearerToken)
+	}
+
+	return &req
 }
 
 // verb sets method.
@@ -93,7 +119,9 @@ func (r *Request) Body(in interface{}) *Request {
 		r.err = err
 		return r
 	}
+
 	r.body = b
+
 	return r
 }
 
@@ -142,6 +170,7 @@ func (r *Request) request() (*http.Request, error) {
 
 	// set headers on request
 	req.Header = r.header
+
 	return req, nil
 }
 
@@ -171,8 +200,8 @@ func (r *Request) Do() *Response {
 	return newResponse(res, err)
 }
 
-// Watch builds and triggers the request, but
-// will watch instead of return an object.
+// Watch builds and triggers the request, but will watch instead of return
+// an object.
 func (r *Request) Watch() (watch.Watch, error) {
 	if r.err != nil {
 		return nil, r.err
@@ -186,30 +215,6 @@ func (r *Request) Watch() (watch.Watch, error) {
 	}
 
 	w, err := watch.NewBodyWatcher(req, r.client)
+
 	return w, err
-}
-
-// Options ...
-type Options struct {
-	Host        string
-	Namespace   string
-	BearerToken *string
-	Client      *http.Client
-}
-
-// NewRequest creates a k8s api request.
-func NewRequest(opts *Options) *Request {
-	req := &Request{
-		header:    make(http.Header),
-		params:    make(url.Values),
-		client:    opts.Client,
-		namespace: opts.Namespace,
-		host:      opts.Host,
-	}
-
-	if opts.BearerToken != nil {
-		req.SetHeader("Authorization", "Bearer "+*opts.BearerToken)
-	}
-
-	return req
 }

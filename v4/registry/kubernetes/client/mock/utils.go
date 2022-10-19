@@ -38,6 +38,7 @@ func updateMetadata(a, b *client.Meta) {
 				delete(labels, lk)
 				continue
 			}
+
 			labels[lk] = lv
 		}
 	}
@@ -49,6 +50,7 @@ func updateMetadata(a, b *client.Meta) {
 				delete(ann, ak)
 				continue
 			}
+
 			ann[ak] = av
 		}
 	}
@@ -56,6 +58,7 @@ func updateMetadata(a, b *client.Meta) {
 
 func labelFilterMatch(a map[string]*string, b map[string]string) bool {
 	match := true
+
 	for lk, lv := range b {
 		ml, ok := a[lk]
 		if !ok || *ml != lv {
@@ -63,5 +66,6 @@ func labelFilterMatch(a map[string]*string, b map[string]string) bool {
 			break
 		}
 	}
+
 	return match
 }
