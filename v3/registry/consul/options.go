@@ -2,6 +2,7 @@ package consul
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/asim/go-micro/v3/registry"
@@ -77,5 +78,28 @@ func TCPCheck(t time.Duration) registry.Option {
 			o.Context = context.Background()
 		}
 		o.Context = context.WithValue(o.Context, "consul_tcp_check", t)
+	}
+}
+
+// HTTPCheck will tell the service provider to invoke the health check endpoint
+// with an interval and timeout. It will be enabled only if interval and
+// timeout are greater than 0.
+// See `HTTP + Interval` for more information [1].
+//
+// [1] https://www.consul.io/docs/agent/checks.html
+func HTTPCheck(httpEndpoint string, interval, timeout time.Duration) registry.Option {
+	return func(o *registry.Options) {
+		if interval <= time.Duration(0) || timeout <= time.Duration(0) {
+			return
+		}
+		if o.Context == nil {
+			o.Context = context.Background()
+		}
+		check := consul.AgentServiceCheck{
+			HTTP:     httpEndpoint,
+			Interval: fmt.Sprintf("%v", interval),
+			Timeout:  fmt.Sprintf("%v", timeout),
+		}
+		o.Context = context.WithValue(o.Context, "consul_http_check_config", check)
 	}
 }
