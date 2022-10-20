@@ -68,6 +68,7 @@ use (
 	./v4/registry/nats
 	./v4/registry/proxy
 	./v4/registry/zookeeper
+	./v4/registry/polaris
 	./v4/selector/dns
 	./v4/selector/label
 	./v4/selector/registry
