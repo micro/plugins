@@ -16,27 +16,15 @@ func init() {
 // NewCache returns a new redis cache.
 func NewCache(opts ...cache.Option) cache.Cache {
 	options := cache.NewOptions(opts...)
-	addr := "redis://127.0.0.1:6379"
-	if len(options.Address) > 0 {
-		addr = options.Address
-	}
-	redisOptions, err := redis.ParseURL(addr)
-	if err != nil {
-		redisOptions = &redis.Options{
-			Addr:     addr,
-			Password: "",
-			DB:       0,
-		}
-	}
 	return &redisCache{
 		opts:   options,
-		client: redis.NewClient(redisOptions),
+		client: newUniversalClient(options),
 	}
 }
 
 type redisCache struct {
 	opts   cache.Options
-	client *redis.Client
+	client redis.UniversalClient
 }
 
 func (c *redisCache) Get(ctx context.Context, key string) (interface{}, time.Time, error) {

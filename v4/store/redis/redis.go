@@ -13,7 +13,7 @@ import (
 type rkv struct {
 	ctx     context.Context
 	options store.Options
-	Client  *redis.Client
+	Client  redis.UniversalClient
 }
 
 func init() {
@@ -155,27 +155,10 @@ func NewStore(opts ...store.Option) store.Store {
 }
 
 func (r *rkv) configure() error {
-	var redisOptions *redis.Options
-	nodes := r.options.Nodes
-
-	if len(nodes) == 0 {
-		nodes = []string{"redis://127.0.0.1:6379"}
-	}
-
-	redisOptions, err := redis.ParseURL(nodes[0])
-	if err != nil {
-		// Backwards compatibility
-		redisOptions = &redis.Options{
-			Addr:     nodes[0],
-			Password: "", // no password set
-			DB:       0,  // use default DB
-		}
-	}
-
 	if r.Client != nil {
 		r.Client.Close()
 	}
-	r.Client = redis.NewClient(redisOptions)
+	r.Client = newUniversalClient(r.options)
 
 	return nil
 }
