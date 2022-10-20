@@ -213,9 +213,7 @@ func (n *natsBroker) Subscribe(topic string, handler broker.Handler, opts ...bro
 		pub.m = &m
 		if err != nil {
 			m.Body = msg.Data
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Error(err)
-			}
+			n.opts.Logger.Log(logger.ErrorLevel, err)
 			if eh != nil {
 				eh(pub)
 			}
@@ -223,9 +221,7 @@ func (n *natsBroker) Subscribe(topic string, handler broker.Handler, opts ...bro
 		}
 		if err := handler(pub); err != nil {
 			pub.err = err
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Error(err)
-			}
+			n.opts.Logger.Log(logger.ErrorLevel, err)
 			if eh != nil {
 				eh(pub)
 			}
@@ -312,6 +308,7 @@ func NewBroker(opts ...broker.Option) broker.Broker {
 		Codec:    json.Marshaler{},
 		Context:  context.Background(),
 		Registry: registry.DefaultRegistry,
+		Logger:   logger.DefaultLogger,
 	}
 
 	n := &natsBroker{

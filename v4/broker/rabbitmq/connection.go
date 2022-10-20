@@ -56,6 +56,8 @@ type rabbitMQConn struct {
 	close     chan bool
 
 	waitConnection chan struct{}
+
+	logger logger.Logger
 }
 
 // Exchange is the rabbitmq exchange.
@@ -66,7 +68,7 @@ type Exchange struct {
 	Durable bool
 }
 
-func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlobal bool, confirmPublish bool) *rabbitMQConn {
+func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlobal bool, confirmPublish bool, logger logger.Logger) *rabbitMQConn {
 	var url string
 
 	if len(urls) > 0 && regexp.MustCompile("^amqp(s)?://.*").MatchString(urls[0]) {
@@ -83,6 +85,7 @@ func newRabbitMQConn(ex Exchange, urls []string, prefetchCount int, prefetchGlob
 		confirmPublish: confirmPublish,
 		close:          make(chan bool),
 		waitConnection: make(chan struct{}),
+		logger:         logger,
 	}
 	// its bad case of nil == waitConnection, so close it at start
 	close(ret.waitConnection)
@@ -137,9 +140,7 @@ func (r *rabbitMQConn) reconnect(secure bool, config *amqp.Config) {
 			// block until closed
 			select {
 			case err := <-chanNotifyClose:
-				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-					logger.Error(err)
-				}
+				r.logger.Log(logger.ErrorLevel, err)
 				// block all resubscribe attempt - they are useless because there is no connection to rabbitmq
 				// create channel 'waitConnection' (at this point channel is nil or closed, create it without unnecessary checks)
 				r.Lock()
@@ -148,9 +149,7 @@ func (r *rabbitMQConn) reconnect(secure bool, config *amqp.Config) {
 				r.Unlock()
 				chanNotifyClose = nil
 			case err := <-notifyClose:
-				if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-					logger.Error(err)
-				}
+				r.logger.Log(logger.ErrorLevel, err)
 				// block all resubscribe attempt - they are useless because there is no connection to rabbitmq
 				// create channel 'waitConnection' (at this point channel is nil or closed, create it without unnecessary checks)
 				r.Lock()

@@ -8,7 +8,7 @@ require (
 	github.com/nats-io/nats.go v1.16.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
-	go-micro.dev/v4 v4.8.1
+	go-micro.dev/v4 v4.9.0
 )
 
 require (

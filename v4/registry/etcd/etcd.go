@@ -70,6 +70,11 @@ func configure(e *etcdRegistry, opts ...registry.Option) error {
 	if e.options.Timeout == 0 {
 		e.options.Timeout = 5 * time.Second
 	}
+
+	if e.options.Logger == nil {
+		e.options.Logger = logger.DefaultLogger
+	}
+
 	config.DialTimeout = e.options.Timeout
 
 	if e.options.Secure || e.options.TLSConfig != nil {
@@ -163,6 +168,8 @@ func (e *etcdRegistry) registerNode(s *registry.Service, node *registry.Node, op
 	leaseID, ok := e.leases[s.Name+node.Id]
 	e.RUnlock()
 
+	log := e.options.Logger
+
 	if !ok {
 		// missing lease, check if the key exists
 		ctx, cancel := context.WithTimeout(context.Background(), e.options.Timeout)
@@ -206,17 +213,13 @@ func (e *etcdRegistry) registerNode(s *registry.Service, node *registry.Node, op
 
 	// renew the lease if it exists
 	if leaseID > 0 {
-		if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-			logger.Tracef("Renewing existing lease for %s %d", s.Name, leaseID)
-		}
+		log.Logf(logger.TraceLevel, "Renewing existing lease for %s %d", s.Name, leaseID)
 		if _, err := e.client.KeepAliveOnce(context.TODO(), leaseID); err != nil {
 			if err != rpctypes.ErrLeaseNotFound {
 				return err
 			}
 
-			if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-				logger.Tracef("Lease not found for %s %d", s.Name, leaseID)
-			}
+			log.Logf(logger.TraceLevel, "Lease not found for %s %d", s.Name, leaseID)
 			// lease not found do register
 			leaseNotFound = true
 		}
@@ -235,9 +238,7 @@ func (e *etcdRegistry) registerNode(s *registry.Service, node *registry.Node, op
 
 	// the service is unchanged, skip registering
 	if ok && v == h && !leaseNotFound {
-		if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-			logger.Tracef("Service %s node %s unchanged skipping registration", s.Name, node.Id)
-		}
+		log.Logf(logger.TraceLevel, "Service %s node %s unchanged skipping registration", s.Name, node.Id)
 		return nil
 	}
 
@@ -266,9 +267,7 @@ func (e *etcdRegistry) registerNode(s *registry.Service, node *registry.Node, op
 		}
 	}
 
-	if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-		logger.Tracef("Registering %s id %s with lease %v and leaseID %v and ttl %v", service.Name, node.Id, lgr, lgr.ID, options.TTL)
-	}
+	log.Logf(logger.TraceLevel, "Registering %s id %s with lease %v and leaseID %v and ttl %v", service.Name, node.Id, lgr, lgr.ID, options.TTL)
 	// create an entry for the node
 	if lgr != nil {
 		_, err = e.client.Put(ctx, nodePath(service.Name, node.Id), encode(service), clientv3.WithLease(lgr.ID))
@@ -307,9 +306,7 @@ func (e *etcdRegistry) Deregister(s *registry.Service, opts ...registry.Deregist
 		ctx, cancel := context.WithTimeout(context.Background(), e.options.Timeout)
 		defer cancel()
 
-		if logger.V(logger.TraceLevel, logger.DefaultLogger) {
-			logger.Tracef("Deregistering %s id %s", s.Name, node.Id)
-		}
+		e.options.Logger.Logf(logger.TraceLevel, "Deregistering %s id %s", s.Name, node.Id)
 		_, err := e.client.Delete(ctx, nodePath(s.Name, node.Id))
 		if err != nil {
 			return err

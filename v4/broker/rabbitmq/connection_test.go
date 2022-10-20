@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/streadway/amqp"
+	"go-micro.dev/v4/logger"
 )
 
 func TestNewRabbitMQConnURL(t *testing.T) {
@@ -22,7 +23,7 @@ func TestNewRabbitMQConnURL(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, 0, false, false)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, 0, false, false, logger.DefaultLogger)
 
 		if have, want := conn.url, test.want; have != want {
 			t.Errorf("%s: invalid url, want %q, have %q", test.title, want, have)
@@ -63,7 +64,7 @@ func TestTryToConnectTLS(t *testing.T) {
 	for _, test := range testcases {
 		dialCount, dialTLSCount = 0, 0
 
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, []string{test.url}, 0, false, false)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, []string{test.url}, 0, false, false, logger.DefaultLogger)
 		conn.tryConnect(test.secure, test.amqpConfig)
 
 		have := dialCount
@@ -93,7 +94,7 @@ func TestNewRabbitMQPrefetchConfirmPublish(t *testing.T) {
 	}
 
 	for _, test := range testcases {
-		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, test.prefetchCount, test.prefetchGlobal, test.confirmPublish)
+		conn := newRabbitMQConn(Exchange{Name: "exchange"}, test.urls, test.prefetchCount, test.prefetchGlobal, test.confirmPublish, logger.DefaultLogger)
 
 		if have, want := conn.prefetchCount, test.prefetchCount; have != want {
 			t.Errorf("%s: invalid prefetch count, want %d, have %d", test.title, want, have)

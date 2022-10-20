@@ -7,7 +7,7 @@ require (
 	github.com/go-micro/plugins/v4/codec/segmentio v1.1.0
 	github.com/google/uuid v1.2.0
 	github.com/segmentio/kafka-go v0.4.31
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 )
 
 require (

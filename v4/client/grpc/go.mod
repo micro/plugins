@@ -3,7 +3,7 @@ module github.com/go-micro/plugins/v4/client/grpc
 go 1.17
 
 require (
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 	google.golang.org/grpc v1.42.0
 	google.golang.org/grpc/examples v0.0.0-20211102180624-670c133e568e
 	google.golang.org/protobuf v1.27.1

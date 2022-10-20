@@ -84,6 +84,7 @@ func newGRPCServer(opts ...server.Option) server.Server {
 		opts: options,
 		rpc: &rServer{
 			serviceMap: make(map[string]*service),
+			logger:     options.Logger,
 		},
 		handlers:    make(map[string]server.Handler),
 		subscribers: make(map[*subscriber][]broker.Subscriber),
@@ -600,6 +601,8 @@ func (g *grpcServer) Register() error {
 	config := g.opts
 	g.RUnlock()
 
+	log := g.opts.Logger
+
 	regFunc := func(service *registry.Service) error {
 		var regErr error
 
@@ -721,9 +724,7 @@ func (g *grpcServer) Register() error {
 	g.RUnlock()
 
 	if !registered {
-		if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-			logger.Infof("Registry [%s] Registering node: %s", config.Registry.String(), node.Id)
-		}
+		log.Logf(logger.InfoLevel, "Registry [%s] Registering node: %s", config.Registry.String(), node.Id)
 	}
 
 	// register the service
@@ -754,9 +755,8 @@ func (g *grpcServer) Register() error {
 			opts = append(opts, broker.DisableAutoAck())
 		}
 
-		if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-			logger.Infof("Subscribing to topic: %s", sb.Topic())
-		}
+		log.Logf(logger.InfoLevel, "Subscribing to topic: %s", sb.Topic())
+
 		sub, err := config.Broker.Subscribe(sb.Topic(), handler, opts...)
 		if err != nil {
 			return err
@@ -779,6 +779,8 @@ func (g *grpcServer) Deregister() error {
 	g.RLock()
 	config := g.opts
 	g.RUnlock()
+
+	log := g.opts.Logger
 
 	// check the advertise address first
 	// if it exists then use it, otherwise
@@ -815,9 +817,8 @@ func (g *grpcServer) Deregister() error {
 		Nodes:   []*registry.Node{node},
 	}
 
-	if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-		logger.Infof("Deregistering node: %s", node.Id)
-	}
+	log.Logf(logger.InfoLevel, "Deregistering node: %s", node.Id)
+
 	if err := config.Registry.Deregister(service); err != nil {
 		return err
 	}
@@ -838,9 +839,7 @@ func (g *grpcServer) Deregister() error {
 			wg.Add(1)
 			go func(s broker.Subscriber) {
 				defer wg.Done()
-				if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-					logger.Infof("Unsubscribing from topic: %s", s.Topic())
-				}
+				log.Logf(logger.InfoLevel, "Unsubscribing from topic: %s", s.Topic())
 				s.Unsubscribe()
 			}(sub)
 		}
@@ -861,6 +860,7 @@ func (g *grpcServer) Start() error {
 	g.RUnlock()
 
 	config := g.Options()
+	log := config.Logger
 
 	// micro: config.Transport.Listen(config.Address)
 	var (
@@ -889,9 +889,7 @@ func (g *grpcServer) Start() error {
 		}
 	}
 
-	if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-		logger.Infof("Server [grpc] Listening on %s", ts.Addr().String())
-	}
+	log.Logf(logger.InfoLevel, "Server [grpc] Listening on %s", ts.Addr().String())
 	g.Lock()
 	g.opts.Address = ts.Addr().String()
 	g.Unlock()
@@ -900,37 +898,27 @@ func (g *grpcServer) Start() error {
 	if len(g.subscribers) > 0 {
 		// connect to the broker
 		if err := config.Broker.Connect(); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("Broker [%s] connect error: %v", config.Broker.String(), err)
-			}
+			log.Logf(logger.ErrorLevel, "Broker [%s] connect error: %v", config.Broker.String(), err)
 			return err
 		}
 
-		if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-			logger.Infof("Broker [%s] Connected to %s", config.Broker.String(), config.Broker.Address())
-		}
+		log.Logf(logger.InfoLevel, "Broker [%s] Connected to %s", config.Broker.String(), config.Broker.Address())
 	}
 
 	// use RegisterCheck func before register
 	if err = g.opts.RegisterCheck(g.opts.Context); err != nil {
-		if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-			logger.Errorf("Server %s-%s register check error: %s", config.Name, config.Id, err)
-		}
+		log.Logf(logger.ErrorLevel, "Server %s-%s register check error: %s", config.Name, config.Id, err)
 	} else {
 		// announce self to the world
 		if err := g.Register(); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("Server register error: %v", err)
-			}
+			log.Logf(logger.ErrorLevel, "Server register error: %v", err)
 		}
 	}
 
 	// micro: go ts.Accept(s.accept)
 	go func() {
 		if err := g.srv.Serve(ts); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("gRPC Server start error: %v", err)
-			}
+			log.Logf(logger.ErrorLevel, "gRPC Server start error: %v", err)
 		}
 	}()
 
@@ -959,25 +947,17 @@ func (g *grpcServer) Start() error {
 				g.RUnlock()
 				rerr := g.opts.RegisterCheck(g.opts.Context)
 				if rerr != nil && registered {
-					if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-						logger.Errorf("Server %s-%s register check error: %s, deregister it", config.Name, config.Id, err)
-					}
+					log.Logf(logger.ErrorLevel, "Server %s-%s register check error: %s, deregister it", config.Name, config.Id, rerr)
 					// deregister self in case of error
 					if err := g.Deregister(); err != nil {
-						if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-							logger.Errorf("Server %s-%s deregister error: %s", config.Name, config.Id, err)
-						}
+						log.Logf(logger.ErrorLevel, "Server %s-%s deregister error: %s", config.Name, config.Id, err)
 					}
 				} else if rerr != nil && !registered {
-					if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-						logger.Errorf("Server %s-%s register check error: %s", config.Name, config.Id, err)
-					}
+					log.Logf(logger.ErrorLevel, "Server %s-%s register check error: %s", config.Name, config.Id, rerr)
 					continue
 				}
 				if err := g.Register(); err != nil {
-					if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-						logger.Error("Server register error: ", err)
-					}
+					log.Log(logger.ErrorLevel, "Server register error: ", err)
 				}
 			// wait for exit
 			case ch = <-g.exit:
@@ -987,9 +967,7 @@ func (g *grpcServer) Start() error {
 
 		// deregister self
 		if err := g.Deregister(); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Error("Server deregister error: ", err)
-			}
+			log.Log(logger.ErrorLevel, "Server deregister error: ", err)
 		}
 
 		// wait for waitgroup
@@ -1011,14 +989,10 @@ func (g *grpcServer) Start() error {
 			g.srv.Stop()
 		}
 
-		if logger.V(logger.InfoLevel, logger.DefaultLogger) {
-			logger.Infof("Broker [%s] Disconnected from %s", config.Broker.String(), config.Broker.Address())
-		}
+		log.Logf(logger.InfoLevel, "Broker [%s] Disconnected from %s", config.Broker.String(), config.Broker.Address())
 		// disconnect broker
 		if err = config.Broker.Disconnect(); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("Broker [%s] disconnect error: %v", config.Broker.String(), err)
-			}
+			log.Logf(logger.ErrorLevel, "Broker [%s] disconnect error: %v", config.Broker.String(), err)
 		}
 
 		// close transport

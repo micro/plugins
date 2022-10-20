@@ -196,9 +196,7 @@ func (m *memoryEvent) Message() *broker.Message {
 	case []byte:
 		msg := &broker.Message{}
 		if err := m.opts.Codec.Unmarshal(v, msg); err != nil {
-			if logger.V(logger.ErrorLevel, logger.DefaultLogger) {
-				logger.Errorf("[memory]: failed to unmarshal: %v\n", err)
-			}
+			m.opts.Logger.Logf(logger.ErrorLevel, "[memory]: failed to unmarshal: %v\n", err)
 			return nil
 		}
 		return msg
@@ -231,6 +229,7 @@ func (m *memorySubscriber) Unsubscribe() error {
 func NewBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
 		Context: context.Background(),
+		Logger:  logger.DefaultLogger,
 	}
 
 	rand.Seed(time.Now().UnixNano())

@@ -1,6 +1,10 @@
 package stream
 
-import "crypto/tls"
+import (
+	"crypto/tls"
+
+	"github.com/go-redis/redis/v8"
+)
 
 // Options which are used to configure the redis stream.
 type Options struct {
@@ -8,6 +12,8 @@ type Options struct {
 	User      string
 	Password  string
 	TLSConfig *tls.Config
+
+	RedisOptions *redis.UniversalOptions
 }
 
 // Option is a function which configures options.
@@ -40,4 +46,52 @@ func TLSConfig(tlsConfig *tls.Config) Option {
 	return func(o *Options) {
 		o.TLSConfig = tlsConfig
 	}
+}
+
+// WithRedisOptions sets advanced options for redis.
+func WithRedisOptions(options *redis.UniversalOptions) Option {
+	return func(o *Options) {
+		o.RedisOptions = options
+	}
+}
+
+func (o Options) newUniversalClient() redis.UniversalClient {
+	opts := o.RedisOptions
+
+	if opts == nil {
+		addr := "redis://127.0.0.1:6379"
+		if len(o.Address) > 0 {
+			addr = o.Address
+		}
+
+		redisOptions, err := redis.ParseURL(addr)
+		if err != nil {
+			redisOptions = &redis.Options{
+				Addr:      addr,
+				Username:  o.User,
+				Password:  o.Password,
+				TLSConfig: o.TLSConfig,
+			}
+		}
+
+		return redis.NewClient(redisOptions)
+	}
+
+	if len(opts.Addrs) == 0 && len(o.Address) > 0 {
+		opts.Addrs = []string{o.Address}
+	}
+
+	if len(opts.Username) == 0 && len(o.User) > 0 {
+		opts.Username = o.User
+	}
+
+	if len(opts.Password) == 0 && len(o.Password) > 0 {
+		opts.Password = o.Password
+	}
+
+	if opts.TLSConfig == nil && o.TLSConfig != nil {
+		opts.TLSConfig = o.TLSConfig
+	}
+
+	return redis.NewUniversalClient(opts)
 }
