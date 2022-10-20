@@ -1,5 +1,7 @@
 # polaris
 
+> Warning: Watch has not yet been implemented. If you want to use it please consider implementing it.
+
 Polaris is a cloud-native service discovery and governance center. It can be used to solve the problem of service connection, fault tolerance, traffic control and secure in distributed and microservice architecture.
 
 https://github.com/polarismesh/polaris
