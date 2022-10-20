@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -255,8 +256,11 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 		interval, _ := time.ParseDuration(httpCheckConfig.Interval)
 		deregTTL := getDeregisterTTL(interval)
 
+		host, _, _ := net.SplitHostPort(node.Address)
+		healthCheckURI := strings.Replace(httpCheckConfig.HTTP, "{host}", host, 1)
+
 		check = &consul.AgentServiceCheck{
-			HTTP:                           httpCheckConfig.HTTP,
+			HTTP:                           healthCheckURI,
 			Interval:                       httpCheckConfig.Interval,
 			Timeout:                        httpCheckConfig.Timeout,
 			DeregisterCriticalServiceAfter: fmt.Sprintf("%v", deregTTL),
