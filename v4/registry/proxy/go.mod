@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/gorilla/websocket v1.4.2
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 )
 
 require (

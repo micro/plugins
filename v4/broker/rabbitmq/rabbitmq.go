@@ -11,6 +11,7 @@ import (
 
 	"github.com/streadway/amqp"
 	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/util/cmd"
 )
 
@@ -348,7 +349,7 @@ func (r *rbroker) Init(opts ...broker.Option) error {
 
 func (r *rbroker) Connect() error {
 	if r.conn == nil {
-		r.conn = newRabbitMQConn(r.getExchange(), r.opts.Addrs, r.getPrefetchCount(), r.getPrefetchGlobal(), r.getConfirmPublish())
+		r.conn = newRabbitMQConn(r.getExchange(), r.opts.Addrs, r.getPrefetchCount(), r.getPrefetchGlobal(), r.getConfirmPublish(), r.opts.Logger)
 	}
 
 	conf := defaultAmqpConfig
@@ -374,6 +375,7 @@ func (r *rbroker) Disconnect() error {
 func NewBroker(opts ...broker.Option) broker.Broker {
 	options := broker.Options{
 		Context: context.Background(),
+		Logger:  logger.DefaultLogger,
 	}
 
 	for _, o := range opts {

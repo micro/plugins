@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/stretchr/testify v1.7.0
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 )
 
 require (

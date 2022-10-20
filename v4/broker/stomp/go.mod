@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-stomp/stomp/v3 v3.0.1
-	go-micro.dev/v4 v4.8.0
+	go-micro.dev/v4 v4.9.0
 )
 
 require (

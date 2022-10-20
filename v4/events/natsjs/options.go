@@ -1,6 +1,10 @@
 package natsjs
 
-import "crypto/tls"
+import (
+	"crypto/tls"
+
+	"go-micro.dev/v4/logger"
+)
 
 // Options which are used to configure the nats stream.
 type Options struct {
@@ -8,6 +12,7 @@ type Options struct {
 	ClientID  string
 	Address   string
 	TLSConfig *tls.Config
+	Logger    logger.Logger
 }
 
 // Option is a function which configures options.
@@ -38,5 +43,12 @@ func Address(addr string) Option {
 func TLSConfig(t *tls.Config) Option {
 	return func(o *Options) {
 		o.TLSConfig = t
+	}
+}
+
+// Logger sets the underlyin logger
+func Logger(log logger.Logger) Option {
+	return func(o *Options) {
+		o.Logger = log
 	}
 }
