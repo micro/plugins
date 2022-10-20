@@ -81,6 +81,12 @@ func TCPCheck(t time.Duration) registry.Option {
 	}
 }
 
+// HTTPCheck will tell the service provider to invoke the health check endpoint
+// with an interval and timeout. It will be enabled only if interval and
+// timeout are greater than 0.
+// See `HTTP + Interval` for more information [1].
+//
+// [1] https://www.consul.io/docs/agent/checks.html
 func HTTPCheck(httpEndpoint string, interval, timeout time.Duration) registry.Option {
 	return func(o *registry.Options) {
 		if interval <= time.Duration(0) || timeout <= time.Duration(0) {
