@@ -5,3 +5,5 @@ Thumbs.db
 /.vscode/
 /.idea/
 .vim/
+
+*coverage.out
