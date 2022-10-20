@@ -12,34 +12,37 @@ type poWatcher struct {
 	opts    registry.WatchOptions
 }
 
-func newPoWatcher(e *polarisRegistry, timeout time.Duration, opts ...registry.WatchOption) (registry.Watcher, error) {
+func newPoWatcher(timeout time.Duration, opts ...registry.WatchOption) (registry.Watcher, error) {
 	w := &poWatcher{
 		stop:    make(chan bool, 1),
 		timeout: timeout,
 	}
+
 	for _, opt := range opts {
 		opt(&w.opts)
 	}
+
 	return w, nil
 }
 
 // simulate for cache delete
 // registry/cache.go watch,update ...
-// otherwise, always called while deregister and not one service online
-func (ew *poWatcher) Next() (*registry.Result, error) {
+// otherwise, always called while deregister and not one service online.
+func (pw *poWatcher) Next() (*registry.Result, error) {
 	// just delete
-	time.Sleep(ew.timeout)
+	time.Sleep(pw.timeout)
+
 	return &registry.Result{
 		Action:  "delete",
-		Service: &registry.Service{Name: ew.opts.Service},
+		Service: &registry.Service{Name: pw.opts.Service},
 	}, nil
 }
 
-func (ew *poWatcher) Stop() {
+func (pw *poWatcher) Stop() {
 	select {
-	case <-ew.stop:
+	case <-pw.stop:
 		return
 	default:
-		close(ew.stop)
+		close(pw.stop)
 	}
 }

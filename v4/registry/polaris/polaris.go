@@ -4,7 +4,6 @@ package polaris
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -13,10 +12,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/polarismesh/polaris-go/api"
 	"github.com/polarismesh/polaris-go/pkg/model"
 
-	"go-micro.dev/v4/logger"
+	log "go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/util/cmd"
 )
@@ -24,257 +24,255 @@ import (
 var (
 	prefix      = "/micro/registry/"
 	defaultAddr = "127.0.0.1:8091"
+
+	// DefaultTimeout is the default registry timeout.
+	DefaultTimeout = time.Second * 5
+
+	// ErrNoNodes is returned when the lenth of the node slice is zero.
+	ErrNoNodes = errors.New("no nodes provided")
+	// ErrNoMetadata is returned when metadata failed to fetch.
+	ErrNoMetadata = errors.New("fail to GetMetadata")
 )
 
 type polarisRegistry struct {
-	options registry.Options
 	sync.RWMutex
-	register map[string]string
-	//p
-	namespace   string
-	serverToken string
-	provider    api.ProviderAPI
-	consumer    api.ConsumerAPI
+
+	options registry.Options
+
 	// only get one instance for use polaris's loadbalance
 	getOneInstance bool
+	register       map[string]string
+	namespace      string
+	serverToken    string
+
+	provider api.ProviderAPI
+	consumer api.ConsumerAPI
 }
 
 func init() {
 	cmd.DefaultRegistries["polaris"] = NewRegistry
 }
 
+// NewRegistry creates a new Polaris registry.
 func NewRegistry(opts ...registry.Option) registry.Registry {
-	e := &polarisRegistry{
-		options: registry.Options{
-			Timeout: time.Second * 5,
-		},
+	polaris := polarisRegistry{
+		options:        *registry.NewOptions(opts...),
 		register:       make(map[string]string),
 		getOneInstance: false,
 	}
-	token := os.Getenv("POLARIS_TOKEN")
-	if token != "" {
+
+	polaris.options.Timeout = DefaultTimeout
+
+	if token := os.Getenv("POLARIS_TOKEN"); token != "" {
 		opts = append(opts, ServerToken(token))
 	}
-	ns := os.Getenv("POLARIS_NAMESPACE")
-	if ns != "" {
-		opts = append(opts, NameSpace(token))
+
+	if ns := os.Getenv("POLARIS_NAMESPACE"); ns != "" {
+		opts = append(opts, NameSpace(ns))
 	}
-	address := os.Getenv("MICRO_REGISTRY_ADDRESS")
-	if len(address) > 0 {
+
+	if address := os.Getenv("MICRO_REGISTRY_ADDRESS"); len(address) > 0 {
 		opts = append(opts, registry.Addrs(address))
 	}
-	configure(e, opts...)
 
-	return e
+	if err := polaris.configure(opts...); err != nil {
+		polaris.Options().Logger.Logf(log.ErrorLevel, "failed to create Polaris registry: %v", err)
+	}
+
+	return &polaris
 }
 
-func configure(e *polarisRegistry, opts ...registry.Option) error {
+func (p *polarisRegistry) Init(opts ...registry.Option) error {
+	return p.configure(opts...)
+}
 
+func (p *polarisRegistry) configure(opts ...registry.Option) error {
 	for _, o := range opts {
-		o(&e.options)
+		o(&p.options)
 	}
 
-	if e.options.Context != nil {
-		ns, ok := e.options.Context.Value(nameSpaceKey{}).(string)
-		if ok {
-			e.namespace = ns
+	if p.options.Context != nil {
+		if ns, ok := p.options.Context.Value(nameSpaceKey{}).(string); ok {
+			p.namespace = ns
 		}
-		token, ok := e.options.Context.Value(serverTokenKey{}).(string)
-		if ok {
-			e.serverToken = token
+
+		if token, ok := p.options.Context.Value(serverTokenKey{}).(string); ok {
+			p.serverToken = token
 		}
-		flag, ok := e.options.Context.Value(getOneInstanceKey{}).(bool)
-		if ok {
-			e.getOneInstance = flag
+
+		if flag, ok := p.options.Context.Value(getOneInstanceKey{}).(bool); ok {
+			p.getOneInstance = flag
 		}
 	}
+
 	addr := defaultAddr
-	for _, a := range e.Options().Addrs {
+
+	for _, a := range p.Options().Addrs {
 		if a != "" {
 			addr = a
 		}
 	}
+
 	consumer, err := api.NewConsumerAPIByAddress(addr)
 	if err != nil {
 		return err
 	}
+
 	provider, err := api.NewProviderAPIByAddress(addr)
 	if err != nil {
 		return err
 	}
-	e.consumer = consumer
-	e.provider = provider
+
+	p.consumer = consumer
+	p.provider = provider
+
 	return nil
 }
 
-func encode(s *registry.Service) string {
-	b, _ := json.Marshal(s)
-	return string(b)
-}
-
-func decode(ds []byte) *registry.Service {
-	var s *registry.Service
-	json.Unmarshal(ds, &s)
-	return s
-}
-
-func nodePath(s, id string) string {
-	service := strings.Replace(s, "/", "-", -1)
-	node := strings.Replace(id, "/", "-", -1)
-	return path.Join(prefix, service, node)
-}
-
-func servicePath(s string) string {
-	return path.Join(prefix, strings.Replace(s, "/", "-", -1))
-}
-
-func (e *polarisRegistry) addInstance(nodeId, id string) {
-	e.register[nodeId] = id
-}
-func (e *polarisRegistry) getInstance(nodeId string) string {
-	if id, ok := e.register[nodeId]; ok {
-		return id
-	}
-	return ""
-}
-func (e *polarisRegistry) delInstance(nodeId string) {
-	delete(e.register, nodeId)
-}
-
-func (e *polarisRegistry) Init(opts ...registry.Option) error {
-	return configure(e, opts...)
-}
-
-func (e *polarisRegistry) Options() registry.Options {
-	return e.options
-}
-
-func (e *polarisRegistry) registerNode(s *registry.Service, node *registry.Node, opts ...registry.RegisterOption) error {
-
-	service := &registry.Service{
-		Name:      s.Name,
-		Version:   s.Version,
-		Metadata:  s.Metadata,
-		Endpoints: s.Endpoints,
+func (p *polarisRegistry) registerNode(service *registry.Service, node *registry.Node,
+	opts ...registry.RegisterOption) error {
+	nodeSrv := registry.Service{
+		Name:      service.Name,
+		Version:   service.Version,
+		Metadata:  service.Metadata,
+		Endpoints: service.Endpoints,
 		Nodes:     []*registry.Node{node},
 	}
 
 	addrs := strings.Split(node.Address, ":")
 	if len(addrs) != 2 {
-		msg := fmt.Sprintf("fail to register instance, node.Address invalid %s", node.Address)
-		logger.Fatal(msg)
-		return errors.New(msg)
+		return fmt.Errorf("fail to register instance, node.Address invalid: %s", node.Address)
 	}
+
 	host := addrs[0]
-	port, _ := strconv.Atoi(addrs[1])
+
+	port, err := strconv.Atoi(addrs[1])
+	if err != nil {
+		return err
+	}
 
 	retryCount := 3
 
-	e.Lock()
-	defer e.Unlock()
+	p.Lock()
+	defer p.Unlock()
 
-	if id := e.getInstance(node.Id); id != "" {
-		req := &api.InstanceHeartbeatRequest{}
-		req.Service = s.Name
-		req.Namespace = e.namespace
-		req.Host = host
-		req.Port = port
-		req.ServiceToken = e.serverToken
-		req.RetryCount = &retryCount
-		req.InstanceID = id
-		err := e.provider.Heartbeat(req)
-		if err != nil {
-			logger.Errorf("fail to heartbeat instance, err is %v %v", err, req)
-			return err
+	// Check if node already registered
+	if id := p.getInstance(node.Id); id != "" {
+		req := &api.InstanceHeartbeatRequest{
+			InstanceHeartbeatRequest: model.InstanceHeartbeatRequest{
+				Service:      service.Name,
+				Namespace:    p.namespace,
+				Host:         host,
+				Port:         port,
+				ServiceToken: p.serverToken,
+				RetryCount:   &retryCount,
+				InstanceID:   id,
+			},
 		}
+
+		if err = p.provider.Heartbeat(req); err != nil {
+			return errors.Wrapf(err, "fail to heartbeat instance %+v", req)
+		}
+
 		return nil
-	} else {
-		var options registry.RegisterOptions
-		for _, o := range opts {
-			o(&options)
-		}
-		version := s.Version
-		req := &api.InstanceRegisterRequest{}
-		req.Service = s.Name
-		req.Version = &version
-		req.Namespace = e.namespace
-		req.Host = host
-		req.Port = port
-		req.ServiceToken = e.serverToken
-		// 不做心跳就不要设置,否则服务器会被置不健康
-		req.SetTTL(int(options.TTL.Seconds()))
-		req.RetryCount = &retryCount
-		mm := map[string]string{}
-		mm["node_path"] = nodePath(service.Name, node.Id)
-		mm["Micro-Service"] = encode(service)
-
-		req.Metadata = mm
-
-		resp, err := e.provider.Register(req)
-		if err != nil {
-			logger.Fatalf("fail to register instance, err is %v %v", err, req)
-		}
-		e.addInstance(node.Id, resp.InstanceID)
-		// logger.Infof("register response: instanceId %s %v", resp.InstanceID, options.TTL.Seconds())
 	}
+
+	var options registry.RegisterOptions
+
+	for _, o := range opts {
+		o(&options)
+	}
+
+	version := service.Version
+
+	req := api.InstanceRegisterRequest{
+		InstanceRegisterRequest: model.InstanceRegisterRequest{
+			Service:      service.Name,
+			Version:      &version,
+			Namespace:    p.namespace,
+			Host:         host,
+			Port:         port,
+			ServiceToken: p.serverToken,
+			RetryCount:   &retryCount,
+		},
+	}
+
+	req.SetTTL(int(options.TTL.Seconds()))
+
+	b, err := json.Marshal(&nodeSrv)
+	if err != nil {
+		return err
+	}
+
+	req.Metadata = map[string]string{
+		"node_path":     nodePath(nodeSrv.Name, node.Id),
+		"Micro-Service": string(b),
+	}
+
+	resp, err := p.provider.Register(&req)
+	if err != nil {
+		return errors.Wrapf(err, "fail to register instance, err is %+v", req)
+	}
+
+	p.addInstance(node.Id, resp.InstanceID)
 
 	return nil
 }
 
-func (e *polarisRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
+// Deregister will deregister a node.
+func (p *polarisRegistry) Deregister(s *registry.Service, opts ...registry.DeregisterOption) error {
 	if len(s.Nodes) != 1 {
-		return errors.New("Require must one node")
+		return ErrNoNodes
 	}
 
-	e.Lock()
-	defer e.Unlock()
+	p.Lock()
+	defer p.Unlock()
 
 	for _, node := range s.Nodes {
 		addrs := strings.Split(node.Address, ":")
 		if len(addrs) != 2 {
-			msg := fmt.Sprintf("fail to deregister instance, node.Address invalid %s", node.Address)
-			logger.Error(msg)
-			return errors.New(msg)
+			return fmt.Errorf("fail to deregister instance, node.Address invalid %s", node.Address)
 		}
+
 		host := addrs[0]
-		port, _ := strconv.Atoi(addrs[1])
 
-		timeout := e.options.Timeout
-		retryCount := 3
-		// logger.Infof("start to invoke deregister operation")
-		req := &api.InstanceDeRegisterRequest{}
-		req.Service = s.Name
-		req.Namespace = e.namespace
-		req.Host = host
-		req.Port = port
-		req.ServiceToken = e.serverToken
-		req.Timeout = &timeout
-		req.RetryCount = &retryCount
-
-		e.delInstance(node.Id)
-
-		if err := e.provider.Deregister(req); err != nil {
-			msg := fmt.Sprintf("fail to deregister instance, err is %s", err)
-			logger.Error(msg)
-			return errors.New(msg)
+		port, err := strconv.Atoi(addrs[1])
+		if err != nil {
+			return err
 		}
-		logger.Infof("deregister successfully.")
+
+		timeout := p.options.Timeout
+		retryCount := 3
+
+		req := api.InstanceDeRegisterRequest{
+			InstanceDeRegisterRequest: model.InstanceDeRegisterRequest{
+				Service:      s.Name,
+				Namespace:    p.namespace,
+				Host:         host,
+				Port:         port,
+				ServiceToken: p.serverToken,
+				Timeout:      &timeout,
+				RetryCount:   &retryCount,
+			},
+		}
+
+		p.delInstance(node.Id)
+
+		if err := p.provider.Deregister(&req); err != nil {
+			return errors.Wrap(err, "fail to deregister instance")
+		}
 	}
 
 	return nil
 }
 
-func (e *polarisRegistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
-	if len(s.Nodes) != 1 {
-		return errors.New("Require must one node")
-	}
-
+// Register will register a node.
+func (p *polarisRegistry) Register(s *registry.Service, opts ...registry.RegisterOption) error {
 	var gerr error
 
 	// register each node individually
 	for _, node := range s.Nodes {
-		err := e.registerNode(s, node, opts...)
-		if err != nil {
+		if err := p.registerNode(s, node, opts...); err != nil {
 			gerr = err
 		}
 	}
@@ -282,83 +280,105 @@ func (e *polarisRegistry) Register(s *registry.Service, opts ...registry.Registe
 	return gerr
 }
 
-func (e *polarisRegistry) GetService(name string, opts ...registry.GetOption) ([]*registry.Service, error) {
-	timeout := e.options.Timeout
+// GetService will fetch the service list.
+func (p *polarisRegistry) GetService(name string, opts ...registry.GetOption) ([]*registry.Service, error) {
+	logger := p.options.Logger
+	timeout := p.options.Timeout
+
 	retryCount := 3
 
-	inss := []model.Instance{}
-	// DiscoverEchoServer
-	if false == e.getOneInstance {
-		req := &api.GetInstancesRequest{}
-		req.Service = name
-		req.Namespace = e.namespace
-		req.Timeout = &timeout
-		req.RetryCount = &retryCount
-		insResp, err := e.consumer.GetInstances(req)
-		if err != nil {
-			logger.Errorf("[error] fail to GetInstances, err is %v", err)
-			return nil, err
-		}
-		inss = insResp.GetInstances()
-	} else {
-		req := &api.GetOneInstanceRequest{}
-		req.Service = name
-		req.Namespace = e.namespace
-		req.Timeout = &timeout
-		req.RetryCount = &retryCount
-		insResp, err := e.consumer.GetOneInstance(req)
-		if err != nil {
-			logger.Errorf("[error] fail to GetOneInstance, err is %v", err)
-			return nil, err
-		}
-		inss = insResp.GetInstances()
+	type getInstancer interface {
+		GetInstances() []model.Instance
 	}
 
+	var (
+		err     error
+		insResp getInstancer
+	)
+
+	// DiscoverEchoServer
+	if !p.getOneInstance {
+		req := api.GetInstancesRequest{
+			GetInstancesRequest: model.GetInstancesRequest{
+				Service:    name,
+				Namespace:  p.namespace,
+				Timeout:    &timeout,
+				RetryCount: &retryCount,
+			},
+		}
+
+		insResp, err = p.consumer.GetInstances(&req)
+		if err != nil {
+			return nil, errors.Wrap(err, "fail to GetInstances")
+		}
+	} else {
+		req := api.GetOneInstanceRequest{
+			GetOneInstanceRequest: model.GetOneInstanceRequest{
+				Service:    name,
+				Namespace:  p.namespace,
+				Timeout:    &timeout,
+				RetryCount: &retryCount,
+			},
+		}
+
+		insResp, err = p.consumer.GetOneInstance(&req)
+		if err != nil {
+			return nil, errors.Wrap(err, "fail to GetOneInstance")
+		}
+	}
+
+	inss := insResp.GetInstances()
 	if len(inss) == 0 {
 		return []*registry.Service{}, registry.ErrNotFound
 	}
 
-	serviceMap := map[string]*registry.Service{}
+	serviceMap := make(map[string]*registry.Service)
 
 	for _, n := range inss {
 		m := n.GetMetadata()
 		if m == nil {
-			logger.Errorf("[error] fail to GetMetadata, name is %v", name)
-			return nil, errors.New("fail to GetMetadata")
+			return nil, ErrNoMetadata
 		}
 
 		microService := m["Micro-Service"]
-		if sn := decode([]byte(microService)); sn != nil {
+
+		var service *registry.Service
+		if err := json.Unmarshal([]byte(microService), &service); err != nil {
+			return nil, err
+		}
+
+		if service != nil {
 			if !n.IsHealthy() {
-				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", sn.Name, sn.Version, len(sn.Nodes))
-				logger.Log(logger.WarnLevel, "Service not healthy according to Polaris", msg)
+				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", service.Name, service.Version, len(service.Nodes))
+				logger.Logf(log.WarnLevel, "Service not healthy according to Polaris: %v", msg)
 
 				continue
 			}
 
 			if n.IsIsolated() {
-				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", sn.Name, sn.Version, len(sn.Nodes))
-				logger.Log(logger.WarnLevel, "Service is isolated according to Polaris", msg)
+				msg := fmt.Sprintf("{Name: %s, Version: %v, Node Count: %v}", service.Name, service.Version, len(service.Nodes))
+				logger.Logf(log.WarnLevel, "Service is isolated according to Polaris: %v", msg)
 
 				continue
 			}
 
-			s, ok := serviceMap[sn.Version]
+			s, ok := serviceMap[service.Version]
 			if !ok {
 				s = &registry.Service{
-					Name:      sn.Name,
-					Version:   sn.Version,
-					Metadata:  sn.Metadata,
-					Endpoints: sn.Endpoints,
+					Name:      service.Name,
+					Version:   service.Version,
+					Metadata:  service.Metadata,
+					Endpoints: service.Endpoints,
 				}
 				serviceMap[s.Version] = s
 			}
 
-			s.Nodes = append(s.Nodes, sn.Nodes...)
+			s.Nodes = append(s.Nodes, service.Nodes...)
 		}
 	}
 
 	services := make([]*registry.Service, 0, len(serviceMap))
+
 	for _, service := range serviceMap {
 		services = append(services, service)
 	}
@@ -366,15 +386,43 @@ func (e *polarisRegistry) GetService(name string, opts ...registry.GetOption) ([
 	return services, nil
 }
 
-func (e *polarisRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
+func (p *polarisRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Service, error) {
 	services := make([]*registry.Service, 0)
 	return services, errors.New("not support")
 }
 
-func (e *polarisRegistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
-	return newPoWatcher(e, e.options.Timeout, opts...)
+func (p *polarisRegistry) Watch(opts ...registry.WatchOption) (registry.Watcher, error) {
+	return newPoWatcher(p.options.Timeout, opts...)
 }
 
-func (e *polarisRegistry) String() string {
+// String returns the Polaris plugin name.
+func (p *polarisRegistry) String() string {
 	return "polaris"
+}
+
+func nodePath(s, id string) string {
+	service := strings.ReplaceAll(s, "/", "-")
+	node := strings.ReplaceAll(id, "/", "-")
+
+	return path.Join(prefix, service, node)
+}
+
+func (p *polarisRegistry) addInstance(nodeID, id string) {
+	p.register[nodeID] = id
+}
+
+func (p *polarisRegistry) getInstance(nodeID string) string {
+	if id, ok := p.register[nodeID]; ok {
+		return id
+	}
+
+	return ""
+}
+
+func (p *polarisRegistry) delInstance(nodeID string) {
+	delete(p.register, nodeID)
+}
+
+func (p *polarisRegistry) Options() registry.Options {
+	return p.options
 }

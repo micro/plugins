@@ -60,8 +60,8 @@ linters-settings:
   wsl:
     allow-cuddle-with-calls: ["Lock", "RLock", "defer"]
   funlen:
-    lines: 80
-    statements: 60
+    lines: 130
+    statements: 80
   varnamelen:
     # The longest distance, in source lines, that is being considered a "small scope".
     # Variables used in at most this many lines will be ignored.
