@@ -1,11 +1,18 @@
 #!/bin/bash
 
 ######################################################################################
-# $ release.sh broker/http                                                           #
-#                                                                                    #
 # Release a plugin                                                                   #
 #                                                                                    #
+# Usage:                                                                             #
+#   $ release.sh all                                                                 #
+#   $ release.sh v4/broker/http                                                      #
+#   $ release.sh v4/broker/http,v4/broker/redis                                      #
+#   $ release.sh v4/*                                                                #
+#                                                                                    #
 ######################################################################################
+
+CHANGELOG_TEMPLATE="scripts/template/changelog.md"
+CHANGELOG_FILE="/tmp/changelog.md"
 
 function increment_minor_version() {
 	declare -a part=(${1//\./ })
@@ -52,8 +59,14 @@ function release() {
 	if ! check_if_changed "${pkg}"; then
 		return 1
 	fi
+
+	cat $CHANGELOG_TEMPLATE >$CHANGELOG_FILE
+
 	local last_tag=$(git tag --list --sort='-creatordate' "${pkg}/*" | head -n1)
-	local changes="$(git --no-pager log "${last_tag}..HEAD" --format="%s" "${pkg}")"
+
+	# Create changelog file
+	git log "${last_tag}..HEAD" --format="%s" "${pkg}" |
+		xargs -d'\n' -I{} bash -c "echo \"  * {}\" >> $CHANGELOG_FILE"
 
 	declare -a last_tag_split=(${last_tag//\// })
 
@@ -75,36 +88,33 @@ function release() {
 	#  echo -e "# Run:\n"
 	echo "# Upgrading pkg ${last_tag} >> ${new_tag}"
 	# echo "gh release create \"${new_tag}\" --generate-notes --notes-start-tag ${last_tag}"
-	gh release create "${new_tag}" --generate-notes --notes-start-tag "${last_tag}"
+	gh release create "${new_tag}" --notes-file "${CHANGELOG_FILE}"
 }
 
 function release_all() {
-	for pkg in $(find . -name 'go.mod' -printf "%h\n"); do
+	while read -r pkg; do
 		pkg=$(remove_prefix "${pkg}")
 		if echo "${pkg}" | grep -q "^v2"; then
 			continue
 		fi
-
 		release "${pkg}"
-	done
+	done < <(find . -name 'go.mod' -printf "%h\n")
 }
 
 function release_specific() {
-	set -o noglob
-	for pkg in $(echo "${1}" | tr "," "\n"); do
-		set +o noglob
-		echo "checking: ${pkg}"
-
+	set +o noglob
+	while read -r pkg; do
 		# If path contains a star find all relevant packages
 		if echo "${pkg}" | grep -q "\*"; then
-			for p in $(find ${pkg} -name 'go.mod' -printf "%h\n"); do
+			while read -r p; do
 				release "$(remove_prefix "${p}")"
-			done
+			done < <(find $pkg -name 'go.mod' -printf "%h\n")
 		else
 			release "${pkg}"
 		fi
-	done
-
+	done < <(echo "${1}" | tr "," "\n")
+	# set -o noglob
+	# set +o noglob
 }
 
 case $1 in
