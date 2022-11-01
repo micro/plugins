@@ -23,8 +23,7 @@ function increment_patch_version() {
 }
 
 function remove_prefix() {
-	local prefix="./"
-	echo "$1" | grep -oP "^${prefix}\K.*"
+	echo "${1//\.\//}"
 }
 
 function check_if_changed() {
@@ -46,22 +45,15 @@ function check_if_changed() {
 function release() {
 	if [[ ! -f "${1}/go.mod" ]]; then
 		echo "Unknown package '${1}' given."
-		exit 1
+		return 1
 	fi
 
 	local pkg="${1}"
+	if ! check_if_changed "${pkg}"; then
+		return 1
+	fi
 	local last_tag=$(git tag --list --sort='-creatordate' "${pkg}/*" | head -n1)
-	if [[ "${last_tag}" == "" ]]; then
-		echo -e "# No previous tag\n# Run:\ngh release create "${pkg}/v1.0.0" -n 'Initial release'"
-		exit 0
-	fi
-
-	# echo "# last_tag: ${last_tag}"
 	local changes="$(git --no-pager log "${last_tag}..HEAD" --format="%s" "${pkg}")"
-	if [[ "${#changes}" == "0" ]]; then
-		echo "# No changes detected in package ${pkg}"
-		exit 0
-	fi
 
 	declare -a last_tag_split=(${last_tag//\// })
 
@@ -82,7 +74,8 @@ function release() {
 
 	#  echo -e "# Run:\n"
 	echo "# Upgrading pkg ${last_tag} >> ${new_tag}"
-	echo "gh release create \"${new_tag}\" --generate-notes --notes-start-tag ${last_tag}"
+	# echo "gh release create \"${new_tag}\" --generate-notes --notes-start-tag ${last_tag}"
+	gh release create "${new_tag}" --generate-notes --notes-start-tag "${last_tag}"
 }
 
 function release_all() {
@@ -92,10 +85,26 @@ function release_all() {
 			continue
 		fi
 
-		if check_if_changed "${pkg}"; then
+		release "${pkg}"
+	done
+}
+
+function release_specific() {
+	set -o noglob
+	for pkg in $(echo "${1}" | tr "," "\n"); do
+		set +o noglob
+		echo "checking: ${pkg}"
+
+		# If path contains a star find all relevant packages
+		if echo "${pkg}" | grep -q "\*"; then
+			for p in $(find ${pkg} -name 'go.mod' -printf "%h\n"); do
+				release "$(remove_prefix "${p}")"
+			done
+		else
 			release "${pkg}"
 		fi
 	done
+
 }
 
 case $1 in
@@ -103,8 +112,6 @@ case $1 in
 	release_all
 	;;
 *)
-	for pkg in $(echo "${1}" | tr "," "\n"); do
-		release "${pkg}"
-	done
+	release_specific "${1}"
 	;;
 esac
