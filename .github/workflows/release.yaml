@@ -16,6 +16,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run Linters
-        run: ./scripts/release.sh  ${{ github.event.inputs.releasePackages }}"
+        run: ./scripts/release.sh  "${{ github.event.inputs.releasePackages }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
