@@ -1,23 +1,110 @@
 #!/bin/bash
 
-version=$1
-tag=$2
-commitsh=$3
+######################################################################################
+# $ release.sh broker/http                                                           #
+#                                                                                    #
+# Release a plugin                                                                   #
+#                                                                                    #
+######################################################################################
 
-if [ "x$version" = "x" ]; then
-  echo "must specify version to release"
-  exit 1;
-fi
+function increment_minor_version() {
+	declare -a part=(${1//\./ })
+	part[2]=0
+	part[1]=$((part[1] + 1))
+	new="${part[*]}"
+	echo -e "${new// /.}"
+}
 
-if [ "x$tag" = "x" ]; then
-  echo "must specify tag to release"
-  exit 1;
-fi
+function increment_patch_version() {
+	declare -a part=(${1//\./ })
+	part[2]=$((part[2] + 1))
+	new="${part[*]}"
+	echo -e "${new// /.}"
+}
 
-for m in $(find $version -name 'go.mod' -exec dirname {} \;); do
-  if [ ! -n "$commitsh" ]; then
-    hub release create -m "$m/$tag release" $m/$tag;
-  else
-    hub release create -m "$m/$tag release" -t $commitsh $m/$tag;
-  fi
-done
+function remove_prefix() {
+	local prefix="./"
+	echo "$1" | grep -oP "^${prefix}\K.*"
+}
+
+function check_if_changed() {
+	local pkg="$1"
+	local last_tag=$(git tag --list --sort='-creatordate' "${pkg}/*" | head -n1)
+	if [[ "${last_tag}" == "" ]]; then
+		echo -e "# No previous tag\n# Run:\ngh release create "${pkg}/v1.0.0" -n 'Initial release'"
+		return 1
+	fi
+
+	local changes="$(git --no-pager log "${last_tag}..HEAD" --format="%s" "${pkg}")"
+	if [[ "${#changes}" == "0" ]]; then
+		# echo "# No changes detected in package '${pkg}'"
+		return 1
+	fi
+	return 0
+}
+
+function release() {
+	if [[ ! -f "${1}/go.mod" ]]; then
+		echo "Unknown package '${1}' given."
+		exit 1
+	fi
+
+	local pkg="${1}"
+	local last_tag=$(git tag --list --sort='-creatordate' "${pkg}/*" | head -n1)
+	if [[ "${last_tag}" == "" ]]; then
+		echo -e "# No previous tag\n# Run:\ngh release create "${pkg}/v1.0.0" -n 'Initial release'"
+		exit 0
+	fi
+
+	# echo "# last_tag: ${last_tag}"
+	local changes="$(git --no-pager log "${last_tag}..HEAD" --format="%s" "${pkg}")"
+	if [[ "${#changes}" == "0" ]]; then
+		echo "# No changes detected in package ${pkg}"
+		exit 0
+	fi
+
+	declare -a last_tag_split=(${last_tag//\// })
+
+	local v_version=${last_tag_split[-1]}
+	local version=${v_version:1}
+	# Remove the version from last_tag_split
+	unset last_tag_split[-1]
+
+	# Increment minor version if "feat:" commit found, otherwise patch version
+	git --no-pager log "${last_tag}..HEAD" --format="%s" "${pkg}/*" | grep -q -E "^feat:"
+	if [[ "$?" == "0" ]]; then
+		local tmp_new_tag="$(printf "/%s" "${last_tag_split[@]}")/v$(increment_minor_version ${version})"
+		local new_tag=${tmp_new_tag:1}
+	else
+		local tmp_new_tag="$(printf "/%s" "${last_tag_split[@]}")/v$(increment_patch_version ${version})"
+		local new_tag=${tmp_new_tag:1}
+	fi
+
+	#  echo -e "# Run:\n"
+	echo "# Upgrading pkg ${last_tag} >> ${new_tag}"
+	echo "gh release create \"${new_tag}\" --generate-notes --notes-start-tag ${last_tag}"
+}
+
+function release_all() {
+	for pkg in $(find . -name 'go.mod' -printf "%h\n"); do
+		pkg=$(remove_prefix "${pkg}")
+		if echo "${pkg}" | grep -q "^v2"; then
+			continue
+		fi
+
+		if check_if_changed "${pkg}"; then
+			release "${pkg}"
+		fi
+	done
+}
+
+case $1 in
+"all")
+	release_all
+	;;
+*)
+	for pkg in $(echo "${1}" | tr "," "\n"); do
+		release "${pkg}"
+	done
+	;;
+esac
