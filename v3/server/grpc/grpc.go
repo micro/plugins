@@ -88,7 +88,6 @@ func newGRPCServer(opts ...server.Option) server.Server {
 		handlers:    make(map[string]server.Handler),
 		subscribers: make(map[*subscriber][]broker.Subscriber),
 		exit:        make(chan chan error),
-		wg:          wait(options.Context),
 	}
 
 	// configure the grpc server
@@ -128,6 +127,8 @@ func (g *grpcServer) configure(opts ...server.Option) {
 	for _, o := range opts {
 		o(&g.opts)
 	}
+
+	g.wg = wait(g.opts.Context)
 
 	g.rsvc = nil
 
