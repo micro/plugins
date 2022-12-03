@@ -365,7 +365,7 @@ func (n *natsRegistry) ListServices(opts ...registry.ListOption) ([]*registry.Se
 	serviceMap := make(map[string]*registry.Service)
 
 	for _, v := range s {
-		serviceMap[v.Name] = &registry.Service{Name: v.Name}
+		serviceMap[v.Name] = &registry.Service{Name: v.Name, Version: v.Version}
 	}
 
 	for _, v := range serviceMap {
