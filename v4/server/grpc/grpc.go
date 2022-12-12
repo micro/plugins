@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	sentry "github.com/getsentry/sentry-go"
 	"github.com/golang/protobuf/proto"
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/errors"
@@ -399,6 +400,10 @@ func (g *grpcServer) processRequest(stream grpc.ServerStream, service *service, 
 		fn := func(ctx context.Context, req server.Request, rsp interface{}) (err error) {
 			defer func() {
 				if r := recover(); r != nil {
+					sentry.CurrentHub().Recover(
+						string(debug.Stack()),
+					)
+					sentry.Flush(time.Second * 5)
 					logger.Extract(ctx).Errorf("panic recovered: %v, stack: %s", r, string(debug.Stack()))
 					err = errors.InternalServerError("go.micro.server", "panic recovered: %v", r)
 				}
