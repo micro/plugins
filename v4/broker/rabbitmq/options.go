@@ -14,6 +14,8 @@ type prefetchCountKey struct{}
 type prefetchGlobalKey struct{}
 type confirmPublishKey struct{}
 type exchangeKey struct{}
+type exchangeTypeKey struct{}
+type withoutExchangeKey struct{}
 type requeueOnErrorKey struct{}
 type deliveryMode struct{}
 type priorityKey struct{}
@@ -50,7 +52,6 @@ func QueueArguments(h map[string]interface{}) broker.SubscribeOption {
 	return setSubscribeOption(queueArgumentsKey{}, h)
 }
 
-
 func RequeueOnError() broker.SubscribeOption {
 	return setSubscribeOption(requeueOnErrorKey{}, true)
 }
@@ -58,6 +59,14 @@ func RequeueOnError() broker.SubscribeOption {
 // ExchangeName is an option to set the ExchangeName.
 func ExchangeName(e string) broker.Option {
 	return setBrokerOption(exchangeKey{}, e)
+}
+
+func WithoutExchange() broker.Option {
+	return setBrokerOption(withoutExchangeKey{}, true)
+}
+
+func ExchangeType(t MQExchangeType) broker.Option {
+	return setBrokerOption(exchangeTypeKey{}, t)
 }
 
 // PrefetchCount ...
