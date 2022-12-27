@@ -17,7 +17,7 @@ import (
 type Example struct{}
 
 func init() {
-	rabbitmq.DefaultRabbitURL = "amqp://admin:admin@127.0.0.1:5672"
+	rabbitmq.DefaultRabbitURL = "amqp://rabbitmq:rabbitmq@127.0.0.1:5672"
 }
 
 type TestEvent struct {
