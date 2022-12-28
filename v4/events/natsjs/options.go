@@ -8,11 +8,12 @@ import (
 
 // Options which are used to configure the nats stream.
 type Options struct {
-	ClusterID string
-	ClientID  string
-	Address   string
-	TLSConfig *tls.Config
-	Logger    logger.Logger
+	ClusterID  string
+	ClientID   string
+	Address    string
+	NkeyConfig string
+	TLSConfig  *tls.Config
+	Logger     logger.Logger
 }
 
 // Option is a function which configures options.
@@ -43,6 +44,13 @@ func Address(addr string) Option {
 func TLSConfig(t *tls.Config) Option {
 	return func(o *Options) {
 		o.TLSConfig = t
+	}
+}
+
+// Nkey string to use when connecting to the cluster.
+func NkeyConfig(nkey string) Option {
+	return func(o *Options) {
+		o.NkeyConfig = nkey
 	}
 }
 
