@@ -61,10 +61,13 @@ func ExchangeName(e string) broker.Option {
 	return setBrokerOption(exchangeKey{}, e)
 }
 
+// WithoutExchange is an option to use the rabbitmq default exchange.
+// means it would not create any custom exchange.
 func WithoutExchange() broker.Option {
 	return setBrokerOption(withoutExchangeKey{}, true)
 }
 
+// ExchangeType is an option to set the rabbitmq exchange type.
 func ExchangeType(t MQExchangeType) broker.Option {
 	return setBrokerOption(exchangeTypeKey{}, t)
 }
