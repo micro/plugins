@@ -230,19 +230,27 @@ func (h *httpServer) Deregister() error {
 	}
 
 	h.Lock()
+
 	if !h.registered {
 		h.Unlock()
 		return nil
 	}
 	h.registered = false
 
+	wg := sync.WaitGroup{}
 	for sb, subs := range h.subscribers {
 		for _, sub := range subs {
-			log.Infof("Unsubscribing from topic: %s", sub.Topic())
-			sub.Unsubscribe()
+			wg.Add(1)
+			go func(s broker.Subscriber) {
+				defer wg.Done()
+				log.Infof("Unsubscribing from topic: %s", s.Topic())
+				s.Unsubscribe()
+			}(sub)
 		}
 		h.subscribers[sb] = nil
 	}
+
+	wg.Wait()
 	h.Unlock()
 	return nil
 }
