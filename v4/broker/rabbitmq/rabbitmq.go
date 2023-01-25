@@ -188,6 +188,7 @@ func (r *rbroker) Publish(topic string, msg *broker.Message, opts ...broker.Publ
 		}
 
 		if value, ok := options.Context.Value(contentType{}).(string); ok {
+			m.Headers["Content-Type"] = value
 			m.ContentType = value
 		}
 
@@ -230,6 +231,10 @@ func (r *rbroker) Publish(topic string, msg *broker.Message, opts ...broker.Publ
 
 	for k, v := range msg.Header {
 		m.Headers[k] = v
+	}
+
+	if r.getWithoutExchange() {
+		m.Headers["Micro-Topic"] = topic
 	}
 
 	if r.conn == nil {
@@ -349,7 +354,15 @@ func (r *rbroker) Init(opts ...broker.Option) error {
 
 func (r *rbroker) Connect() error {
 	if r.conn == nil {
-		r.conn = newRabbitMQConn(r.getExchange(), r.opts.Addrs, r.getPrefetchCount(), r.getPrefetchGlobal(), r.getConfirmPublish(), r.opts.Logger)
+		r.conn = newRabbitMQConn(
+			r.getExchange(),
+			r.opts.Addrs,
+			r.getPrefetchCount(),
+			r.getPrefetchGlobal(),
+			r.getConfirmPublish(),
+			r.getWithoutExchange(),
+			r.opts.Logger,
+		)
 	}
 
 	conf := defaultAmqpConfig
@@ -395,6 +408,10 @@ func (r *rbroker) getExchange() Exchange {
 		ex.Name = e
 	}
 
+	if t, ok := r.opts.Context.Value(exchangeTypeKey{}).(MQExchangeType); ok {
+		ex.Type = t
+	}
+
 	if d, ok := r.opts.Context.Value(durableExchange{}).(bool); ok {
 		ex.Durable = d
 	}
@@ -421,4 +438,11 @@ func (r *rbroker) getConfirmPublish() bool {
 		return e
 	}
 	return DefaultConfirmPublish
+}
+
+func (r *rbroker) getWithoutExchange() bool {
+	if e, ok := r.opts.Context.Value(withoutExchangeKey{}).(bool); ok {
+		return e
+	}
+	return DefaultWithoutExchange
 }
