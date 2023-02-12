@@ -20,6 +20,16 @@ func WithUrl(a string) source.Option {
 		if o.Context == nil {
 			o.Context = context.Background()
 		}
+		o.Context = context.WithValue(o.Context, urlKey{}, []string{a})
+	}
+}
+
+// WithUrls sets the nats multiple urls
+func WithUrls(a []string) source.Option {
+	return func(o *source.Options) {
+		if o.Context == nil {
+			o.Context = context.Background()
+		}
 		o.Context = context.WithValue(o.Context, urlKey{}, a)
 	}
 }
