@@ -66,10 +66,17 @@ func (l *zaplog) Init(opts ...logger.Option) error {
 		log = log.WithOptions(options...)
 	}
 
+	// Using zap.Logger instance to replace internal logger
+	if zapLogger, ok := l.opts.Context.Value(loggerKey{}).(*zap.Logger); ok && zapLogger != nil {
+		l.zap = zapLogger
+	}
+
 	// defer log.Sync() ??
 
 	l.cfg = zapConfig
-	l.zap = log
+	if l.zap == nil {
+		l.zap = log
+	}
 	l.fields = make(map[string]interface{})
 
 	return nil
