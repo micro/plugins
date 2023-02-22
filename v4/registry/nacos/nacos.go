@@ -54,7 +54,10 @@ func configure(n *nacosRegistry, opts ...registry.Option) error {
 	}
 	addrs, ok := n.opts.Context.Value(addressKey{}).([]string)
 	if !ok {
-		addrs = []string{"127.0.0.1:8848"}
+		addrs = n.opts.Addrs
+		if len(addrs) == 0 {
+			addrs = []string{"127.0.0.1:8848"}
+		}
 	}
 
 	for _, addr := range addrs {
