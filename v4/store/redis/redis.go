@@ -5,9 +5,16 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/store"
 	"go-micro.dev/v4/util/cmd"
+)
+
+// DefaultDatabase is the namespace that the store
+// will use if no namespace is provided.
+var (
+	DefaultDatabase = "micro"
+	DefaultTable    = "micro"
 )
 
 type rkv struct {
@@ -137,7 +144,12 @@ func (r *rkv) String() string {
 }
 
 func NewStore(opts ...store.Option) store.Store {
-	var options store.Options
+	options := store.Options{
+		Database: DefaultDatabase,
+		Table:    DefaultTable,
+		Logger:   logger.DefaultLogger,
+	}
+
 	for _, o := range opts {
 		o(&options)
 	}
@@ -148,7 +160,7 @@ func NewStore(opts ...store.Option) store.Store {
 	}
 
 	if err := s.configure(); err != nil {
-		log.Fatal(err)
+		s.options.Logger.Log(logger.ErrorLevel, "Error configuring store ", err)
 	}
 
 	return s

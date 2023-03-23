@@ -179,16 +179,12 @@ func Test_Store(t *testing.T) {
 	if tr := os.Getenv("TRAVIS"); len(tr) > 0 {
 		t.Skip()
 	}
-	r := new(rkv)
 
-	// r.options = store.Options{Nodes: []string{"redis://:password@127.0.0.1:6379"}}
-	//r.options = store.Options{Nodes: []string{"127.0.0.1:6379"}}
-	r.options = store.Options{Nodes: []string{"redis://127.0.0.1:6379"}}
-
-	if err := r.configure(); err != nil {
-		t.Error(err)
-		return
-	}
+	r := NewStore(
+		//store.Nodes("redis://:password@127.0.0.1:6379"),
+		//store.Nodes("127.0.0.1:6379"),
+		store.Nodes("redis://127.0.0.1:6379"),
+	)
 
 	key := "myTest"
 	rec := store.Record{
