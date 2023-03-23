@@ -197,19 +197,30 @@ func Test_Store(t *testing.T) {
 	if err != nil {
 		t.Errorf("Write Erroe. Error: %v", err)
 	}
+
 	rec1, err := r.Read(key)
 	if err != nil {
 		t.Errorf("Read Error. Error: %v\n", err)
 	}
-	err = r.Delete(rec1[0].Key)
-	if err != nil {
-		t.Errorf("Delete error %v\n", err)
-	}
+
 	keys, err := r.List()
 	if err != nil {
 		t.Errorf("listing error %v\n", err)
 	}
 	if len(keys) < 1 {
 		t.Errorf("not enough keys\n")
+	}
+
+	err = r.Delete(rec1[0].Key)
+	if err != nil {
+		t.Errorf("Delete error %v\n", err)
+	}
+
+	keys, err = r.List()
+	if err != nil {
+		t.Errorf("listing error %v\n", err)
+	}
+	if len(keys) > 0 {
+		t.Errorf("too many keys\n")
 	}
 }
