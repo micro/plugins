@@ -1,3 +1,4 @@
+// Package redis is a redis backed store implementation
 package redis
 
 import (
@@ -52,6 +53,7 @@ func (r *rkv) Read(key string, opts ...store.ReadOption) ([]*store.Record, error
 	var keys []string
 
 	var rkey string
+
 	switch {
 	case options.Prefix:
 		rkey = fmt.Sprintf("%s%s*", options.Table, key)
@@ -64,14 +66,19 @@ func (r *rkv) Read(key string, opts ...store.ReadOption) ([]*store.Record, error
 	if len(keys) == 0 {
 		cursor := uint64(options.Offset)
 		count := int64(options.Limit)
+
 		for {
 			var err error
+
 			var ks []string
+
 			ks, cursor, err = r.Client.Scan(r.ctx, cursor, rkey, count).Result()
 			if err != nil {
 				return nil, err
 			}
+
 			keys = append(keys, ks...)
+
 			if cursor == 0 {
 				break
 			}
@@ -81,9 +88,12 @@ func (r *rkv) Read(key string, opts ...store.ReadOption) ([]*store.Record, error
 	records := make([]*store.Record, 0, len(keys))
 
 	// read all keys, continue on error
-	var err error
 	var val []byte
+
 	var d time.Duration
+
+	var err error
+
 	for _, rkey = range keys {
 		val, err = r.Client.Get(r.ctx, rkey).Bytes()
 		if err != nil || val == nil {
@@ -120,6 +130,7 @@ func (r *rkv) Delete(key string, opts ...store.DeleteOption) error {
 	}
 
 	rkey := fmt.Sprintf("%s%s", options.Table, key)
+
 	return r.Client.Del(r.ctx, rkey).Err()
 }
 
@@ -133,6 +144,7 @@ func (r *rkv) Write(record *store.Record, opts ...store.WriteOption) error {
 	}
 
 	rkey := fmt.Sprintf("%s%s", options.Table, record.Key)
+
 	return r.Client.Set(r.ctx, rkey, record.Value, record.Expiry).Err()
 }
 
@@ -148,16 +160,23 @@ func (r *rkv) List(opts ...store.ListOption) ([]string, error) {
 	key := fmt.Sprintf("%s%s*%s", options.Table, options.Prefix, options.Suffix)
 
 	cursor := uint64(options.Offset)
+
 	count := int64(options.Limit)
+
 	var allKeys []string
-	var err error
+
 	var keys []string
+
+	var err error
+
 	for {
 		keys, cursor, err = r.Client.Scan(r.ctx, cursor, key, count).Result()
 		if err != nil {
 			return nil, err
 		}
+
 		allKeys = append(allKeys, keys...)
+
 		if cursor == 0 {
 			break
 		}
@@ -174,6 +193,7 @@ func (r *rkv) String() string {
 	return "redis"
 }
 
+// NewStore returns a redis store.
 func NewStore(opts ...store.Option) store.Store {
 	options := store.Options{
 		Database: DefaultDatabase,
@@ -199,8 +219,11 @@ func NewStore(opts ...store.Option) store.Store {
 
 func (r *rkv) configure() error {
 	if r.Client != nil {
-		r.Client.Close()
+		if err := r.Client.Close(); err != nil {
+			return err
+		}
 	}
+
 	r.Client = newUniversalClient(r.options)
 
 	return nil

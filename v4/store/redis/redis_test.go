@@ -181,8 +181,8 @@ func Test_Store(t *testing.T) {
 	}
 
 	r := NewStore(
-		//store.Nodes("redis://:password@127.0.0.1:6379"),
-		//store.Nodes("127.0.0.1:6379"),
+		// store.Nodes("redis://:password@127.0.0.1:6379"),
+		// store.Nodes("127.0.0.1:6379"),
 		store.Nodes("redis://127.0.0.1:6379"),
 	)
 
