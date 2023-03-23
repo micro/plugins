@@ -205,8 +205,11 @@ func Test_Store(t *testing.T) {
 	if err != nil {
 		t.Errorf("Delete error %v\n", err)
 	}
-	_, err = r.List()
+	keys, err := r.List()
 	if err != nil {
 		t.Errorf("listing error %v\n", err)
+	}
+	if len(keys) < 1 {
+		t.Errorf("not enough keys\n")
 	}
 }

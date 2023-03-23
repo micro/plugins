@@ -120,19 +120,33 @@ func (r *rkv) Write(record *store.Record, opts ...store.WriteOption) error {
 }
 
 func (r *rkv) List(opts ...store.ListOption) ([]string, error) {
-	options := store.ListOptions{}
-	options.Table = r.options.Table
+	options := store.ListOptions{
+		Table: r.options.Table,
+	}
 
 	for _, o := range opts {
 		o(&options)
 	}
 
-	keys, err := r.Client.Keys(r.ctx, "*").Result()
-	if err != nil {
-		return nil, err
+	key := fmt.Sprintf("%s*%s", options.Prefix, options.Suffix)
+
+	cursor := uint64(options.Offset)
+	count := int64(options.Limit)
+	var allKeys []string
+	for {
+		var err error
+		var keys []string
+		keys, cursor, err = r.Client.Scan(r.ctx, cursor, key, count).Result()
+		if err != nil {
+			return nil, err
+		}
+		allKeys = append(allKeys, keys...)
+		if cursor == 0 {
+			break
+		}
 	}
 
-	return keys, nil
+	return allKeys, nil
 }
 
 func (r *rkv) Options() store.Options {
