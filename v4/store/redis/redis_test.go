@@ -176,15 +176,12 @@ func Test_rkv_configure_cluster(t *testing.T) {
 }
 
 func Test_Store(t *testing.T) {
-	if tr := os.Getenv("TRAVIS"); len(tr) > 0 {
-		t.Skip()
+	url := os.Getenv("REDIS_URL")
+	if len(url) == 0 {
+		t.Skip("REDIS_URL not defined")
 	}
 
-	r := NewStore(
-		// store.Nodes("redis://:password@127.0.0.1:6379"),
-		// store.Nodes("127.0.0.1:6379"),
-		store.Nodes("redis://127.0.0.1:6379"),
-	)
+	r := NewStore(store.Nodes(url))
 
 	key := "myTest"
 	rec := store.Record{
