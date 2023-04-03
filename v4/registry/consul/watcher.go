@@ -47,7 +47,7 @@ func newConsulWatcher(cr *consulRegistry, opts ...registry.WatchOption) (registr
 		return nil, err
 	}
 
-	wp.Handler = cw.handle
+	wp.Handler = cw.serviceHandler
 	go wp.RunWithClientAndHclog(cr.Client(), wp.Logger)
 	cw.wp = wp
 
