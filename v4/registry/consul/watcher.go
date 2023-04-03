@@ -184,6 +184,15 @@ func (cw *consulWatcher) serviceHandler(idx uint64, data interface{}) {
 		}
 	}
 
+	// there are no services in the service, empty all services
+	if len(rservices) != 0 && serviceName == "" {
+		for _, services := range rservices {
+			for _, service := range services {
+				cw.next <- &registry.Result{Action: "delete", Service: service}
+			}
+		}
+	}
+
 	cw.Lock()
 	cw.services[serviceName] = newServices
 	cw.Unlock()
