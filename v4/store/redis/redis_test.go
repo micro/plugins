@@ -176,19 +176,12 @@ func Test_rkv_configure_cluster(t *testing.T) {
 }
 
 func Test_Store(t *testing.T) {
-	if tr := os.Getenv("TRAVIS"); len(tr) > 0 {
-		t.Skip()
+	url := os.Getenv("REDIS_URL")
+	if len(url) == 0 {
+		t.Skip("REDIS_URL not defined")
 	}
-	r := new(rkv)
 
-	// r.options = store.Options{Nodes: []string{"redis://:password@127.0.0.1:6379"}}
-	//r.options = store.Options{Nodes: []string{"127.0.0.1:6379"}}
-	r.options = store.Options{Nodes: []string{"redis://127.0.0.1:6379"}}
-
-	if err := r.configure(); err != nil {
-		t.Error(err)
-		return
-	}
+	r := NewStore(store.Nodes(url))
 
 	key := "myTest"
 	rec := store.Record{
@@ -201,16 +194,30 @@ func Test_Store(t *testing.T) {
 	if err != nil {
 		t.Errorf("Write Erroe. Error: %v", err)
 	}
+
 	rec1, err := r.Read(key)
 	if err != nil {
 		t.Errorf("Read Error. Error: %v\n", err)
 	}
+
+	keys, err := r.List()
+	if err != nil {
+		t.Errorf("listing error %v\n", err)
+	}
+	if len(keys) < 1 {
+		t.Errorf("not enough keys\n")
+	}
+
 	err = r.Delete(rec1[0].Key)
 	if err != nil {
 		t.Errorf("Delete error %v\n", err)
 	}
-	_, err = r.List()
+
+	keys, err = r.List()
 	if err != nil {
 		t.Errorf("listing error %v\n", err)
+	}
+	if len(keys) > 0 {
+		t.Errorf("too many keys\n")
 	}
 }
