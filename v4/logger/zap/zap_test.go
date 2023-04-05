@@ -1,6 +1,9 @@
 package zap
 
 import (
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"os"
 	"testing"
 
 	"go-micro.dev/v4/logger"
@@ -43,4 +46,19 @@ func TestSetLevel(t *testing.T) {
 
 	logger.Init(logger.WithLevel(logger.InfoLevel))
 	l.Logf(logger.DebugLevel, "test non-show debug: %s", "debug msg")
+}
+
+func TestZapLogger(t *testing.T) {
+	enc := zapcore.NewJSONEncoder(zap.NewProductionEncoderConfig())
+	w := zapcore.AddSync(os.Stdout)
+	core := zapcore.NewCore(enc, w, zapcore.ErrorLevel)
+	zapLogger := zap.New(core)
+	l, err := NewLogger(logger.WithLevel(logger.InfoLevel), WithLogger(zapLogger))
+	if err != nil {
+		t.Fatal(err)
+	}
+	l.Logf(logger.InfoLevel, "test non-show info: %s", "info msg")
+	l.Logf(logger.ErrorLevel, "test show error: %s", "error msg")
+	logger.Init(logger.WithLevel(logger.InfoLevel))
+	l.Logf(logger.InfoLevel, "test non-show info: %s", "info msg")
 }

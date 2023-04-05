@@ -36,3 +36,10 @@ type optionsKey struct{}
 func WithOptions(opts ...zap.Option) logger.Option {
 	return logger.SetOption(optionsKey{}, opts)
 }
+
+type loggerKey struct{}
+
+// WithLogger pass zap.Logger to logger
+func WithLogger(zapLogger *zap.Logger) logger.Option {
+	return logger.SetOption(loggerKey{}, zapLogger)
+}
