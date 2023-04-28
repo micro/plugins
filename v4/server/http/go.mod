@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v4/server/http
+module github.com/dev-mockingbird/go-micro-plugins/v4/server/http
 
 go 1.17
 

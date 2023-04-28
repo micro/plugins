@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v4/server/grpc
+module github.com/dev-mockingbird/go-micro-plugins/v4/server/grpc
 
 go 1.17
 
