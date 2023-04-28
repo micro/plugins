@@ -27,13 +27,13 @@ import (
 	mgrpc "go-micro.dev/v4/util/grpc"
 	mnet "go-micro.dev/v4/util/net"
 	"golang.org/x/net/netutil"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/encoding"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
 )
 
@@ -1028,6 +1028,19 @@ func (g *grpcServer) Stop() error {
 	}
 
 	return err
+}
+
+// example
+//
+//	type ReflectionEnabler interface {
+//	    EnableReflection()
+//	}
+//
+//	if enabler, ok := s.(ReflectionEnabler); ok {
+//	    enabler.EnableReflection()
+//	}
+func (g *grpcServer) EnableReflection() {
+	reflection.Register(g.getGrpcServer())
 }
 
 func (g *grpcServer) String() string {
