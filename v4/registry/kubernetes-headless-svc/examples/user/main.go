@@ -4,7 +4,6 @@ import (
 	"github.com/go-micro-v4-demo/user/handler"
 	pb "github.com/go-micro-v4-demo/user/proto"
 
-	"go-micro.dev/v4"
 	"go-micro.dev/v4/logger"
 	regs "go-micro.dev/v4/registry"
 )
@@ -15,8 +14,9 @@ var (
 )
 
 func main() {
-	// 因为我们不用第第三方服务注册发现
-	// 所以这里是用内存注册，也就是不注册，完全靠k8s service实现多pod的动态发现
+	// Because we don't register for discovery with a third party service
+	// So here is a memory registration, that is, no registration,
+	//completely rely on k8s service to achieve dynamic discovery of multiple Pods
 	reg := regs.NewMemoryRegistry()
 	srv := micro.NewService()
 	srv.Init(

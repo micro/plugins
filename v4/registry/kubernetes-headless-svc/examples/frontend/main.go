@@ -20,21 +20,21 @@ var (
 
 const K8sSvcName = "user-svc"
 
-const UserSvcName = "user-svc"        //user模块在k8s service中的metadata.name的名字
-const HelloWordSvcName = "helloworld" //user模块在k8s service中的metadata.name的名字
+const UserSvcName = "user-svc"        //k8s service metadata.name
+const HelloWordSvcName = "helloworld" //k8s service metadata.name
 func main() {
 	UserSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: UserSvcName, PodPort: 8080}
 	//HelloWordSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: HelloWordSvcName, PodPort: 9090}
 	reg := k8sHeadlessSvc.NewRegistry([]*k8sHeadlessSvc.Service{UserSvc})
-	// 当前frontend调用依赖多个grpc 上游服务器的情况
+	// when registry multiple microservices we need call, u can use like this
 	//reg := k8sHeadlessSvc.NewRegistry([]*k8sHeadlessSvc.Service{UserSvc},[]*k8sHeadlessSvc.Service{HelloWordSvcName})
 	srv := micro.NewService(
-		micro.Server(mhttp.NewServer()), //当前服务的类型 http 对外提供http
-		micro.Client(mgrpc.NewClient())) //当前client的类型grpc 对内调用grpc
+		micro.Server(mhttp.NewServer()),
+		micro.Client(mgrpc.NewClient()))
 	srv.Init(
 		micro.Name(service),
 		micro.Version(version),
-		micro.Address("0.0.0.0:8080"), //对外暴漏8000端口
+		micro.Address("0.0.0.0:8080"),
 		micro.Registry(reg),
 	)
 	client := srv.Client()
@@ -44,9 +44,7 @@ func main() {
 	}
 	r := mux.NewRouter()
 	r.HandleFunc("/index", svc.HomeHandler).Methods(http.MethodGet)
-	//反爬虫
 	r.HandleFunc("/robots.txt", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "User-agent: *\nDisallow: /") })
-	//健康检查
 	r.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 
 	var httpHandler http.Handler = r

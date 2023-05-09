@@ -9,13 +9,9 @@ ENV GO111MODULE=on \
 WORKDIR /build
 
 COPY . ./
-#build出二进制文件app
 RUN go build -o app .
 
 FROM alpine:latest
-#第二段打包
 COPY --from=builder /build/app /
-#项目端口
 EXPOSE 8080
-#以二进制方式执行
 ENTRYPOINT ["/app"]
