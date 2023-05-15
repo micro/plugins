@@ -16,7 +16,7 @@ var (
 func main() {
 	// Because we don't register for discovery with a third party service
 	// So here is a memory registration, that is, no registration,
-	//completely rely on k8s service to achieve dynamic discovery of multiple Pods
+	// completely rely on k8s service to achieve dynamic discovery of multiple Pods.
 	reg := regs.NewMemoryRegistry()
 	srv := micro.NewService()
 	srv.Init(
@@ -26,11 +26,11 @@ func main() {
 		micro.Registry(reg),
 	)
 
-	// Register handler
+	// Register handler.
 	if err := pb.RegisterUserHandler(srv.Server(), new(handler.User)); err != nil {
 		logger.Fatal(err)
 	}
-	// Run service
+	// Run service.
 	if err := srv.Run(); err != nil {
 		logger.Fatal(err)
 	}

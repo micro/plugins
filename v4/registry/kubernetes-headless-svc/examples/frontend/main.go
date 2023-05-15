@@ -21,14 +21,14 @@ var (
 
 const K8sSvcName = "user-svc"
 
-const UserSvcName = "user-svc"        //k8s service metadata.name
-const HelloWordSvcName = "helloworld" //k8s service metadata.name
+const UserSvcName = "user-svc"        // k8s service metadata.name.
+const HelloWordSvcName = "helloworld" // k8s service metadata.name.
 func main() {
 	UserSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: UserSvcName, PodPort: 8080}
-	//HelloWordSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: HelloWordSvcName, PodPort: 9090}
+	// HelloWordSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: HelloWordSvcName, PodPort: 9090}.
 	reg := k8sHeadlessSvc.NewRegistry([]*k8sHeadlessSvc.Service{UserSvc})
 	// when registry multiple microservices we need call, u can use like this
-	//reg := k8sHeadlessSvc.NewRegistry([]*k8sHeadlessSvc.Service{UserSvc},[]*k8sHeadlessSvc.Service{HelloWordSvcName})
+	// reg := k8sHeadlessSvc.NewRegistry([]*k8sHeadlessSvc.Service{UserSvc},[]*k8sHeadlessSvc.Service{HelloWordSvcName}).
 	srv := micro.NewService(
 		micro.Server(mhttp.NewServer()),
 		micro.Client(mgrpc.NewClient()))
@@ -49,11 +49,11 @@ func main() {
 	r.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 
 	var httpHandler http.Handler = r
-	// Register handler
+	// Register handler.
 	if err := micro.RegisterHandler(srv.Server(), httpHandler); err != nil {
 		logger.Fatal(err)
 	}
-	// Run service
+	// Run service.
 	if err := srv.Run(); err != nil {
 		logger.Fatal(err)
 	}
