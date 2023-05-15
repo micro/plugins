@@ -50,10 +50,12 @@ func (k *k8sSvcRegister) Deregister(*registry.Service, ...registry.DeregisterOpt
 
 // GetService get service from endpoints of Service.
 func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.Service, error) {
-	var service []*registry.Service
-	var nodes []*registry.Node
+	service := []*registry.Service{}
+	nodes := []*registry.Node{}
+
 	ipMaps, err := getDNSForPodIP(k.k8sService)
 	if err != nil {
+
 		return []*registry.Service{}, err
 	}
 
@@ -63,17 +65,17 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 		}
 		service = append(service, &registry.Service{Name: svcName, Version: "latest", Nodes: nodes})
 	}
-
 	return service, nil
 }
 
 // ListServices get service from endpoints of Service.
 func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Service, error) {
 
-	var service []*registry.Service
-	var nodes []*registry.Node
+	service := []*registry.Service{}
+	nodes := []*registry.Node{}
 	ipMaps, err := getDNSForPodIP(k.k8sService)
 	if err != nil {
+
 		return []*registry.Service{}, err
 	}
 
