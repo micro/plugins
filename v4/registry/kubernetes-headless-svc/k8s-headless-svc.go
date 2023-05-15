@@ -65,17 +65,16 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 		}
 		service = append(service, &registry.Service{Name: svcName, Version: "latest", Nodes: nodes})
 	}
+
 	return service, nil
 }
 
 // ListServices get service from endpoints of Service.
 func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Service, error) {
-
 	service := []*registry.Service{}
 	nodes := []*registry.Node{}
 	ipMaps, err := getDNSForPodIP(k.k8sService)
 	if err != nil {
-
 		return []*registry.Service{}, err
 	}
 
@@ -89,7 +88,8 @@ func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Servi
 	return service, nil
 }
 
-// Watch Since we intend to register self-discovery endpoints with k8s service, we do not need to write the registration discovery logic ourselves.
+// Watch Since we intend to register self-discovery endpoints with k8s service,
+// we do not need to write the registration discovery logic ourselves.
 func (k *k8sSvcRegister) Watch(option ...registry.WatchOption) (registry.Watcher, error) {
 	return &k8sSvcWatcher{}, nil
 }
@@ -104,5 +104,6 @@ func NewRegistry(k8sService []*Service, opts ...registry.Option) registry.Regist
 		k8sService: k8sService,
 		opts:       &registry.Options{},
 	}
+
 	return &k
 }

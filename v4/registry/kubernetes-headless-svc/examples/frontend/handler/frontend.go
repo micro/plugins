@@ -21,6 +21,7 @@ type Frontend struct {
 func (e *Frontend) Call(ctx context.Context, req *pb.CallRequest, rsp *pb.CallResponse) error {
 	logger.Infof("Received Frontend.Call request: %v", req)
 	rsp.Msg = "Hello " + req.Name
+
 	return nil
 }
 
