@@ -27,6 +27,7 @@ func (k *k8sSvcRegister) Init(opts ...registry.Option) error {
 	for _, o := range opts {
 		o(k.opts)
 	}
+
 	return nil
 }
 func (k *k8sSvcRegister) Options() registry.Options {
@@ -34,13 +35,15 @@ func (k *k8sSvcRegister) Options() registry.Options {
 }
 
 // Register The resolution dns returns the pod id
-// Since we intend to register self-discovery endpoints with k8s service, we do not need to write the registration discovery logic ourselves.
+// Since we intend to register self-discovery endpoints with k8s service,
+// we do not need to write the registration discovery logic ourselves.
 func (k *k8sSvcRegister) Register(*registry.Service, ...registry.RegisterOption) error {
 	return nil
 }
 
 // Deregister The resolution dns returns the pod id
-// Since we intend to register self-discovery endpoints with k8s service, we do not need to write the registration discovery logic ourselves.
+// Since we intend to register self-discovery endpoints with k8s service,
+// we do not need to write the registration discovery logic ourselves.
 func (k *k8sSvcRegister) Deregister(*registry.Service, ...registry.DeregisterOption) error {
 	return nil
 }
@@ -60,8 +63,7 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 		}
 		service = append(service, &registry.Service{Name: svcName, Version: "latest", Nodes: nodes})
 	}
-	// nodes = append(nodes, &registry.Node{Address: "127.0.0.1:8080"})
-	// service = append(service, &registry.Service{Name: "user", Version: "latest", Nodes: nodes}).
+
 	return service, nil
 }
 

@@ -6,7 +6,7 @@ import (
 )
 
 // dns for headless service in k8s: $(service_name).$(k8s_namespace).svc.cluster.local
-// ipMaps data like this: { "user-svc":["127.0.0.1:8080","127.0.0.1:8081"] }.
+// ipMaps data like this: { "user-svc":["127.0.0.1:8080","127.0.0.1:8081"] } .
 func getDNSForPodIP(svc []*Service) (ipMaps map[string][]string, err error) {
 	ipMaps = make(map[string][]string, 10)
 
