@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/go-micro-v4-demo/user/handler"
 	pb "github.com/go-micro-v4-demo/user/proto"
-
+	"go-micro.dev/v4"
 	"go-micro.dev/v4/logger"
 	regs "go-micro.dev/v4/registry"
 )

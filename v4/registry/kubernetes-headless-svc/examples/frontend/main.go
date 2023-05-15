@@ -9,6 +9,7 @@ import (
 	mhttp "github.com/go-micro/plugins/v4/server/http"
 	"github.com/gorilla/mux"
 	k8sHeadlessSvc "github.com/gsmini/k8s-headless-svc"
+	"go-micro.dev/v4"
 	"go-micro.dev/v4/logger"
 	"net/http"
 )
