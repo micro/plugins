@@ -55,8 +55,7 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 
 	ipMaps, err := getDNSForPodIP(k.k8sService)
 	if err != nil {
-
-		return []*registry.Service{}, err
+		return service, err
 	}
 
 	for svcName, ips := range ipMaps {
