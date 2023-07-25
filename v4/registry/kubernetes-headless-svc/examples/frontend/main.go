@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/go-micro-v4-demo/frontend/handler"
 	helloworldPb "github.com/go-micro-v4-demo/helloworld/proto"
 	userPb "github.com/go-micro-v4-demo/user/proto"
@@ -11,7 +13,13 @@ import (
 	k8sHeadlessSvc "github.com/gsmini/k8s-headless-svc"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/logger"
-	"net/http"
+)
+
+const (
+	// UserSvcName the microservice u call.
+	UserSvcName = "user-svc"
+	// HelloWordSvcName the microservice u call.
+	HelloWordSvcName = "helloworld"
 )
 
 var (
@@ -19,10 +27,6 @@ var (
 	version = "latest"
 )
 
-const K8sSvcName = "user-svc"
-
-const UserSvcName = "user-svc"        // k8s service metadata.name.
-const HelloWordSvcName = "helloworld" // k8s service metadata.name.
 func main() {
 	UserSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: UserSvcName, PodPort: 8080}
 	// HelloWordSvc := &k8sHeadlessSvc.Service{Namespace: "default", SvcName: HelloWordSvcName, PodPort: 9090}.
@@ -38,6 +42,7 @@ func main() {
 		micro.Address("0.0.0.0:8080"),
 		micro.Registry(reg),
 	)
+
 	client := srv.Client()
 	svc := &handler.Frontend{
 		UserService:       userPb.NewUserService(UserSvcName, client),
@@ -45,7 +50,10 @@ func main() {
 	}
 	r := mux.NewRouter()
 	r.HandleFunc("/index", svc.HomeHandler).Methods(http.MethodGet)
-	r.HandleFunc("/robots.txt", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "User-agent: *\nDisallow: /") })
+	r.HandleFunc("/robots.txt",
+		func(w http.ResponseWriter, _ *http.Request) {
+			fmt.Fprint(w, "User-agent: *\nDisallow: /")
+		})
 	r.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "ok") })
 
 	var httpHandler http.Handler = r

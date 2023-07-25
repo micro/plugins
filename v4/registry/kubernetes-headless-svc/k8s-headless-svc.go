@@ -1,4 +1,4 @@
-package k8s_headless_svc
+package k8sheadlesssvc
 
 import (
 	"go-micro.dev/v4/registry"
@@ -13,6 +13,7 @@ func (k *k8sSvcWatcher) Next() (*registry.Result, error) {
 }
 func (k *k8sSvcWatcher) Stop() {}
 
+// Service  saves the microservice u call.
 type Service struct {
 	Namespace string // namespace of microservice u call in k8s
 	SvcName   string // Service name of microservice u call in k8s
@@ -50,8 +51,8 @@ func (k *k8sSvcRegister) Deregister(*registry.Service, ...registry.DeregisterOpt
 
 // GetService get service from endpoints of Service.
 func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.Service, error) {
-	service := []*registry.Service{}
-	nodes := []*registry.Node{}
+	service := make([]*registry.Service, 64)
+	nodes := make([]*registry.Node, 64)
 
 	ipMaps, err := getDNSForPodIP(k.k8sService)
 	if err != nil {
@@ -62,6 +63,7 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 		for _, ip := range ips {
 			nodes = append(nodes, &registry.Node{Address: ip})
 		}
+
 		service = append(service, &registry.Service{Name: svcName, Version: "latest", Nodes: nodes})
 	}
 
@@ -70,9 +72,10 @@ func (k *k8sSvcRegister) GetService(string, ...registry.GetOption) ([]*registry.
 
 // ListServices get service from endpoints of Service.
 func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Service, error) {
-	service := []*registry.Service{}
-	nodes := []*registry.Node{}
+	service := make([]*registry.Service, 64)
+	nodes := make([]*registry.Node, 64)
 	ipMaps, err := getDNSForPodIP(k.k8sService)
+
 	if err != nil {
 		return []*registry.Service{}, err
 	}
@@ -81,6 +84,7 @@ func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Servi
 		for _, ip := range ips {
 			nodes = append(nodes, &registry.Node{Address: ip})
 		}
+
 		service = append(service, &registry.Service{Name: svcName, Version: "latest", Nodes: nodes})
 	}
 
@@ -89,7 +93,7 @@ func (k *k8sSvcRegister) ListServices(...registry.ListOption) ([]*registry.Servi
 
 // Watch Since we intend to register self-discovery endpoints with k8s service,
 // we do not need to write the registration discovery logic ourselves.
-func (k *k8sSvcRegister) Watch(option ...registry.WatchOption) (registry.Watcher, error) {
+func (k *k8sSvcRegister) Watch(_ ...registry.WatchOption) (registry.Watcher, error) {
 	return &k8sSvcWatcher{}, nil
 }
 
