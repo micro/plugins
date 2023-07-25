@@ -13,12 +13,14 @@ func getDNSForPodIP(svc []*Service) (map[string][]string, error) {
 
 	for _, value := range svc {
 		dnsForK8sSvc := fmt.Sprintf("%s.%s.svc.cluster.local", value.SvcName, value.Namespace)
-		if ipRecords, err := net.LookupIP(dnsForK8sSvc); err != nil {
+		ipRecords, err := net.LookupIP(dnsForK8sSvc)
+
+		if err != nil {
 			return nil, err
-		} else {
-			for _, ip := range ipRecords {
-				ipMaps[value.SvcName] = append(ipMaps[value.SvcName], fmt.Sprintf("%s:%d", ip.String(), value.PodPort))
-			}
+		}
+
+		for _, ip := range ipRecords {
+			ipMaps[value.SvcName] = append(ipMaps[value.SvcName], fmt.Sprintf("%s:%d", ip.String(), value.PodPort))
 		}
 	}
 
