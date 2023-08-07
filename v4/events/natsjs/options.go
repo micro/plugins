@@ -11,6 +11,7 @@ type Options struct {
 	ClusterID   string
 	ClientID    string
 	Address     string
+	NkeyConfig  string
 	TLSConfig   *tls.Config
 	Logger      logger.Logger
 	SyncPublish bool
@@ -45,6 +46,13 @@ func Address(addr string) Option {
 func TLSConfig(t *tls.Config) Option {
 	return func(o *Options) {
 		o.TLSConfig = t
+	}
+}
+
+// Nkey string to use when connecting to the cluster.
+func NkeyConfig(nkey string) Option {
+	return func(o *Options) {
+		o.NkeyConfig = nkey
 	}
 }
 

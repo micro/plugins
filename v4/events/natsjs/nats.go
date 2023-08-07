@@ -52,6 +52,10 @@ func connectToNatsJetStream(options Options) (nats.JetStreamContext, error) {
 		nopts.Secure = true
 		nopts.TLSConfig = options.TLSConfig
 	}
+	if options.NkeyConfig != "" {
+		nopts.Nkey = options.NkeyConfig
+	}
+
 	if len(options.Address) > 0 {
 		nopts.Servers = strings.Split(options.Address, ",")
 	}
