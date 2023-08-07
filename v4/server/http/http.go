@@ -15,7 +15,7 @@ import (
 	"go-micro.dev/v4/codec"
 	"go-micro.dev/v4/codec/jsonrpc"
 	"go-micro.dev/v4/codec/protorpc"
-	log "go-micro.dev/v4/logger"
+	"go-micro.dev/v4/logger"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/util/cmd"
@@ -178,7 +178,7 @@ func (h *httpServer) Register() error {
 	}
 
 	h.registerOnce.Do(func() {
-		log.Infof("Registering node: %s", opts.Name+"-"+opts.Id)
+		opts.Logger.Logf(logger.InfoLevel, "Registering node: %s", opts.Name+"-"+opts.Id)
 	})
 
 	if err := opts.Registry.Register(service, rOpts...); err != nil {
@@ -222,7 +222,7 @@ func (h *httpServer) Deregister() error {
 	opts := h.opts
 	h.Unlock()
 
-	log.Infof("Deregistering node: %s", opts.Name+"-"+opts.Id)
+	opts.Logger.Logf(logger.InfoLevel, "Deregistering node: %s", opts.Name+"-"+opts.Id)
 
 	service := serviceDef(opts)
 	if err := opts.Registry.Deregister(service); err != nil {
@@ -230,19 +230,27 @@ func (h *httpServer) Deregister() error {
 	}
 
 	h.Lock()
+
 	if !h.registered {
 		h.Unlock()
 		return nil
 	}
 	h.registered = false
 
+	wg := sync.WaitGroup{}
 	for sb, subs := range h.subscribers {
 		for _, sub := range subs {
-			log.Infof("Unsubscribing from topic: %s", sub.Topic())
-			sub.Unsubscribe()
+			wg.Add(1)
+			go func(s broker.Subscriber) {
+				defer wg.Done()
+				opts.Logger.Logf(logger.InfoLevel, "Unsubscribing from topic: %s", s.Topic())
+				s.Unsubscribe()
+			}(sub)
 		}
 		h.subscribers[sb] = nil
 	}
+
+	wg.Wait()
 	h.Unlock()
 	return nil
 }
@@ -270,7 +278,7 @@ func (h *httpServer) Start() error {
 		return err
 	}
 
-	log.Infof("Listening on %s", ln.Addr().String())
+	opts.Logger.Logf(logger.InfoLevel, "Listening on %s", ln.Addr().String())
 
 	h.Lock()
 	h.opts.Address = ln.Addr().String()
@@ -310,7 +318,7 @@ func (h *httpServer) Start() error {
 			// register self on interval
 			case <-t.C:
 				if err := h.Register(); err != nil {
-					log.Error("Server register error: ", err)
+					opts.Logger.Log(logger.ErrorLevel, "Server register error: ", err)
 				}
 			// wait for exit
 			case ch = <-h.exit:

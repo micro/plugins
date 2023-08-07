@@ -35,7 +35,7 @@ func newWatcher(n, ns string, c *kubernetes.Clientset, opts source.Options) (sou
 		stop:      make(chan struct{}),
 	}
 
-	lw := cache.NewListWatchFromClient(w.client.RESTClient(), "configmaps", w.namespace, fields.OneTermEqualSelector("metadata.name", w.name))
+	lw := cache.NewListWatchFromClient(w.client.CoreV1().RESTClient(), "configmaps", w.namespace, fields.OneTermEqualSelector("metadata.name", w.name))
 	st, ct := cache.NewInformer(
 		lw,
 		&api.ConfigMap{},

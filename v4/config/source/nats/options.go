@@ -15,7 +15,7 @@ type (
 )
 
 // WithUrl sets the nats url.
-func WithUrl(a string) source.Option {
+func WithUrl(a ...string) source.Option {
 	return func(o *source.Options) {
 		if o.Context == nil {
 			o.Context = context.Background()

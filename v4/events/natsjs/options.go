@@ -8,12 +8,14 @@ import (
 
 // Options which are used to configure the nats stream.
 type Options struct {
-	ClusterID  string
-	ClientID   string
-	Address    string
-	NkeyConfig string
-	TLSConfig  *tls.Config
-	Logger     logger.Logger
+	ClusterID   string
+	ClientID    string
+	Address     string
+	NkeyConfig  string
+	TLSConfig   *tls.Config
+	Logger      logger.Logger
+	SyncPublish bool
+	Name        string
 }
 
 // Option is a function which configures options.
@@ -58,5 +60,19 @@ func NkeyConfig(nkey string) Option {
 func Logger(log logger.Logger) Option {
 	return func(o *Options) {
 		o.Logger = log
+	}
+}
+
+// SynchronousPublish allows using a synchronous publishing instead of the default asynchronous
+func SynchronousPublish(sync bool) Option {
+	return func(o *Options) {
+		o.SyncPublish = sync
+	}
+}
+
+// Name allows to add a name to the natsjs connection
+func Name(name string) Option {
+	return func(o *Options) {
+		o.Name = name
 	}
 }

@@ -60,6 +60,9 @@ func connectToNatsJetStream(options Options) (nats.JetStreamContext, error) {
 		nopts.Servers = strings.Split(options.Address, ",")
 	}
 
+	if options.Name != "" {
+		nopts.Name = options.Name
+	}
 	conn, err := nopts.Connect()
 	if err != nil {
 		return nil, fmt.Errorf("error connecting to nats at %v with tls enabled (%v): %v", options.Address, nopts.TLSConfig != nil, err)
@@ -116,6 +119,16 @@ func (s *stream) Publish(topic string, msg interface{}, opts ...events.PublishOp
 	}
 
 	// publish the event to the topic's channel
+	// publish synchronously if configured
+	if s.opts.SyncPublish {
+		_, err := s.natsJetStreamCtx.Publish(event.Topic, bytes)
+		if err != nil {
+			err = errors.Wrap(err, "Error publishing message to topic")
+		}
+		return err
+	}
+
+	// publish asynchronously by default
 	if _, err := s.natsJetStreamCtx.PublishAsync(event.Topic, bytes); err != nil {
 		return errors.Wrap(err, "Error publishing message to topic")
 	}
