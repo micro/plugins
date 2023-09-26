@@ -66,6 +66,7 @@ func newWatcher() *consulWatcher {
 
 func newHealthCheck(node, name, status string) *api.HealthCheck {
 	return &api.HealthCheck{
+		ServiceID:   node,
 		Node:        node,
 		Name:        name,
 		Status:      status,
