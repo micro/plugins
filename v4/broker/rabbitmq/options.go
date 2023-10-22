@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"go-micro.dev/v4/broker"
+	"go-micro.dev/v4/server"
 )
 
 type durableQueueKey struct{}
@@ -31,6 +32,11 @@ type userID struct{}
 type appID struct{}
 type externalAuth struct{}
 type durableExchange struct{}
+
+// ServerAckOnSuccess export AckOnSuccess server.SubscriberOption
+func ServerAckOnSuccess() server.SubscriberOption {
+	return setServerSubscriberOption(ackSuccessKey{}, true)
+}
 
 // DurableQueue creates a durable queue when subscribing.
 func DurableQueue() broker.SubscribeOption {
