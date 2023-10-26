@@ -118,7 +118,7 @@ func (m *memorySync) Lock(id string, opts ...sync.LockOption) error {
 			// release the lock if it expired
 			_ = m.Unlock(id)
 		} else {
-			ttl = time.After(live)
+			ttl = time.After(lk.ttl - live)
 		}
 	}
 
