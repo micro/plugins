@@ -38,6 +38,11 @@ func ServerDurableQueue() server.SubscriberOption {
 	return setServerSubscriberOption(durableQueueKey{}, true)
 }
 
+// ServerAckOnSuccess export AckOnSuccess server.SubscriberOption
+func ServerAckOnSuccess() server.SubscriberOption {
+	return setServerSubscriberOption(ackSuccessKey{}, true)
+}
+
 // DurableQueue creates a durable queue when subscribing.
 func DurableQueue() broker.SubscribeOption {
 	return setSubscribeOption(durableQueueKey{}, true)
