@@ -408,10 +408,10 @@ func (n *natsStore) List(opts ...store.ListOption) ([]string, error) {
 		keys = append(keys, key)
 	}
 
-	if opt.Limit > 0 {
+	if opt.Limit > 0 && int(opt.Offset+opt.Limit) < len(keys) {
 		return keys[opt.Offset : opt.Offset+opt.Limit], nil
 	}
-	if opt.Offset > 0 {
+	if opt.Offset > 0 && int(opt.Offset) < len(keys) {
 		return keys[opt.Offset:], nil
 	}
 	return keys, nil
