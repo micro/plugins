@@ -125,7 +125,7 @@ func TestStream(t *testing.T) {
 
 	t.Run("WithGroup", func(t *testing.T) {
 		topic := "foogroup"
-		assert.NoError(t, s.(*redisStream).redisClient.XTrim(context.Background(), "stream-"+topic, 0).Err())
+		assert.NoError(t, s.(*redisStream).redisClient.XTrimMaxLen(context.Background(), "stream-"+topic, 0).Err())
 		ch1, err := s.Consume(topic, events.WithGroup("mygroup"))
 		assert.NoError(t, err)
 
@@ -192,7 +192,7 @@ func TestCleanup(t *testing.T) {
 
 	assert.NoError(t, err, "Should be no error when creating stream")
 	topic := "fooclean"
-	assert.NoError(t, s.(*redisStream).redisClient.XTrim(context.Background(), "stream-"+topic, 0).Err())
+	assert.NoError(t, s.(*redisStream).redisClient.XTrimMaxLen(context.Background(), "stream-"+topic, 0).Err())
 	_, err = s.Consume(topic, events.WithGroup("mygroup"))
 	assert.NoError(t, err)
 	time.Sleep(200 * time.Millisecond)

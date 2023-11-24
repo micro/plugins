@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+	"github.com/redis/go-redis/v9"
 	"go-micro.dev/v4/events"
 	"go-micro.dev/v4/logger"
 )
@@ -204,7 +204,7 @@ func (r *redisStream) consumeWithGroup(topic, group string, options events.Consu
 				sleepWithJitter(2 * time.Second)
 				continue
 			}
-			if sl == nil || len(sl) == 0 || len(sl[0].Messages) == 0 {
+			if len(sl) == 0 || len(sl[0].Messages) == 0 {
 				// test the channel is still being read from
 				select {
 				case ch <- events.Event{}:
