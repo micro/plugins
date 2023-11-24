@@ -6,6 +6,7 @@ import (
 
 	"go-micro.dev/v4/broker"
 	"go-micro.dev/v4/server"
+	"go-micro.dev/v4/client"
 )
 
 type durableQueueKey struct{}
@@ -169,4 +170,15 @@ type ackSuccessKey struct{}
 // AckOnSuccess will automatically acknowledge messages when no error is returned.
 func AckOnSuccess() broker.SubscribeOption {
 	return setSubscribeOption(ackSuccessKey{}, true)
+}
+
+// PublishDeliveryMode client.PublishOption for setting message "delivery mode"
+// mode , Transient (0 or 1) or Persistent (2)
+func PublishDeliveryMode(mode uint8) client.PublishOption {
+	return func(o *client.PublishOptions) {
+		if o.Context == nil {
+			o.Context = context.Background()
+		}
+		o.Context = context.WithValue(o.Context, deliveryMode{}, mode)
+	}
 }
