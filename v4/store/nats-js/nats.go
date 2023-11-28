@@ -405,7 +405,8 @@ func (n *natsStore) List(opts ...store.ListOption) ([]string, error) {
 		if !strings.HasSuffix(key, opt.Suffix) {
 			continue
 		}
-		keys = append(keys, key)
+
+		keys = append(keys, strings.TrimPrefix(key, getKey(opt.Prefix, opt.Table)))
 	}
 
 	if opt.Limit > 0 && int(opt.Offset+opt.Limit) < len(keys) {
