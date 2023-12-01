@@ -1,4 +1,4 @@
-go 1.18
+go 1.21
 
 use (
 	./v4/acme/certmagic
@@ -84,6 +84,7 @@ use (
 	./v4/store/memory
 	./v4/store/mysql
 	./v4/store/nats-js
+	./v4/store/nats-js-kv
 	./v4/store/redis
 	./v4/sync/consul
 	./v4/sync/etcd
