@@ -252,7 +252,7 @@ func (r *rabbitMQConn) tryConnect(secure bool, config *amqp.Config) error {
 
 	if !r.withoutExchange {
 		if r.exchange.Durable {
-			r.Channel.DeclareDurableExchange(r.exchange.Name)
+			r.Channel.DeclareDurableExchange(r.exchange)
 		} else {
 			r.Channel.DeclareExchange(r.exchange)
 		}
