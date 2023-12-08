@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"go-micro.dev/v4/broker"
-	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/server"
 )
