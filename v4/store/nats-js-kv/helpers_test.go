@@ -26,7 +26,7 @@ func testSetup(ctx context.Context, t *testing.T, opts ...store.Option) store.St
 		nCtx, cancel := context.WithCancel(ctx)
 		addr := startNatsServer(nCtx, t)
 
-		opts = append(opts, store.Nodes(addr))
+		opts = append(opts, store.Nodes(addr), EncodeKeys())
 		s = NewStore(opts...)
 
 		err = s.Init()

@@ -20,7 +20,7 @@ func TestNats(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		ctx, cancel = context.WithCancel(context.Background())
 		addr := startNatsServer(ctx, t)
-		s := NewStore(store.Nodes(addr))
+		s := NewStore(store.Nodes(addr), EncodeKeys())
 
 		// Test String method
 		t.Log("Testing:", s.String())
@@ -76,6 +76,9 @@ func TestOptions(t *testing.T) {
 			Storage:     nats.MemoryStorage,
 			Replicas:    1,
 		}),
+
+		// Encode keys to avoid character limitations
+		EncodeKeys(),
 	)
 	defer cancel()
 
