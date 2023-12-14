@@ -11,12 +11,13 @@ import (
 	"github.com/go-micro/plugins/v4/events/natsjs"
 	nserver "github.com/nats-io/nats-server/v2/server"
 	"github.com/stretchr/testify/assert"
+	"github.com/test-go/testify/require"
 	"go-micro.dev/v4/events"
 )
 
 type Payload struct {
-	ID   string
-	Name string
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 func TestSingleEvent(t *testing.T) {
@@ -54,16 +55,17 @@ func TestSingleEvent(t *testing.T) {
 		natsjs.Address(natsAddr),
 		natsjs.ClusterID(clusterName),
 	)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	if err != nil {
 		return
 	}
 
-	consumer := func(ctx context.Context, t *testing.T, client events.Stream, cancel context.CancelFunc) {
+	consumer := func(_ context.Context, t *testing.T, client events.Stream, cancel context.CancelFunc) {
+		t.Helper()
 		defer cancel()
 
 		foobarEvents, err := client.Consume(topic)
-		assert.Nil(t, err)
+		require.Nil(t, err)
 		if err != nil {
 			return
 		}
@@ -74,7 +76,7 @@ func TestSingleEvent(t *testing.T) {
 		p := Payload{}
 		err = json.Unmarshal(event.Payload, &p)
 
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		if err != nil {
 			return
 		}
@@ -92,14 +94,15 @@ func TestSingleEvent(t *testing.T) {
 		natsjs.Address(natsAddr),
 		natsjs.ClusterID(clusterName),
 	)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	if err != nil {
 		return
 	}
 
-	publisher := func(ctx context.Context, t *testing.T, client events.Stream) {
+	publisher := func(_ context.Context, t *testing.T, client events.Stream) {
+		t.Helper()
 		err := client.Publish(topic, demoPayload)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	}
 
 	go publisher(ctx, t, publisherClient)
