@@ -17,6 +17,8 @@ type Options struct {
 	SyncPublish           bool
 	Name                  string
 	DisableDurableStreams bool
+	Username              string
+	Password              string
 }
 
 // Option is a function which configures options.
@@ -82,5 +84,13 @@ func Name(name string) Option {
 func DisableDurableStreams() Option {
 	return func(o *Options) {
 		o.DisableDurableStreams = true
+	}
+}
+
+// Authenticate authenticates the connection with the given username and password.
+func Authenticate(username, password string) Option {
+	return func(o *Options) {
+		o.Username = username
+		o.Password = password
 	}
 }
