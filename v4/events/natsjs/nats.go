@@ -69,6 +69,11 @@ func connectToNatsJetStream(options Options) (nats.JetStreamContext, error) {
 		nopts.Name = options.Name
 	}
 
+	if options.Username != "" && options.Password != "" {
+		nopts.User = options.Username
+		nopts.Password = options.Password
+	}
+
 	conn, err := nopts.Connect()
 	if err != nil {
 		tls := nopts.TLSConfig != nil
