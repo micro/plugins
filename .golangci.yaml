@@ -112,10 +112,10 @@ linters-settings:
     min-occurrences: 3
   depguard:
     rules:
-        main:
-          deny:
-            - pkg: "github.com/golang/protobuf/proto"
-              desc: not allowed
+      main:
+        deny:
+          - pkg: "github.com/golang/protobuf/proto"
+            desc: not allowed
   misspell:
     # Correct spellings using locale preferences for US or UK.
     # Default is to use a neutral variety of English.
