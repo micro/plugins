@@ -107,15 +107,15 @@ func (r *rabbitMQChannel) DeclareExchange(ex Exchange) error {
 	)
 }
 
-func (r *rabbitMQChannel) DeclareDurableExchange(exchange string) error {
+func (r *rabbitMQChannel) DeclareDurableExchange(ex Exchange) error {
 	return r.channel.ExchangeDeclare(
-		exchange, // name
-		"topic",  // kind
-		true,     // durable
-		false,    // autoDelete
-		false,    // internal
-		false,    // noWait
-		nil,      // args
+		ex.Name,         // name
+		string(ex.Type), // kind
+		true,            // durable
+		false,           // autoDelete
+		false,           // internal
+		false,           // noWait
+		nil,             // args
 	)
 }
 
