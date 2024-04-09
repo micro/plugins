@@ -69,6 +69,18 @@ func NewStore(opts ...store.Option) store.Store {
 
 	n.setOption(opts...)
 
+	// register unset connection callback
+	f := n.nopts.ClosedCB
+	n.nopts.ClosedCB = func(c *nats.Conn) {
+		// reset connection
+		n.resetConn()
+
+		// execute the original callback if set
+		if f != nil {
+			f(c)
+		}
+	}
+
 	return n
 }
 
@@ -358,6 +370,14 @@ func (n *natsStore) hasConn() bool {
 	defer n.RUnlock()
 
 	return n.conn != nil
+}
+
+// thread safe way to reset the connection.
+func (n *natsStore) resetConn() {
+	n.Lock()
+	defer n.Unlock()
+
+	n.conn = nil
 }
 
 // mustGetDefaultBucket returns the bucket with the given name creating it with default configuration if needed.
