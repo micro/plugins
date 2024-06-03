@@ -397,7 +397,7 @@ func (n *natsStore) mustGetBucket(kv *nats.KeyValueConfig) (nats.KeyValue, error
 func (n *natsStore) getRecord(bucket nats.KeyValue, key string) (*store.Record, bool, error) {
 	obj, err := bucket.Get(key)
 	if errors.Is(err, nats.ErrKeyNotFound) {
-		return nil, false, nil
+		return nil, false, store.ErrNotFound
 	} else if err != nil {
 		return nil, false, errors.Wrap(err, "Failed to get object from bucket")
 	}
