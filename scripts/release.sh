@@ -5,9 +5,9 @@
 #                                                                                    #
 # Usage:                                                                             #
 #   $ release.sh all                                                                 #
-#   $ release.sh v4/broker/http                                                      #
-#   $ release.sh v4/broker/http,v4/broker/redis                                      #
-#   $ release.sh v4/*                                                                #
+#   $ release.sh v5/broker/http                                                      #
+#   $ release.sh v5/broker/http,v5/broker/redis                                      #
+#   $ release.sh v5/*                                                                #
 #                                                                                    #
 ######################################################################################
 

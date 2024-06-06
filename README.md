@@ -36,7 +36,7 @@ Contents of this repository:
 
 - [v2 - github.com/micro/go-micro/v2](https://github.com/go-micro/plugins/tree/main/v2)
 - [v3 - github.com/asim/go-micro/v3](https://github.com/go-micro/plugins/tree/main/v3)
-- [v4 - go-micro.dev/v4](https://github.com/go-micro/plugins/tree/main/v4)
+- [v5 - go-micro.dev/v5](https://github.com/go-micro/plugins/tree/main/v5)
 
 ## Usage
 
@@ -48,9 +48,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v4/transport/nats"
+	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v5/transport/nats"
 )
 ```
 
@@ -60,7 +60,7 @@ Create your service and ensure you call `service.Init`
 package main
 
 import (
-	"go-micro.dev/v4"
+	"go-micro.dev/v5"
 )
 
 func main() {
@@ -105,8 +105,8 @@ Import and set as options when creating a new service
 
 ```go
 import (
-	"go-micro.dev/v4"
-	"github.com/go-micro/plugins/v4/registry/kubernetes"
+	"go-micro.dev/v5"
+	"github.com/go-micro/plugins/v5/registry/kubernetes"
 )
 
 func main() {
@@ -133,9 +133,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v4/transport/nats"
+	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v5/transport/nats"
 )
 ```
 
