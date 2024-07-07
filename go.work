@@ -46,9 +46,6 @@ use (
 	./v5/config/source/runtimevar
 	./v5/config/source/url
 	./v5/config/source/vault
-	./v5/events/nats
-	./v5/events/natsjs
-	./v5/events/redis
 	./v5/logger/apex
 	./v5/logger/logrus
 	./v5/logger/windowseventlog
