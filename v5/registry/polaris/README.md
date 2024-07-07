@@ -15,7 +15,7 @@ in future maybe support more features,eg: Selector plugin for polaris's weight a
 3. according my test, it it necessary to call "time.Sleep(time.Second * x)" after call Register or Deregister, then the "GetService"  return correct data
 
 ```go
-import sr "github.com/go-micro/plugins/v5/selector/registry"
+import sr "github.com/micro/plugins/v5/selector/registry"
 
 func main() {
 	poRegUrl := "127.0.0.1:8091"

@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/go-micro/plugins/v5/registry/gossip/proto"
+	pb "github.com/micro/plugins/v5/registry/gossip/proto"
 	"github.com/golang/protobuf/proto"
 	"github.com/google/uuid"
 	"github.com/hashicorp/memberlist"

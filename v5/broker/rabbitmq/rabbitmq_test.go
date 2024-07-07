@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	rabbitmq "github.com/go-micro/plugins/v5/broker/rabbitmq"
+	rabbitmq "github.com/micro/plugins/v5/broker/rabbitmq"
 	micro "go-micro.dev/v5"
 	broker "go-micro.dev/v5/broker"
 	server "go-micro.dev/v5/server"

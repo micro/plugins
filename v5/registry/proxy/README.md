@@ -19,7 +19,7 @@ micro proxy
 ### Import and Flag plugin
 
 ```go
-import _ "github.com/go-micro/plugins/v5/registry/proxy"
+import _ "github.com/micro/plugins/v5/registry/proxy"
 ```
 
 ```

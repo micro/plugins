@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/transport/utp
+module github.com/micro/plugins/v5/transport/utp
 
 go 1.17
 

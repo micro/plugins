@@ -1,11 +1,11 @@
-module github.com/go-micro/plugins/v5/broker/segmentio
+module github.com/micro/plugins/v5/broker/segmentio
 
 go 1.17
 
 require (
-	github.com/go-micro/plugins/v5/broker/kafka v1.1.0
-	github.com/go-micro/plugins/v5/codec/segmentio v1.1.0
 	github.com/google/uuid v1.3.0
+	github.com/micro/plugins/v5/broker/kafka v1.1.0
+	github.com/micro/plugins/v5/codec/segmentio v1.1.0
 	github.com/segmentio/kafka-go v0.4.31
 	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
 )
@@ -67,6 +67,6 @@ require (
 )
 
 replace (
-	github.com/go-micro/plugins/v5/broker/kafka => ../kafka
-	github.com/go-micro/plugins/v5/codec/segmentio => ../../codec/segmentio
+	github.com/micro/plugins/v5/broker/kafka => ../kafka
+	github.com/micro/plugins/v5/codec/segmentio => ../../codec/segmentio
 )

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/wrapper/trace/opencensus
+module github.com/micro/plugins/v5/wrapper/trace/opencensus
 
 go 1.17
 

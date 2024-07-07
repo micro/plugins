@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/broker/stomp
+module github.com/micro/plugins/v5/broker/stomp
 
 go 1.17
 

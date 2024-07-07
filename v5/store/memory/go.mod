@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/store/memory
+module github.com/micro/plugins/v5/store/memory
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/store/memcached
+module github.com/micro/plugins/v5/store/memcached
 
 go 1.17
 

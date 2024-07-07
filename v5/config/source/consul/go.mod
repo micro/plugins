@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/config/source/consul
+module github.com/micro/plugins/v5/config/source/consul
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/selector/dns
+module github.com/micro/plugins/v5/selector/dns
 
 go 1.17
 

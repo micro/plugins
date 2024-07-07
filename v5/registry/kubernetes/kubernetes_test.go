@@ -12,8 +12,8 @@ import (
 	"go-micro.dev/v5/logger"
 	"go-micro.dev/v5/registry"
 
-	"github.com/go-micro/plugins/v5/registry/kubernetes/client"
-	"github.com/go-micro/plugins/v5/registry/kubernetes/client/mock"
+	"github.com/micro/plugins/v5/registry/kubernetes/client"
+	"github.com/micro/plugins/v5/registry/kubernetes/client/mock"
 )
 
 var (

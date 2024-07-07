@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/client/mucp
+module github.com/micro/plugins/v5/client/mucp
 
 go 1.17
 

@@ -54,7 +54,7 @@ func ServerToken(token string) registry.Option {
 }
 
 // GetOneInstance will fetch only one instance for use with Polaris's loadbalancer
-// and disable cache by: github.com/go-micro/plugins/v5/selector/registry, option TTF(0).
+// and disable cache by: github.com/micro/plugins/v5/selector/registry, option TTF(0).
 func GetOneInstance(flag bool) registry.Option {
 	return func(o *registry.Options) {
 		if o.Context == nil {

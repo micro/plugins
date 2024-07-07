@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/registry/multi
+module github.com/micro/plugins/v5/registry/multi
 
 go 1.17
 

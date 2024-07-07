@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/codec/segmentio
+module github.com/micro/plugins/v5/codec/segmentio
 
 go 1.17
 

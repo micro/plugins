@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	instrumentationName = "github.com/go-micro/plugins/v5/wrapper/trace/opentelemetry"
+	instrumentationName = "github.com/micro/plugins/v5/wrapper/trace/opentelemetry"
 )
 
 // StartSpanFromContext returns a new span with the given operation name and options. If a span

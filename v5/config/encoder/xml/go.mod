@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/config/encoder/xml
+module github.com/micro/plugins/v5/config/encoder/xml
 
 go 1.17
 

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/logger/windowseventlog
+module github.com/micro/plugins/v5/logger/windowseventlog
 
 go 1.17
 

@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/go-micro/plugins/v5/registry/polaris"
+	"github.com/micro/plugins/v5/registry/polaris"
 )
 
 const (

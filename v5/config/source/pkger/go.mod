@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/config/source/pkger
+module github.com/micro/plugins/v5/config/source/pkger
 
 go 1.17
 

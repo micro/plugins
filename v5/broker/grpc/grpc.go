@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	proto "github.com/go-micro/plugins/v5/broker/grpc/proto"
+	proto "github.com/micro/plugins/v5/broker/grpc/proto"
 	"github.com/google/uuid"
 	"go-micro.dev/v5/broker"
 	merr "go-micro.dev/v5/errors"

@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/registry/eureka
+module github.com/micro/plugins/v5/registry/eureka
 
 go 1.17
 

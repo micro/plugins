@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/wrapper/select/roundrobin
+module github.com/micro/plugins/v5/wrapper/select/roundrobin
 
 go 1.17
 

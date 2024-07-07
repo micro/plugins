@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-micro/plugins/v5/registry/nats"
+	"github.com/micro/plugins/v5/registry/nats"
 	log "go-micro.dev/v5/logger"
 	"go-micro.dev/v5/registry"
 )

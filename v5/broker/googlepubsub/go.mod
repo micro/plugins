@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/broker/googlepubsub
+module github.com/micro/plugins/v5/broker/googlepubsub
 
 go 1.17
 

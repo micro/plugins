@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/wrapper/service
+module github.com/micro/plugins/v5/wrapper/service
 
 go 1.17
 

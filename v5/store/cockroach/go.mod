@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/store/cockroach
+module github.com/micro/plugins/v5/store/cockroach
 
 go 1.17
 

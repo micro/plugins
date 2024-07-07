@@ -14,7 +14,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/go-micro/plugins/v5/registry/kubernetes/client"
+	"github.com/micro/plugins/v5/registry/kubernetes/client"
 )
 
 type kregistry struct {

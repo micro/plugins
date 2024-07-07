@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/store/nats-js
+module github.com/micro/plugins/v5/store/nats-js
 
 go 1.17
 

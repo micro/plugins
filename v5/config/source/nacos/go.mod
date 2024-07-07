@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/config/source/nacos
+module github.com/micro/plugins/v5/config/source/nacos
 
 go 1.17
 

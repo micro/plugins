@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/wrapper/trace/opentelemetry
+module github.com/micro/plugins/v5/wrapper/trace/opentelemetry
 
 go 1.17
 

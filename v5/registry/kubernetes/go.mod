@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/registry/kubernetes
+module github.com/micro/plugins/v5/registry/kubernetes
 
 go 1.17
 

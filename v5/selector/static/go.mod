@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/selector/static
+module github.com/micro/plugins/v5/selector/static
 
 go 1.17
 

@@ -3,7 +3,7 @@ package grpc
 import (
 	"runtime/debug"
 
-	pb "github.com/go-micro/plugins/v5/transport/grpc/proto"
+	pb "github.com/micro/plugins/v5/transport/grpc/proto"
 	"go-micro.dev/v5/errors"
 	"go-micro.dev/v5/logger"
 	"go-micro.dev/v5/transport"

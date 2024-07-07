@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/wrapper/breaker/hystrix
+module github.com/micro/plugins/v5/wrapper/breaker/hystrix
 
 go 1.17
 

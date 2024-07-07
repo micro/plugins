@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/registry/gossip
+module github.com/micro/plugins/v5/registry/gossip
 
 go 1.17
 

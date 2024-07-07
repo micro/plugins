@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/logger/logrus
+module github.com/micro/plugins/v5/logger/logrus
 
 go 1.17
 

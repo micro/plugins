@@ -1,4 +1,4 @@
-module github.com/go-micro/plugins/v5/cache/redis
+module github.com/micro/plugins/v5/cache/redis
 
 go 1.17
 
