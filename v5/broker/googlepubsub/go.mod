@@ -5,7 +5,7 @@ go 1.17
 require (
 	cloud.google.com/go/pubsub v1.28.0
 	github.com/google/uuid v1.3.0
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 	google.golang.org/api v0.110.0
 	google.golang.org/grpc v1.53.0
 )

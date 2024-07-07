@@ -2,7 +2,7 @@ module github.com/micro/plugins/v5/selector/registry
 
 go 1.17
 
-require go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+require go-micro.dev/v5 v5.2.0
 
 require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect

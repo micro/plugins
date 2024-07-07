@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/kr/pretty v0.3.0
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 	go.etcd.io/bbolt v1.3.6
 )
 

@@ -18,7 +18,7 @@ import (
 	"go-micro.dev/v5/metadata"
 	"go-micro.dev/v5/registry"
 	"go-micro.dev/v5/selector"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	pnet "go-micro.dev/v5/util/net"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

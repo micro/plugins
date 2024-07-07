@@ -12,7 +12,7 @@ import (
 
 	"github.com/streadway/amqp"
 	"go-micro.dev/v5/broker"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	"gocloud.dev/gcp"
 	"gocloud.dev/pubsub"
 	"gocloud.dev/pubsub/gcppubsub"

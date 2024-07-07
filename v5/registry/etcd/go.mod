@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/mitchellh/hashstructure v1.1.0
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 	go.etcd.io/etcd/api/v3 v3.5.2
 	go.etcd.io/etcd/client/v3 v3.5.2
 	go.uber.org/zap v1.23.0

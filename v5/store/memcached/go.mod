@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20220106215444-fb4bf637b56d
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 )
 
 require (

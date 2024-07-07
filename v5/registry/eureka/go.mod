@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/hudl/fargo v1.3.0
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 	golang.org/x/oauth2 v0.5.0
 )
 

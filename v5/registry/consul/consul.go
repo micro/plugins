@@ -15,7 +15,7 @@ import (
 	consul "github.com/hashicorp/consul/api"
 	hash "github.com/mitchellh/hashstructure"
 	"go-micro.dev/v5/registry"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	mnet "go-micro.dev/v5/util/net"
 )
 

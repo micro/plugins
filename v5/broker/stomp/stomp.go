@@ -12,7 +12,7 @@ import (
 	"github.com/go-stomp/stomp/v3"
 	"github.com/go-stomp/stomp/v3/frame"
 	"go-micro.dev/v5/broker"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 type rbroker struct {

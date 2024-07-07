@@ -13,7 +13,7 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"go-micro.dev/v5/registry"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 type nacosRegistry struct {

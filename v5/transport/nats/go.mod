@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/go-log/log v0.2.0
 	github.com/nats-io/nats.go v1.31.0
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 )
 
 require (

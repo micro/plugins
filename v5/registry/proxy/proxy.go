@@ -11,7 +11,7 @@ import (
 	"net/url"
 
 	"go-micro.dev/v5/registry"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 type proxy struct {

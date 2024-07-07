@@ -13,7 +13,7 @@ import (
 	"github.com/nats-io/nats.go"
 	"github.com/pkg/errors"
 	"go-micro.dev/v5/store"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 var (

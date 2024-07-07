@@ -12,7 +12,7 @@ import (
 	log "go-micro.dev/v5/logger"
 	"go-micro.dev/v5/transport"
 	maddr "go-micro.dev/v5/util/addr"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	mnet "go-micro.dev/v5/util/net"
 	mls "go-micro.dev/v5/util/tls"
 )

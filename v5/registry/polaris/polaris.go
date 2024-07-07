@@ -18,7 +18,7 @@ import (
 
 	log "go-micro.dev/v5/logger"
 	"go-micro.dev/v5/registry"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 var (

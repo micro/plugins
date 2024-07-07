@@ -23,7 +23,7 @@ import (
 	"go-micro.dev/v5/server"
 	"go-micro.dev/v5/util/addr"
 	"go-micro.dev/v5/util/backoff"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	mgrpc "go-micro.dev/v5/util/grpc"
 	mnet "go-micro.dev/v5/util/net"
 	"golang.org/x/net/netutil"

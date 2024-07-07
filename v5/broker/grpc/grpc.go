@@ -21,7 +21,7 @@ import (
 	"go-micro.dev/v5/registry"
 	"go-micro.dev/v5/registry/cache"
 	maddr "go-micro.dev/v5/util/addr"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	mnet "go-micro.dev/v5/util/net"
 	mls "go-micro.dev/v5/util/tls"
 	"google.golang.org/grpc"

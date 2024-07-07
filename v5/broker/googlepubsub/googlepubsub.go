@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 	"go-micro.dev/v5/broker"
 	log "go-micro.dev/v5/logger"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

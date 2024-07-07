@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"go-micro.dev/v5/store"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	bolt "go.etcd.io/bbolt"
 )
 

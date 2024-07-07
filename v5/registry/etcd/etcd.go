@@ -17,7 +17,7 @@ import (
 	hash "github.com/mitchellh/hashstructure"
 	"go-micro.dev/v5/logger"
 	"go-micro.dev/v5/registry"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 	"go.etcd.io/etcd/api/v3/v3rpc/rpctypes"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"go.uber.org/zap"

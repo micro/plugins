@@ -7,7 +7,7 @@ require (
 	github.com/micro/plugins/v5/broker/kafka v1.1.0
 	github.com/micro/plugins/v5/codec/segmentio v1.1.0
 	github.com/segmentio/kafka-go v0.4.31
-	go-micro.dev/v5 v5.0.1-0.20240605172817-e9ceb66e32e7
+	go-micro.dev/v5 v5.2.0
 )
 
 require (

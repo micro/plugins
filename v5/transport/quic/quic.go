@@ -6,7 +6,7 @@ import (
 	"encoding/gob"
 	"time"
 
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 
 	quic "github.com/lucas-clemente/quic-go"
 	"go-micro.dev/v5/transport"

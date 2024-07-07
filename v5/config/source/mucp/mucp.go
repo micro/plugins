@@ -6,7 +6,7 @@ import (
 	proto "github.com/micro/plugins/v5/config/source/mucp/proto"
 	"go-micro.dev/v5/config/source"
 	log "go-micro.dev/v5/logger"
-	"go-micro.dev/v5/util/cmd"
+	"go-micro.dev/v5/cmd"
 )
 
 var (
