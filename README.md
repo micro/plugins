@@ -32,12 +32,6 @@ Contents of this repository:
 | Transport | Bidirectional Streaming; NATS, RabbitMQ                         | 
 | Wrapper   | Middleware; Circuit Breakers, Rate Limiting, Tracing, Monitoring|
 
-## Versions
-
-- [v2 - github.com/micro/go-micro/v2](https://github.com/go-micro/plugins/tree/main/v2)
-- [v3 - github.com/asim/go-micro/v3](https://github.com/go-micro/plugins/tree/main/v3)
-- [v5 - go-micro.dev/v5](https://github.com/go-micro/plugins/tree/main/v5)
-
 ## Usage
 
 Plugins can be added to go-micro in the following ways. By doing so they'll be available to set via command line args or environment variables.
