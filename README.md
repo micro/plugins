@@ -10,7 +10,6 @@ This repository contains plugins for all micro related tools. Read on for furthe
 ## Getting Started
 
 * [Contents](#contents)
-* [Versions](#versions)
 * [Usage](#usage)
 * [Build Pattern](#build)
 * [Contributions](#contributions)
