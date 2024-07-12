@@ -12,8 +12,6 @@ This repository contains plugins for all micro related tools. Read on for furthe
 * [Contents](#contents)
 * [Usage](#usage)
 * [Build Pattern](#build)
-* [Contributions](#contributions)
-* [Community](#community)
 
 ## Contents
 
@@ -146,9 +144,3 @@ MICRO_REGISTRY=kubernetes \
 MICRO_TRANSPORT=nats \
 service
 ```
-
-## Community
-
-- [Discord](https://discord.gg/qV3HvnEJfB)
-- [Slack](https://join.slack.com/t/go-micro/shared_invite/zt-175aaev1d-iHExPTlfxvfkOeeKLIYEYw)
-- [QQ Group](https://jq.qq.com/?_wv=1027&k=5Gmrfv9i)
