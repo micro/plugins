@@ -11,7 +11,7 @@ This repository contains plugins for all micro related tools. Read on for furthe
 
 * [Contents](#contents)
 * [Usage](#usage)
-* [Build Pattern](#build)
+* [Build](#build)
 
 ## Contents
 
@@ -112,7 +112,7 @@ func main() {
 }
 ```
 
-## Build Pattern
+## Build
 
 An anti-pattern is modifying the `main.go` file to include plugins. Best practice recommendation is to include
 plugins in a separate file and rebuild with it included. This allows for automation of building plugins and
