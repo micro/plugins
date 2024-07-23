@@ -15,10 +15,9 @@ import (
 func TestNats(t *testing.T) {
 	// Setup without calling Init on purpose
 	var err error
-	var cancel func()
-	var ctx context.Context
 	for i := 0; i < 5; i++ {
-		ctx, cancel = context.WithCancel(context.Background())
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		addr := startNatsServer(ctx, t)
 		s := NewStore(store.Nodes(addr), EncodeKeys())
 
@@ -33,8 +32,8 @@ func TestNats(t *testing.T) {
 
 		// Test reading non-existing key
 		r, err := s.Read("this-is-a-random-key")
-		if err != nil {
-			t.Fatal(err)
+		if !errors.Is(err, store.ErrNotFound) {
+			t.Errorf("Expected %# v, got %# v", store.ErrNotFound, err)
 		}
 		if len(r) > 0 {
 			t.Fatal("Lenth should be 0")
@@ -46,7 +45,6 @@ func TestNats(t *testing.T) {
 		cancel()
 		return
 	}
-	cancel()
 	t.Fatal(err)
 }
 
@@ -111,8 +109,8 @@ func TestTTL(t *testing.T) {
 
 	for _, r := range table {
 		res, err := s.Read(r.Record.Key, store.ReadFrom(r.Database+id, r.Table))
-		if err != nil {
-			t.Fatal(err)
+		if !errors.Is(err, store.ErrNotFound) {
+			t.Errorf("Expected %# v, got %# v", store.ErrNotFound, err)
 		}
 		if len(res) > 0 {
 			t.Fatal("Fetched record while it should have expired")
@@ -170,8 +168,8 @@ func TestDelete(t *testing.T) {
 		time.Sleep(time.Second)
 
 		res, err := s.Read(r.Record.Key, store.ReadFrom(r.Database, r.Table))
-		if err != nil {
-			t.Fatal(err)
+		if !errors.Is(err, store.ErrNotFound) {
+			t.Errorf("Expected %# v, got %# v", store.ErrNotFound, err)
 		}
 		if len(res) > 0 {
 			t.Fatalf("Failed to delete %s:%s from %s %s (len: %d)", r.Record.Key, r.Record.Value, r.Database, r.Table, len(res))
