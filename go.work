@@ -1,7 +1,6 @@
 go 1.21
 
 use (
-	./v5/acme/certmagic
 	./v5/auth/jwt
 	./v5/broker/gocloud
 	./v5/broker/googlepubsub
@@ -25,7 +24,6 @@ use (
 	./v5/client/http
 	./v5/client/mock
 	./v5/client/mucp
-	./v5/codec/bsonrpc
 	./v5/codec/json-iterator
 	./v5/codec/jsonrpc2
 	./v5/codec/msgpackrpc
@@ -83,9 +81,6 @@ use (
 	./v5/store/nats-js
 	./v5/store/nats-js-kv
 	./v5/store/redis
-	./v5/sync/consul
-	./v5/sync/etcd
-	./v5/sync/memory
 	./v5/transport/grpc
 	./v5/transport/http
 	./v5/transport/memory
