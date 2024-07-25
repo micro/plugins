@@ -1,6 +1,6 @@
 module github.com/micro/plugins/v5/store/nats-js-kv
 
-go 1.17
+go 1.18
 
 require (
 	github.com/cornelk/hashmap v1.0.8
