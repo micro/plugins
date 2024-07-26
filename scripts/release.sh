@@ -105,6 +105,7 @@ function release_specific() {
 	set +o noglob
 	while read -r pkg; do
 		# If path contains a star find all relevant packages
+		echo releasing ${pkg}
 		if echo "${pkg}" | grep -q "\*"; then
 			while read -r p; do
 				release "$(remove_prefix "${p}")"
