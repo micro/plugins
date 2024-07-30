@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
 	"net"
 	"net/http"
+	"strings"
 	"testing"
 	"time"
 
@@ -15,6 +17,7 @@ import (
 
 type mockRegistry struct {
 	body   []byte
+	fn     func(r *http.Request) ([]byte, int, error)
 	status int
 	err    error
 	url    string
@@ -29,20 +32,27 @@ func encodeData(obj interface{}) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func newMockServer(rg *mockRegistry, l net.Listener) error {
+func newMockServer(l net.Listener, rgs ...*mockRegistry) error {
 	mux := http.NewServeMux()
-	mux.HandleFunc(rg.url, func(w http.ResponseWriter, r *http.Request) {
-		if rg.err != nil {
-			http.Error(w, rg.err.Error(), 500)
-			return
-		}
-		w.WriteHeader(rg.status)
-		w.Write(rg.body)
-	})
+	for _, rg := range rgs {
+		rgIn := rg
+		mux.HandleFunc(rg.url, func(w http.ResponseWriter, r *http.Request) {
+			body, status, err := rgIn.body, rgIn.status, rgIn.err
+			if rg.fn != nil {
+				body, status, err = rgIn.fn(r)
+			}
+			if err != nil {
+				http.Error(w, err.Error(), 500)
+				return
+			}
+			w.WriteHeader(status)
+			w.Write(body)
+		})
+	}
 	return http.Serve(l, mux)
 }
 
-func newConsulTestRegistry(r *mockRegistry) (*consulRegistry, func()) {
+func newConsulTestRegistry(chechkTTL time.Duration, r ...*mockRegistry) (*consulRegistry, func()) {
 	l, err := net.Listen("tcp", "localhost:0")
 	if err != nil {
 		// blurgh?!!
@@ -51,7 +61,7 @@ func newConsulTestRegistry(r *mockRegistry) (*consulRegistry, func()) {
 	cfg := consul.DefaultConfig()
 	cfg.Address = l.Addr().String()
 
-	go newMockServer(r, l)
+	go newMockServer(l, r...)
 
 	var cr = &consulRegistry{
 		config:      cfg,
@@ -63,6 +73,7 @@ func newConsulTestRegistry(r *mockRegistry) (*consulRegistry, func()) {
 			AllowStale: true,
 		},
 	}
+	CheckTTL(time.Nanosecond)(&cr.opts)
 	cr.Client()
 
 	return cr, func() {
@@ -76,7 +87,7 @@ func newServiceList(svc []*consul.ServiceEntry) []byte {
 }
 
 func TestConsul_GetService_WithError(t *testing.T) {
-	cr, cl := newConsulTestRegistry(&mockRegistry{
+	cr, cl := newConsulTestRegistry(time.Second, &mockRegistry{
 		err: errors.New("client-error"),
 		url: "/v1/health/service/service-name",
 	})
@@ -106,7 +117,7 @@ func TestConsul_GetService_WithHealthyServiceNodes(t *testing.T) {
 		),
 	}
 
-	cr, cl := newConsulTestRegistry(&mockRegistry{
+	cr, cl := newConsulTestRegistry(time.Second, &mockRegistry{
 		status: 200,
 		body:   newServiceList(svcs),
 		url:    "/v1/health/service/service-name",
@@ -146,7 +157,7 @@ func TestConsul_GetService_WithUnhealthyServiceNode(t *testing.T) {
 		),
 	}
 
-	cr, cl := newConsulTestRegistry(&mockRegistry{
+	cr, cl := newConsulTestRegistry(time.Second, &mockRegistry{
 		status: 200,
 		body:   newServiceList(svcs),
 		url:    "/v1/health/service/service-name",
@@ -186,7 +197,7 @@ func TestConsul_GetService_WithUnhealthyServiceNodes(t *testing.T) {
 		),
 	}
 
-	cr, cl := newConsulTestRegistry(&mockRegistry{
+	cr, cl := newConsulTestRegistry(time.Second, &mockRegistry{
 		status: 200,
 		body:   newServiceList(svcs),
 		url:    "/v1/health/service/service-name",
@@ -204,5 +215,203 @@ func TestConsul_GetService_WithUnhealthyServiceNodes(t *testing.T) {
 
 	if exp, act := 0, len(svc[0].Nodes); exp != act {
 		t.Fatalf("Expected len of nodes to be `%d`, got `%d`.", exp, act)
+	}
+}
+
+func TestConsul_TestRegistrer(t *testing.T) {
+	registerCalled := 0
+	cr, cl := newConsulTestRegistry(
+		time.Second,
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"ID":"nodeId","Name":"service1","Tags":["v-789c010000ffff00000001"],` +
+					`"Address":"address","Check":{"TTL":"1s","DeregisterCriticalServiceAfter":"1m5s"},"Checks":null}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				registerCalled++
+				return []byte(`{"success"":true}`), 200, nil
+			},
+			url: "/v1/agent/service/register",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"Status":"passing","Output":""}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				return nil, 200, nil
+			},
+			url: "/v1/agent/check/update/service:nodeId",
+		},
+	)
+	defer cl()
+
+	service := &registry.Service{
+		Name: "service1",
+		Nodes: []*registry.Node{
+			{
+				Address: "address",
+				Id:      "nodeId",
+			},
+		},
+	}
+	rOpts := []registry.RegisterOption{registry.RegisterTTL(time.Second)}
+	err := cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+	err = cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+	if registerCalled >= 1 {
+		t.Fatalf("Expected run time to be %d`, got `%d`.", 1, registerCalled)
+	}
+}
+
+func TestConsul_TestRegistrerWithCheck(t *testing.T) {
+	registerCalled := 0
+	cr, cl := newConsulTestRegistry(
+		time.Nanosecond,
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"ID":"nodeId","Name":"service1","Tags":["v-789c010000ffff00000001"],` +
+					`"Address":"address","Check":{"TTL":"1s","DeregisterCriticalServiceAfter":"1m5s"},"Checks":null}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				registerCalled++
+				return []byte(`{"success"":true}`), 200, nil
+			},
+			url: "/v1/agent/service/register",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"Status":"passing","Output":""}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				return nil, 200, nil
+			},
+			url: "/v1/agent/check/update/service:nodeId",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := encodeData([]*consul.HealthCheck{
+					newHealthCheck("nodeId", "service1", "passing"),
+				})
+				return b, 200, nil
+			},
+			url: "/v1/health/checks/service1",
+		},
+	)
+	defer cl()
+
+	service := &registry.Service{
+		Name: "service1",
+		Nodes: []*registry.Node{
+			{
+				Address: "address",
+				Id:      "nodeId",
+			},
+		},
+	}
+	rOpts := []registry.RegisterOption{registry.RegisterTTL(time.Second)}
+	err := cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+	err = cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+
+	if registerCalled >= 1 {
+		t.Fatalf("Expected run time to be %d`, got `%d`.", 1, registerCalled)
+	}
+}
+
+func TestConsul_TestRegistrerWithFailedCheck(t *testing.T) {
+	registerCalled := 0
+	deregisterCalled := 0
+	cr, cl := newConsulTestRegistry(
+		time.Nanosecond,
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"ID":"nodeId","Name":"service1","Tags":["v-789c010000ffff00000001"],` +
+					`"Address":"address","Check":{"TTL":"1s","DeregisterCriticalServiceAfter":"1m5s"},"Checks":null}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				registerCalled++
+				return []byte(`{"success"":true}`), 200, nil
+			},
+			url: "/v1/agent/service/register",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				deregisterCalled++
+				return []byte(`{"success"":true}`), 200, nil
+			},
+			url: "/v1/agent/service/deregister/nodeId",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := io.ReadAll(r.Body)
+				exp := `{"Status":"passing","Output":""}`
+				body := strings.TrimSpace(string(b))
+				if body != exp {
+					t.Fatalf("Expected request to be %s`, got `%s`.", exp, body)
+				}
+				return nil, 200, nil
+			},
+			url: "/v1/agent/check/update/service:nodeId",
+		},
+		&mockRegistry{
+			fn: func(r *http.Request) ([]byte, int, error) {
+				b, _ := encodeData([]*consul.HealthCheck{
+					newHealthCheck("nodeIdsdfsd", "service1", "passing"),
+				})
+				return b, 200, nil
+			},
+			url: "/v1/health/checks/service1",
+		},
+	)
+	defer cl()
+
+	service := &registry.Service{
+		Name: "service1",
+		Nodes: []*registry.Node{
+			{
+				Address: "address",
+				Id:      "nodeId",
+			},
+		},
+	}
+	rOpts := []registry.RegisterOption{registry.RegisterTTL(time.Second)}
+	err := cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+	err = cr.Register(service, rOpts...)
+	if err != nil {
+		t.Fatal("Unexpected error", err)
+	}
+	if registerCalled >= 3 {
+		t.Fatalf("Expected register run time to be %d`, got `%d`.", 2, registerCalled)
+	}
+	if deregisterCalled < 1 {
+		t.Fatalf("Expected deregister run time to be %d`, got `%d`.", 1, deregisterCalled)
 	}
 }
