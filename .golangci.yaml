@@ -111,10 +111,11 @@ linters-settings:
     # minimal occurrences count to trigger, 3 by default
     min-occurrences: 3
   depguard:
-    list-type: blacklist
-    # Packages listed here will reported as error if imported
-    packages:
-      - github.com/golang/protobuf/proto
+    rules:
+      main:
+        deny:
+          - pkg: "github.com/golang/protobuf/proto"
+            desc: not allowed
   misspell:
     # Correct spellings using locale preferences for US or UK.
     # Default is to use a neutral variety of English.
@@ -231,6 +232,8 @@ issues:
         - funlen
         - varnamelen
         - wsl
+        - forbidigo
+        - errcheck
 
   # Independently from option `exclude` we use default exclude patterns,
   # it can be disabled by this option. To list all

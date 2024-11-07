@@ -5,9 +5,9 @@
 #                                                                                    #
 # Usage:                                                                             #
 #   $ release.sh all                                                                 #
-#   $ release.sh v4/broker/http                                                      #
-#   $ release.sh v4/broker/http,v4/broker/redis                                      #
-#   $ release.sh v4/*                                                                #
+#   $ release.sh v5/broker/http                                                      #
+#   $ release.sh v5/broker/http,v5/broker/redis                                      #
+#   $ release.sh v5/*                                                                #
 #                                                                                    #
 ######################################################################################
 
@@ -105,6 +105,7 @@ function release_specific() {
 	set +o noglob
 	while read -r pkg; do
 		# If path contains a star find all relevant packages
+		echo releasing ${pkg}
 		if echo "${pkg}" | grep -q "\*"; then
 			while read -r p; do
 				release "$(remove_prefix "${p}")"

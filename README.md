@@ -1,4 +1,4 @@
-# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/go-micro/plugins?status.svg)](https://godoc.org/github.com/go-micro/plugins) [![Unit Tests](https://github.com/go-micro/plugins/actions/workflows/main.yaml/badge.svg)](https://github.com/go-micro/plugins/actions/workflows/main.yaml) [![Vistors](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fgo-micro%2Fplugins&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=Vistors&edge_flat=false)](https://hits.seeyoufarm.com)
+# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/micro/plugins?status.svg)](https://godoc.org/github.com/micro/plugins) [![Unit Tests](https://github.com/micro/plugins/actions/workflows/main.yaml/badge.svg)](https://github.com/micro/plugins/actions/workflows/main.yaml) [![Vistors](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmicro%2Fplugins&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=Vistors&edge_flat=false)](https://hits.seeyoufarm.com)
 
 Go plugins is a place for community maintained plugins.
 
@@ -10,11 +10,8 @@ This repository contains plugins for all micro related tools. Read on for furthe
 ## Getting Started
 
 * [Contents](#contents)
-* [Versions](#versions)
 * [Usage](#usage)
-* [Build Pattern](#build)
-* [Contributions](#contributions)
-* [Community](#community)
+* [Build](#build)
 
 ## Contents
 
@@ -32,12 +29,6 @@ Contents of this repository:
 | Transport | Bidirectional Streaming; NATS, RabbitMQ                         | 
 | Wrapper   | Middleware; Circuit Breakers, Rate Limiting, Tracing, Monitoring|
 
-## Versions
-
-- [v2 - github.com/micro/go-micro/v2](https://github.com/go-micro/plugins/tree/main/v2)
-- [v3 - github.com/asim/go-micro/v3](https://github.com/go-micro/plugins/tree/main/v3)
-- [v4 - go-micro.dev/v4](https://github.com/go-micro/plugins/tree/main/v4)
-
 ## Usage
 
 Plugins can be added to go-micro in the following ways. By doing so they'll be available to set via command line args or environment variables.
@@ -48,9 +39,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v4/transport/nats"
+	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v5/transport/nats"
 )
 ```
 
@@ -60,7 +51,7 @@ Create your service and ensure you call `service.Init`
 package main
 
 import (
-	"go-micro.dev/v4"
+	"go-micro.dev/v5"
 )
 
 func main() {
@@ -105,8 +96,8 @@ Import and set as options when creating a new service
 
 ```go
 import (
-	"go-micro.dev/v4"
-	"github.com/go-micro/plugins/v4/registry/kubernetes"
+	"go-micro.dev/v5"
+	"github.com/go-micro/plugins/v5/registry/kubernetes"
 )
 
 func main() {
@@ -121,7 +112,7 @@ func main() {
 }
 ```
 
-## Build Pattern
+## Build
 
 An anti-pattern is modifying the `main.go` file to include plugins. Best practice recommendation is to include
 plugins in a separate file and rebuild with it included. This allows for automation of building plugins and
@@ -133,9 +124,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v4/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v4/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v4/transport/nats"
+	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
+	_ "github.com/go-micro/plugins/v5/transport/nats"
 )
 ```
 
@@ -153,9 +144,3 @@ MICRO_REGISTRY=kubernetes \
 MICRO_TRANSPORT=nats \
 service
 ```
-
-## Community
-
-- [Discord](https://discord.gg/qV3HvnEJfB)
-- [Slack](https://join.slack.com/t/go-micro/shared_invite/zt-175aaev1d-iHExPTlfxvfkOeeKLIYEYw)
-- [QQ Group](https://jq.qq.com/?_wv=1027&k=5Gmrfv9i)

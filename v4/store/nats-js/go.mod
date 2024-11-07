@@ -1,8 +1,11 @@
 module github.com/go-micro/plugins/v4/store/nats-js
 
-go 1.17
+go 1.21
 
-require github.com/nats-io/nats-server/v2 v2.8.4
+require (
+	github.com/cornelk/hashmap v1.0.8
+	github.com/nats-io/nats-server/v2 v2.8.4
+)
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect
