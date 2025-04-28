@@ -32,8 +32,3 @@ require (
 	google.golang.org/genproto v0.0.0-20230306155012-7f2fa6fef1f4 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 )
-
-replace (
-	github.com/micro/plugins/v5/client/grpc => ../../client/grpc
-	github.com/micro/plugins/v5/transport/grpc => ../../transport/grpc
-)
