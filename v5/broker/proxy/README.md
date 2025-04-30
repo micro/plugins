@@ -9,11 +9,11 @@ Here's a simple usage guide
 ### Run Proxy
 
 ```
-# install micro
-go get github.com/micro/micro
+# install mu
+go install github.com/micro/micro/v5/mu@latest
 
 # run proxy
-micro proxy
+mu proxy
 ```
 
 ### Import and Flag plugin
