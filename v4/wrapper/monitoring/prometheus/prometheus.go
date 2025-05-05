@@ -60,6 +60,7 @@ func init() {
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "version"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "id"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "endpoint"),
+				fmt.Sprintf("%s%s", DefaultLabelPrefix, "method"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "status"),
 			},
 		)
@@ -76,6 +77,7 @@ func init() {
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "version"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "id"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "endpoint"),
+				fmt.Sprintf("%s%s", DefaultLabelPrefix, "method"),
 			},
 		)
 	}
@@ -91,6 +93,7 @@ func init() {
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "version"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "id"),
 				fmt.Sprintf("%s%s", DefaultLabelPrefix, "endpoint"),
+				fmt.Sprintf("%s%s", DefaultLabelPrefix, "method"),
 			},
 		)
 	}
@@ -148,16 +151,16 @@ func (w *wrapper) CallFunc(ctx context.Context, node *registry.Node, req client.
 
 	timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		us := v * 1000000 // make microseconds
-		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "CallFunc").Observe(us)
+		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "CallFunc").Observe(v)
 	}))
 	defer timer.ObserveDuration()
 
 	err := w.callFunc(ctx, node, req, rsp, opts)
 	if err == nil {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "CallFunc", "success").Inc()
 	} else {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "CallFunc", "failure").Inc()
 	}
 
 	return err
@@ -168,16 +171,16 @@ func (w *wrapper) Call(ctx context.Context, req client.Request, rsp interface{},
 
 	timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		us := v * 1000000 // make microseconds
-		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Call").Observe(us)
+		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Call").Observe(v)
 	}))
 	defer timer.ObserveDuration()
 
 	err := w.Client.Call(ctx, req, rsp, opts...)
 	if err == nil {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Call", "success").Inc()
 	} else {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Call", "failure").Inc()
 	}
 
 	return err
@@ -188,16 +191,16 @@ func (w *wrapper) Stream(ctx context.Context, req client.Request, opts ...client
 
 	timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		us := v * 1000000 // make microseconds
-		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Stream").Observe(us)
+		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Stream").Observe(v)
 	}))
 	defer timer.ObserveDuration()
 
 	stream, err := w.Client.Stream(ctx, req, opts...)
 	if err == nil {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Stream", "success").Inc()
 	} else {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Stream", "failure").Inc()
 	}
 
 	return stream, err
@@ -208,16 +211,16 @@ func (w *wrapper) Publish(ctx context.Context, p client.Message, opts ...client.
 
 	timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 		us := v * 1000000 // make microseconds
-		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+		timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Publish").Observe(us)
+		timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Publish").Observe(v)
 	}))
 	defer timer.ObserveDuration()
 
 	err := w.Client.Publish(ctx, p, opts...)
 	if err == nil {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Publish", "success").Inc()
 	} else {
-		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+		opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "Publish", "failure").Inc()
 	}
 
 	return err
@@ -242,16 +245,16 @@ func (w *wrapper) HandlerFunc(fn server.HandlerFunc) server.HandlerFunc {
 
 		timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 			us := v * 1000000 // make microseconds
-			timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-			timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+			timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, req.Method()).Observe(us)
+			timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, req.Method()).Observe(v)
 		}))
 		defer timer.ObserveDuration()
 
 		err := fn(ctx, req, rsp)
 		if err == nil {
-			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, req.Method(), "success").Inc()
 		} else {
-			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, req.Method(), "failure").Inc()
 		}
 
 		return err
@@ -277,16 +280,16 @@ func (w *wrapper) SubscriberFunc(fn server.SubscriberFunc) server.SubscriberFunc
 
 		timer := prometheus.NewTimer(prometheus.ObserverFunc(func(v float64) {
 			us := v * 1000000 // make microseconds
-			timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(us)
-			timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint).Observe(v)
+			timeCounterSummary.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "SubscriberFunc").Observe(us)
+			timeCounterHistogram.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "SubscriberFunc").Observe(v)
 		}))
 		defer timer.ObserveDuration()
 
 		err := fn(ctx, msg)
 		if err == nil {
-			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "success").Inc()
+			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "SubscriberFunc", "success").Inc()
 		} else {
-			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "failure").Inc()
+			opsCounter.WithLabelValues(w.options.Name, w.options.Version, w.options.ID, endpoint, "SubscriberFunc", "failure").Inc()
 		}
 
 		return err
