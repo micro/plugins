@@ -85,6 +85,7 @@ func newOptions(opt ...server.Option) server.Options {
 		Id:            server.DefaultId,
 		Version:       server.DefaultVersion,
 		Logger:        logger.DefaultLogger,
+		RegisterTTL:   server.DefaultRegisterTTL,
 	}
 
 	for _, o := range opt {
