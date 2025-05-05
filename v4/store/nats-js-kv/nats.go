@@ -335,6 +335,66 @@ func (n *natsStore) String() string {
 	return "NATS JetStream KeyValueStore"
 }
 
+// StoreUpdate is the update type for the store.
+type StoreUpdate struct {
+	Value  KeyValueEnvelope
+	Action string
+}
+
+// WatchAll exposes the watcher interface from the underlying JetStreamContext.
+func (n *natsStore) WatchAll(bucket string, opts ...nats.WatchOpt) (<-chan *StoreUpdate, func() error, error) {
+	if bucket == "" {
+		return nil, nil, errors.New("multi bucket watching is not supported")
+	}
+
+	if err := n.initConn(); err != nil {
+		return nil, nil, err
+	}
+
+	b, err := n.js.KeyValue(bucket)
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "Failed to get bucket")
+	}
+
+	w, err := b.WatchAll(opts...)
+	if err != nil {
+		return nil, nil, errors.Wrap(err, "Failed to watch bucket")
+	}
+
+	ch := make(chan *StoreUpdate)
+	go func() {
+		for u := range w.Updates() {
+			if u == nil {
+				continue
+			}
+
+			var action string
+			var kv KeyValueEnvelope
+			switch u.Operation() {
+			case nats.KeyValuePut:
+				action = "create"
+				if err := json.Unmarshal(u.Value(), &kv); err != nil {
+					continue
+				}
+			case nats.KeyValueDelete:
+				fallthrough
+			case nats.KeyValuePurge:
+				action = "delete"
+				kv = KeyValueEnvelope{
+					Key: n.NewKey(n.opts.Table, "", u.Key()).MicroKey(),
+				}
+			}
+
+			ch <- &StoreUpdate{
+				Value:  kv,
+				Action: action,
+			}
+		}
+	}()
+
+	return ch, w.Stop, nil
+}
+
 // thread safe way to initialize the connection.
 func (n *natsStore) initConn() error {
 	if n.hasConn() {
