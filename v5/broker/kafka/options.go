@@ -28,15 +28,14 @@ type asyncProduceErrorKey struct{}
 type asyncProduceSuccessKey struct{}
 
 func AsyncProducer(errors chan<- *sarama.ProducerError, successes chan<- *sarama.ProducerMessage) broker.Option {
-	// set default opt
-	var opt = func(options *broker.Options) {}
-	if successes != nil {
-		opt = setBrokerOption(asyncProduceSuccessKey{}, successes)
+	return func(options *broker.Options) {
+		if errors != nil {
+			setBrokerOption(asyncProduceErrorKey{}, errors)(options)
+		}
+		if successes != nil {
+			setBrokerOption(asyncProduceSuccessKey{}, successes)(options)
+		}
 	}
-	if errors != nil {
-		opt = setBrokerOption(asyncProduceErrorKey{}, errors)
-	}
-	return opt
 }
 
 type subscribeContextKey struct{}
