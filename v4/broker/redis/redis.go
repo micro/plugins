@@ -165,7 +165,7 @@ func (b *redisBroker) Connect() error {
 	} else {
 		addr = b.opts.Addrs[0]
 
-		if !strings.HasPrefix("redis://", addr) {
+		if !strings.HasPrefix(addr, "redis://") {
 			addr = "redis://" + addr
 		}
 	}
