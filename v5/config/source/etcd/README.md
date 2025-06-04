@@ -29,8 +29,8 @@ Specify source with data
 
 ```go
 etcdSource := etcd.NewSource(
-	// optionally specify etcd address; default to localhost:8500
-	etcd.WithAddress("10.0.0.10:8500"),
+	// optionally specify etcd address; default to localhost:2379
+	etcd.WithAddress("10.0.0.10:2379"),
 	// optionally specify prefix; defaults to /micro/config
 	etcd.WithPrefix("/my/prefix"),
 	// optionally strip the provided prefix from the keys, defaults to false

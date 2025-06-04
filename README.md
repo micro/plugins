@@ -1,10 +1,10 @@
-# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/micro/plugins?status.svg)](https://godoc.org/github.com/micro/plugins) [![Unit Tests](https://github.com/micro/plugins/actions/workflows/main.yaml/badge.svg)](https://github.com/micro/plugins/actions/workflows/main.yaml) [![Vistors](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmicro%2Fplugins&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23E7E7E7&title=Vistors&edge_flat=false)](https://hits.seeyoufarm.com)
+# Plugins [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/micro/plugins?status.svg)](https://godoc.org/github.com/micro/plugins)
 
-Go plugins is a place for community maintained plugins.
+Plugins for Go Micro
 
 ## Overview
 
-Micro tooling is built on a powerful pluggable architecture. Plugins can be swapped out with zero code changes.
+Micro is built on a powerful pluggable architecture. Plugins can be swapped out with zero code changes.
 This repository contains plugins for all micro related tools. Read on for further info.
 
 ## Getting Started
@@ -39,9 +39,9 @@ Import the plugins in a `plugins.go` file
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v5/transport/nats"
+	_ "github.com/micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/micro/plugins/v5/registry/kubernetes"
+	_ "github.com/micro/plugins/v5/transport/nats"
 )
 ```
 
@@ -97,7 +97,7 @@ Import and set as options when creating a new service
 ```go
 import (
 	"go-micro.dev/v5"
-	"github.com/go-micro/plugins/v5/registry/kubernetes"
+	"github.com/micro/plugins/v5/registry/kubernetes"
 )
 
 func main() {
@@ -124,9 +124,9 @@ Create file plugins.go
 package main
 
 import (
-	_ "github.com/go-micro/plugins/v5/broker/rabbitmq"
-	_ "github.com/go-micro/plugins/v5/registry/kubernetes"
-	_ "github.com/go-micro/plugins/v5/transport/nats"
+	_ "github.com/micro/plugins/v5/broker/rabbitmq"
+	_ "github.com/micro/plugins/v5/registry/kubernetes"
+	_ "github.com/micro/plugins/v5/transport/nats"
 )
 ```
 
