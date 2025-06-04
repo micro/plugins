@@ -168,6 +168,7 @@ func (c *consulRegistry) Deregister(s *registry.Service, opts ...registry.Deregi
 	c.Unlock()
 
 	node := s.Nodes[0]
+
 	return c.Client().Agent().ServiceDeregister(node.Id)
 }
 
@@ -176,12 +177,13 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 		return errors.New("Require at least one node")
 	}
 
-	var regTCPCheck bool
-	var regInterval time.Duration
-	var regHTTPCheck bool
-	var httpCheckConfig consul.AgentServiceCheck
-
-	var options registry.RegisterOptions
+	var (
+		regTCPCheck     bool
+		regInterval     time.Duration
+		regHTTPCheck    bool
+		httpCheckConfig consul.AgentServiceCheck
+		options         registry.RegisterOptions
+	)
 	for _, o := range opts {
 		o(&options)
 	}
@@ -191,9 +193,9 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 			regTCPCheck = true
 			regInterval = tcpCheckInterval
 		}
-		var ok bool
-		if httpCheckConfig, ok = c.opts.Context.Value("consul_http_check_config").(consul.AgentServiceCheck); ok {
+		if conf, ok := c.opts.Context.Value("consul_http_check_config").(consul.AgentServiceCheck); ok {
 			regHTTPCheck = true
+			httpCheckConfig = conf
 		}
 	}
 
@@ -212,37 +214,8 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 	lastChecked := c.lastChecked[s.Name]
 	c.Unlock()
 
-	// if it's already registered and matches then just pass the check
-	if ok && v == h {
-		if options.TTL == time.Duration(0) {
-			// ensure that our service hasn't been deregistered by Consul
-			if time.Since(lastChecked) <= getDeregisterTTL(regInterval) {
-				return nil
-			}
-			services, _, err := c.Client().Health().Checks(s.Name, c.queryOptions)
-			if err == nil {
-				for _, v := range services {
-					if v.ServiceID == node.Id {
-						return nil
-					}
-				}
-			}
-		} else {
-			// if the err is nil we're all good, bail out
-			// if not, we don't know what the state is, so full re-register
-			if err := c.Client().Agent().PassTTL("service:"+node.Id, ""); err == nil {
-				return nil
-			}
-		}
-	}
-
-	// encode the tags
-	tags := encodeMetadata(node.Metadata)
-	tags = append(tags, encodeEndpoints(s.Endpoints)...)
-	tags = append(tags, encodeVersion(s.Version)...)
-
 	var check *consul.AgentServiceCheck
-
+	checkTTL := regInterval
 	if regTCPCheck {
 		deregTTL := getDeregisterTTL(regInterval)
 
@@ -255,6 +228,7 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 	} else if regHTTPCheck {
 		interval, _ := time.ParseDuration(httpCheckConfig.Interval)
 		deregTTL := getDeregisterTTL(interval)
+		checkTTL = interval
 
 		host, _, _ := net.SplitHostPort(node.Address)
 		healthCheckURI := strings.Replace(httpCheckConfig.HTTP, "{host}", host, 1)
@@ -269,12 +243,53 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 		// if the TTL is greater than 0 create an associated check
 	} else if options.TTL > time.Duration(0) {
 		deregTTL := getDeregisterTTL(options.TTL)
+		checkTTL = options.TTL
 
 		check = &consul.AgentServiceCheck{
 			TTL:                            fmt.Sprintf("%v", options.TTL),
 			DeregisterCriticalServiceAfter: fmt.Sprintf("%v", deregTTL),
 		}
 	}
+	if c.opts.Context != nil {
+		if ttl, ok := c.opts.Context.Value("consul_check_ttl").(time.Duration); ok {
+			checkTTL = ttl
+		}
+	}
+
+	// if it's already registered and matches then just pass the check
+	if ok && v == h {
+		passing := false
+		if time.Since(lastChecked) > checkTTL {
+			services, _, _ := c.Client().Health().Checks(s.Name, c.queryOptions)
+			for _, service := range services {
+				if service.ServiceID == node.Id && service.Status == "passing" {
+					passing = true
+					c.Lock()
+					c.lastChecked[s.Name] = time.Now()
+					c.Unlock()
+					break
+				}
+			}
+		} else {
+			passing = true
+		}
+		if passing {
+			if options.TTL == time.Duration(0) {
+				return nil
+			}
+			// if the err is nil we're all good, bail out
+			// if not, we don't know what the state is, so full re-register
+			if err := c.Client().Agent().UpdateTTL("service:"+node.Id, "", "pass"); err == nil {
+				return nil
+			}
+		}
+		c.Deregister(s)
+	}
+
+	// encode the tags
+	tags := encodeMetadata(node.Metadata)
+	tags = append(tags, encodeEndpoints(s.Endpoints)...)
+	tags = append(tags, encodeVersion(s.Version)...)
 
 	host, pt, _ := net.SplitHostPort(node.Address)
 	if host == "" {
@@ -315,7 +330,7 @@ func (c *consulRegistry) Register(s *registry.Service, opts ...registry.Register
 	}
 
 	// pass the healthcheck
-	return c.Client().Agent().PassTTL("service:"+node.Id, "")
+	return c.Client().Agent().UpdateTTL("service:"+node.Id, "", "pass")
 }
 
 func (c *consulRegistry) GetService(name string, opts ...registry.GetOption) ([]*registry.Service, error) {
